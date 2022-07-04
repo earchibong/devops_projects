@@ -19,13 +19,26 @@
 
 - list ufw application profiles :
 `sudo ufw app list`
+![Screenshot 2022-07-04 at 14 00 57](https://user-images.githubusercontent.com/92983658/177189906-56acccd0-c347-4cbe-86b3-bb5463d10a7e.png)
+
 - select `Apache Full` from profiles list:
  `sudo ufw allow 'Apache Full'`
  
  - verify apache service is running:
- `sudo systemctl status apache2`
+ -- `curl http://localhost:80`
+ 
+ ![Screenshot 2022-07-04 at 13 56 21](https://user-images.githubusercontent.com/92983658/177190000-9fe2eb44-382b-4e03-85ac-c5b15a4a2c56.png)
 
-## STEP THREE: Install MYSQL on AWS EC2 Ubuntu from SSH
+ 
+ -- `sudo systemctl status apache2`
+ ![Screenshot 2022-07-04 at 14 07 43](https://user-images.githubusercontent.com/92983658/177190199-19fbbe14-9f1a-4bdf-9f1f-584499bd10ba.png)
+
+-- check public domain with AWS EC2 instance public IP addess
+
+![Screenshot 2022-07-04 at 14 03 35](https://user-images.githubusercontent.com/92983658/177190361-c86eb711-69fc-4444-bef0-c989bd9aecb4.png)
+
+## STEP FOUR: Install MYSQL on AWS EC2 Ubuntu from SSH
+
 
 ## STEP FOUR: Install PHP on EC2 Ubuntu
 ## STEP FIVE: Create Virtual Host
