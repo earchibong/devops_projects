@@ -44,8 +44,9 @@
 - `$ sudo mysql`
 ![Screenshot 2022-07-04 at 14 15 24](https://user-images.githubusercontent.com/92983658/177191148-d0bc9731-85d8-440b-bfb9-acf4154d2ec6.png)
 <br>
+
 - define password:
-`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';`
+- `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';`
 
 - `sudo mysql_secure_installation`
 
@@ -55,7 +56,16 @@
 `sudo mysql -u root -p`
 ![Screenshot 2022-07-04 at 14 20 44](https://user-images.githubusercontent.com/92983658/177192320-2070770a-a4ea-4b5b-8afc-4a0a9819aa2f.png)
 
-
+- `exit`
+<br>
 ## STEP FOUR: Install PHP on EC2 Ubuntu
+- install PHP with its common extensions:
+` sudo apt-get install php libapache2-mod-php php-mysql php-curl php-gd php-json php-zip php-mbstring`
+
+- confirm PHP version:
+`php -v`
+![Screenshot 2022-07-04 at 14 30 13](https://user-images.githubusercontent.com/92983658/177193126-140b605c-a344-4936-8598-64a002b898e1.png)
+<br>
 ## STEP FIVE: Create Virtual Host
+
 ## STEP SIX: Restart Apache Web ServerServer
