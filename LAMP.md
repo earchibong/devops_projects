@@ -8,16 +8,25 @@
 `ssh -i "private.pem" ubuntu@ec2-13-40-174-165.eu-west-2.compute.amazonaws.com`
 
 ## STEP THREE: Install Apache
-- update local package index of Ubuntu repositories 
+- update local package index of Ubuntu repositories : 
 `sudo apt update`
 
-- install apache server
+- install apache server :
 `sudo apt install apache2`
 
-###verify apache installation
+- verify apache installation :
 `apache2 -version`
 
+- list ufw application profiles :
+`sudo ufw app list`
+- select `Apache Full` from profiles list:
+ `sudo ufw allow 'Apache Full'`
+ 
+ - verify apache service is running:
+ `sudo systemctl status apache2`
+
 ## STEP THREE: Install MYSQL on AWS EC2 Ubuntu from SSH
+
 ## STEP FOUR: Install PHP on EC2 Ubuntu
 ## STEP FIVE: Create Virtual Host
 ## STEP SIX: Restart Apache Web ServerServer
