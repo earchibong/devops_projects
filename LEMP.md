@@ -129,4 +129,7 @@ VALUES
 
 - exit mysql : `exit`
 
+- *create PHP script to query MYSQL for database content* : `nano /var/www/projectLEMP/todo_list.php`
+- copy php script into `todo-list.php`
 
+![Screenshot 2022-07-06 at 16 28 43](https://user-images.githubusercontent.com/92983658/177587746-2f87e6d5-a7a4-471f-ae6c-7cf9cbe502ad.png)
