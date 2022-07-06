@@ -88,7 +88,12 @@ phpinfo();`
 
 - write and save file: `ctrl-x then y then enter`
 - access new php file in browser with `/info.php` extension: `http://ec2 public ip/info.php`
- 
+
+ ![Screenshot 2022-07-06 at 17 11 28](https://user-images.githubusercontent.com/92983658/177596080-4bf0fdcb-57bc-4ce4-9af5-d27f48316555.png)
+
+- remove test file `info.php` after checking relevant information: `sudo rm /var/www/your_domain/info.php`
+
+
 ## STEP SEVEN: Retrieve data from database with PHP
 
 - connect to mysql console: `sudo mysql -p`
