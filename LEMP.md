@@ -43,10 +43,12 @@
 
 - exit mysql : `exit`
 
+
 ## STEP FOUR: Install PHP
 - install `PHP fastCGI process manager` and `php-mysql` : `sudo apt install php-fpm php-mysql`
 
 ![php_myql_fpm](https://user-images.githubusercontent.com/92983658/177559045-dfb1578c-fbd0-4874-b8aa-461e0c52e15b.png)
+
 
 ## STEP FIVE: Configure Nginx
 
@@ -64,6 +66,7 @@
 
 ![activation_configuration](https://user-images.githubusercontent.com/92983658/177561077-06f4179e-004e-47de-8537-5a4427c39eea.png)
 
+
 - unlink default nginx host: `sudo unlink /etc/nginx/sites-enabled/default`
 - reload nginx: `sudo systemctl reload nginx`
 
@@ -74,5 +77,56 @@
 
 ![public_IP_test](https://user-images.githubusercontent.com/92983658/177563188-6863e3d1-30c7-42c5-bd1f-a1fbc5335441.png)
 
+
 ## STEP SIX: Test Nginx and PHP
+- create test PHP file in document root: `sudo nano /var/www/projectLEMP/info.php`
+- paste PHP code: `<?php
+phpinfo();`
+
+![Screenshot 2022-07-06 at 10 04 30](https://user-images.githubusercontent.com/92983658/177569538-4ce68948-43e4-486e-bbb1-fb9babf92543.png)
+
+
+- write and save file: `ctrl-x then y then enter`
+- access new php file in browser with `/info.php` extension: `http://ec2 public ip/info.php`
+ 
 ## STEP SEVEN: Retrieve data from database with PHP
+
+- connect to mysql console: `sudo mysql -p`
+- create new database: `CREATE DATABASE `example_database`;`
+
+![Screenshot 2022-07-06 at 15 21 12](https://user-images.githubusercontent.com/92983658/177572681-89c46d10-eaea-4c99-a8e3-b4b8429a256b.png)
+
+- create a new user: `CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';`
+- give user permission over database: `GRANT ALL ON example_database.* TO 'example_user'@'%';`
+- exit mysql: `exit`
+- test user permissions: `mysql -u example_user -p`
+- confirm access to database: `SHOW DATABASES;`
+
+![Screenshot 2022-07-06 at 15 28 19](https://user-images.githubusercontent.com/92983658/177574279-2f2669cd-4c53-417d-96d6-3231fadec1d4.png)
+
+- create test table '`to-do list`: `CREATE TABLE example_database.todo_list (
+  item_id INT AUTO_INCREMENT,
+  content VARCHAR(255),
+  PRIMARY KEY(item_id)
+);`
+
+
+![Screenshot 2022-07-06 at 16 02 36](https://user-images.githubusercontent.com/92983658/177582132-f6c7a4ff-9918-4659-829e-0c0d0d82110f.png)
+
+
+- insert new rows of content: `INSERT INTO
+  example_database.todo_list (content)
+VALUES
+  ("My first important item");`
+ - repeat mutiple times with different values
+  
+  
+  ![Screenshot 2022-07-06 at 16 12 02](https://user-images.githubusercontent.com/92983658/177584113-dab94a42-fede-4589-a2db-46c4630afa01.png)
+
+  - confirm data successfully saved : `SELECT * FROM example_database.todo_list;`
+
+![Screenshot 2022-07-06 at 16 13 35](https://user-images.githubusercontent.com/92983658/177584714-251dd25c-d560-428e-9d78-a4af57b3594d.png)
+
+- exit mysql : `exit`
+
+
