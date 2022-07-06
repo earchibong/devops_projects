@@ -44,6 +44,35 @@
 - exit mysql : `exit`
 
 ## STEP FOUR: Install PHP
+- install `PHP fastCGI process manager` and `php-mysql` : `sudo apt install php-fpm php-mysql`
+
+![php_myql_fpm](https://user-images.githubusercontent.com/92983658/177559045-dfb1578c-fbd0-4874-b8aa-461e0c52e15b.png)
+
 ## STEP FIVE: Configure Nginx
+
+- create root web directory : `sudo mkdir /var/www/projectLEMP`
+- assign ownership of directory: `sudo chown -R $USER:$USER /var/www/projectLEMP`
+- open new configuration file: `sudo nano /etc/nginx/sites-available/projectLEMP`
+- paste configuration
+
+![nano_php_configuration](https://user-images.githubusercontent.com/92983658/177560662-0fe20e44-4f06-4f4b-ab96-b8cf39f633f6.png)
+
+
+- save and close file: `ctrl-x`, then `y` then `enter`
+- activate configuration: `sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/`
+- test configuration for syntax errors: `sudo nginx -t`
+
+![activation_configuration](https://user-images.githubusercontent.com/92983658/177561077-06f4179e-004e-47de-8537-5a4427c39eea.png)
+
+- unlink default nginx host: `sudo unlink /etc/nginx/sites-enabled/default`
+- reload nginx: `sudo systemctl reload nginx`
+
+- create new index file and test server block: 
+`sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html`
+
+- check browser using IP address: `http://ec2 public IP`
+
+![public_IP_test](https://user-images.githubusercontent.com/92983658/177563188-6863e3d1-30c7-42c5-bd1f-a1fbc5335441.png)
+
 ## STEP SIX: Test Nginx and PHP
 ## STEP SEVEN: Retrieve data from database with PHP
