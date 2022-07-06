@@ -141,5 +141,6 @@ VALUES
 
 - test configuration: `sudo service nginx configtest `
 - restart php-fpm and nginx: `sudo service php7.0-fpm restart` and `sudo service nginx restart`
+- access todo_list in browser: `http://ec2 public ip/todo_list.php`
 
 ![Screenshot 2022-07-06 at 17 05 47](https://user-images.githubusercontent.com/92983658/177595072-890e9d73-22d1-4780-b5c3-ce9c0ce3b3e5.png)
