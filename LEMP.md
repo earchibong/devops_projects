@@ -133,3 +133,8 @@ VALUES
 - copy php script into `todo-list.php`
 
 ![Screenshot 2022-07-06 at 16 28 43](https://user-images.githubusercontent.com/92983658/177587746-2f87e6d5-a7a4-471f-ae6c-7cf9cbe502ad.png)
+
+- test configuration: `sudo service nginx configtest `
+- restart php-fpm and nginx: `sudo service php7.0-fpm restart` and `sudo service nginx restart`
+
+![Screenshot 2022-07-06 at 17 05 47](https://user-images.githubusercontent.com/92983658/177595072-890e9d73-22d1-4780-b5c3-ce9c0ce3b3e5.png)
