@@ -12,14 +12,14 @@
 ## Step two: Set Up The Project
 
   - create an empty directory called `Todo`: `mkdir Todo` 
-  - create a `React app - client ` inside `Todo`: `create-react-app client` 
+  - create a `React app - client ` inside `Todo`: `npx create-react-app client` 
   
   ![create_react_client](https://user-images.githubusercontent.com/92983658/178269789-870ba7b1-d769-46a3-a082-727296084d38.png)
   
   - creaate a folder for backend called `server` : `mkdir server` 
   - initialise `package.json` inside `server` : 
-       `cd server` 
-       `npm init` 
+      - `cd server` 
+      - `npm init` 
     
     ![initialise_json_in_server](https://user-images.githubusercontent.com/92983658/178271884-a8d5a043-b0b1-45d2-a01b-db44cf60c275.png)
     
