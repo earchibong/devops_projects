@@ -162,6 +162,9 @@ console.log(`Server running on port ${port}`)
  
 - confirm database is connected : `node index.js`
   
+  ![Screenshot 2022-07-11 at 17 50 07](https://user-images.githubusercontent.com/92983658/178316576-126a3f93-a070-4f37-bd4e-ed81bf4b23c9.png)
+
+  
 ## Step Four: Server API Endpoints
 
   - inside `Todo` create a directory `routes`. create a file `record.js` inside the `routes` directory: 
