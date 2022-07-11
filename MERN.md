@@ -24,6 +24,7 @@
     ![initialise_json_in_server](https://user-images.githubusercontent.com/92983658/178271884-a8d5a043-b0b1-45d2-a01b-db44cf60c275.png)
     
   - install dependencies: `npm install mongodb express cors dotenv` 
+    - installs: express, mongoDB, dotenv and cors
   
   ![install_dependencies_in_server](https://user-images.githubusercontent.com/92983658/178272447-7c4edcff-7ea5-4bfc-a9cd-9ef9cb3d3f12.png)
 
