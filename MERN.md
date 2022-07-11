@@ -1,39 +1,36 @@
 ## DEPLOYING AN APP ON MERN STACK
 
 ## Step one: Install Node
-<ol>
-  <li> update ubuntu: `sudo app upgrade` </li>
-  <li> upgrade ubuntu: `sudo app update` </li>
-  <li> get location of node software: `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -` </li>
-  <li> install node.js and npm: `sudo apt-get install -y nodejs` </li>
-  <li> verify node version: `node -v`</li>
-  <li> verify npm version: `npm -v` </li>
- </ol>
+
+  - update ubuntu: `sudo app upgrade` 
+  - upgrade ubuntu: `sudo app update` 
+  - get location of node software: `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -` 
+  - install node.js and npm: `sudo apt-get install -y nodejs` 
+  - verify node version: `node -v`
+  - verify npm version: `npm -v` 
  
 ## Step two: Set Up The Project
-<ol>
-  <li> create an empty directory called `Todo`: `mkdir Todo` </li>
-  <li> create a `React app - client ` inside `Todo`: `create-react-app client` </li>
+
+  - create an empty directory called `Todo`: `mkdir Todo` 
+  - create a `React app - client ` inside `Todo`: `create-react-app client` 
   
   ![create_react_client](https://user-images.githubusercontent.com/92983658/178269789-870ba7b1-d769-46a3-a082-727296084d38.png)
   
-  <li> creaate a folder for backend called `server` : `mkdir server` </li>
-  <li> initialise `package.json` inside `server` : 
-    <ul>
-      <li> `cd server` </li>
-      <li> `npm init` </li>
-    </ul>
+  - creaate a folder for backend called `server` : `mkdir server` 
+  - initialise `package.json` inside `server` : 
+       `cd server` 
+       `npm init` 
     
     ![initialise_json_in_server](https://user-images.githubusercontent.com/92983658/178271884-a8d5a043-b0b1-45d2-a01b-db44cf60c275.png)
     
   <li> install dependencies: `npm install mongodb express cors dotenv` </li>
   ![install_dependencies_in_server](https://user-images.githubusercontent.com/92983658/178272447-7c4edcff-7ea5-4bfc-a9cd-9ef9cb3d3f12.png)
 
-  <li> create `server.js` in `server` folder : `touch server.js` </li>
-  <li> paste the following code inside the `server.js` file:
-    <ul>
-      <li> `nano server.js` </li>
-      <li> paste the following:
+  - create `server.js` in `server` folder : `touch server.js` 
+  - paste the following code inside the `server.js` file:
+    
+      - `nano server.js` 
+      - paste the following:
         `const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -52,10 +49,10 @@ app.listen(port, () => {
  
   });
   console.log(`Server is running on port: ${port}`);
-        });` </li>
-    </ul>
+        });`
+    
     ![server_js_file](https://user-images.githubusercontent.com/92983658/178273375-6cba67f6-69a0-465b-8b12-495b9b453b6f.png)
-    </ol>
+    
   
 ## Step Three: Connect To Database
 ## Step Four: Server API Endpoints
