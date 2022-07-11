@@ -1,4 +1,4 @@
-#LEMP INSTALLATION ON AWS
+##LEMP INSTALLATION ON AWS
 ## STEP ONE: Create and configure virtual server on AWS
 
 <a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">See here</a>
