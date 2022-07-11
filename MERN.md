@@ -2,8 +2,8 @@
 
 ## Step one: Install Node
 
-  - update ubuntu: `sudo app upgrade` 
-  - upgrade ubuntu: `sudo app update` 
+  - update ubuntu: `sudo apt upgrade` 
+  - upgrade ubuntu: `sudo apt update` 
   - get location of node software: `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -` 
   - install node.js and npm: `sudo apt-get install -y nodejs` 
   - verify node version: `node -v`
