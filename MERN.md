@@ -100,7 +100,7 @@ module.exports = Todo;
 
 ![Screenshot 2022-07-11 at 17 35 21](https://user-images.githubusercontent.com/92983658/178313903-5ffc9254-6039-46e2-a847-336d8601dfae.png)
 
-## Step Three: Connect To Database
+## Step Four: Connect To Database
 
 - locate Database connection string
 - inside `Todo` directory, create a `.env` file: `touch config.env`
@@ -165,7 +165,7 @@ console.log(`Server running on port ${port}`)
   ![Screenshot 2022-07-11 at 17 50 07](https://user-images.githubusercontent.com/92983658/178316576-126a3f93-a070-4f37-bd4e-ed81bf4b23c9.png)
 
   
-## Step Four: Server API Endpoints
+## Step Five: Server API Endpoints
 
   - inside `Todo` create a directory `routes`. create a file `record.js` inside the `routes` directory: 
     - ` mkdir routes`
@@ -213,6 +213,6 @@ module.exports = router;
 
  
   
-## Step Five: Setting Up React App
-## Step Six: Create Components
-## Step Seven: Connect Front End To Back End.
+## Step Six: Setting Up React App
+## Step Seven: Create Components
+## Step Eight: Connect Front End To Back End.
