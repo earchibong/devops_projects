@@ -569,4 +569,7 @@ monospace;
 - go to `Todo` directory and access the app :
   - `cd ../..`
   - `npm run dev`
+  -  navagate to `http//localhost:5000`
  
+  ![app](https://user-images.githubusercontent.com/92983658/178547477-e7729709-94ee-4f69-97dd-16280453e472.png)
+
