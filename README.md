@@ -3,8 +3,8 @@ devops project based learning from <a href="https://https://www.darey.io/">Darey
 
 Projects include:
 <ul>
-    <li>LAMP stack installation</li>
-    <li>LEMP stack installation</li>
-    <li>MERN stack installation</li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">LAMP stack installation</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/LEMP.md">LEMP stack installation</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/MERN.md">MERN stack installation</a></li>
 </ul>
 
