@@ -206,7 +206,29 @@ module.exports = router;
   ![api_js](https://user-images.githubusercontent.com/92983658/178309460-be6da90f-1cdf-427f-960a-12387373b715.png)
   
 
-## Step Six: Setting Up React App
+## Step Six Test API Endpoints
+  
+  - open server : `node index.js`
+  - open client in POSTMAN,
+  - create a `POST` request and navigate to `http://localhost:5000/api/todos`
+  - set header key to `content-type` and value to `application/json`
+  - confirm there are no errors.
+  
+  ![POST](https://user-images.githubusercontent.com/92983658/178525916-770ccfce-b497-4075-938c-e64317e0f4ae.png)
+
+  
+- create a `GET `request to `http://localhost:5000/api/todos`
+
+ ![GET](https://user-images.githubusercontent.com/92983658/178527588-3546e0b2-e141-421e-a427-609b2f750207.png)
+
+- create a `DELETE` request
+  
+  ![DELETE](https://user-images.githubusercontent.com/92983658/178528180-6ab93dc7-08e2-4466-a2eb-abcff57c3a4f.png)
+  
+
+  
+## Step Seven: Setting Up React App
+  
   - create a `React app - client ` inside `Todo`: `npx create-react-app client` 
   
   ![create_react_client](https://user-images.githubusercontent.com/92983658/178269789-870ba7b1-d769-46a3-a082-727296084d38.png)
@@ -227,7 +249,7 @@ module.exports = router;
 
 ~~~
 
-** - Configure Proxy in `package.json`:**
+  
   - change directory to client: `cd client`
   - open `package.json` : `vim package.json`
   - add in the key-value pair : `"proxy": "http://localhost:5000"`
@@ -237,31 +259,12 @@ module.exports = router;
   - go back to `Todo` directory: `cd ..`
   - confirm that server is running on `localhost:3000` : `npm run dev`
   
-  ![port3000](https://user-images.githubusercontent.com/92983658/178490987-da1821fa-7256-44a1-95fa-ab16308f619f.png)
+  ![run_dev](https://user-images.githubusercontent.com/92983658/178541530-4562d10b-9243-4640-8032-c14c90520140.png)
 
   - open TCP port 3000 in EC2 
-  
-  
-## Step Seven Test API Endpoints
-  
-  - open POSTMAN, 
-  **- create `POST` request to `http://<PublicIP-or-PublicDNS>:5000`**
-  - set header key to `content-type` and value to `application/json`
-  
-  ![Screenshot 2022-07-12 at 13 47 18](https://user-images.githubusercontent.com/92983658/178493367-2bf77c5b-35cf-4fe9-96ad-23e249291a9d.png)
-  
-  - set body as below
-  
-  ![Screenshot 2022-07-12 at 13 47 18](https://user-images.githubusercontent.com/92983658/178493794-ba3a3495-ccd6-4c86-9790-05ec6868284e.png)
-
-- confirm there are no errors.
-  
-**- create a `GET` request to `http://<PublicIP-or-PublicDNS>:5000`**
-
-  ![Screenshot 2022-07-12 at 13 58 32](https://user-images.githubusercontent.com/92983658/178495551-ea05fad6-07bd-4453-acf1-02b1aada1311.png)
 
   
-## Step Seven: Create Components
+## Step Eight: Create React Components
 
 - go to `client` directory : `cd client`
 - create a `components` directory inside the `src` directory and create component files
@@ -269,7 +272,8 @@ module.exports = router;
   
 - open `input.js` file: `vim input.js`
 - paste the following code:
-~~~
+
+```
 
 import React, { Component } from 'react';
 import axios from 'axios';
@@ -317,20 +321,18 @@ return (
 
 export default Input
 
-~~~
+```
   
 - change to `client` directory : `cd ..`
 - install `axios` : `npm install axios`
-
-  
-## Step Eight: Connect Front End To Back End.
 - go to `components` directory: `cd src/components`
 - open `ListTodo.js` : `vim ListTodo.js`
 - paste the following code:
 
-~~~
   
-  import React from 'react';
+```
+  
+import React from 'react';
 
 const ListTodo = ({ todos, deleteTodo }) => {
 
@@ -357,12 +359,11 @@ return (
 
 export default ListTodo
   
-~~~
+```
   
 - in `Todo.js` write the following:
 
-~~~
-
+```
 import React, {Component} from 'react';
 import axios from 'axios';
 
@@ -419,12 +420,12 @@ let { todos } = this.state;
 
 export default Todo;
 
-~~~
+```
   
 - in`src` directory, open `App.js` : `vi App.js`
 - paste the following:
-~~~
   
+``` 
   import React from 'react';
 
 import Todo from './components/Todo';
@@ -440,7 +441,7 @@ return (
 
 export default App;
 
-~~~
+```
   
 
 ![Screenshot 2022-07-12 at 14 35 57](https://user-images.githubusercontent.com/92983658/178503321-36a93f03-ccb6-4fe8-912e-69173f42be22.png)
@@ -448,7 +449,7 @@ export default App;
 - in src directory, open App.css` : `vi App.css`
 - paste the following and exit
 
-  ~~~
+```
   
   .App {
 text-align: center;
@@ -538,12 +539,12 @@ margin-top: 0;
 }
 }
   
- ~~~
+ ```
 
  - in `src` directory, open `index.css` : `vi, index.css`
  - paste the following code and exit:
  
-  ~~~
+ ```
   
   body {
 margin: 0;
@@ -563,9 +564,9 @@ font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 monospace;
 }
   
-~~~
+```
   
 - go to `Todo` directory and access the app :
   - `cd ../..`
   - `npm run dev`
-- 
+ 
