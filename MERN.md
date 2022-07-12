@@ -11,14 +11,8 @@
  
 ## Step two: Set Up The Project
 
-  - create an empty directory called `Todo`: `mkdir Todo` 
-  - create a `React app - client ` inside `Todo`: `npx create-react-app client` 
-  
-  ![create_react_client](https://user-images.githubusercontent.com/92983658/178269789-870ba7b1-d769-46a3-a082-727296084d38.png)
-  
-   
-  - initialise `package.json` inside `Todo` : 
-       
+  - create an empty directory called `Todo`: `mkdir Todo`   
+  - initialise `package.json` inside `Todo` :     
       - `npm init` 
     
   ![init_json](https://user-images.githubusercontent.com/92983658/178304102-8c1b2d68-64d7-4300-b995-46b25bebd5d3.png)
@@ -210,9 +204,221 @@ module.exports = router;
 ```
   
   ![api_js](https://user-images.githubusercontent.com/92983658/178309460-be6da90f-1cdf-427f-960a-12387373b715.png)
-
- 
   
+
 ## Step Six: Setting Up React App
+  - create a `React app - client ` inside `Todo`: `npx create-react-app client` 
+  
+  ![create_react_client](https://user-images.githubusercontent.com/92983658/178269789-870ba7b1-d769-46a3-a082-727296084d38.png)
+  
+  - install dependencies `concurrently` and `nodemon`: 
+    - concurrently : `npm install concurrently --save-dev`
+    - nodemon: `npm install nodemon --save-dev`
+  
+  - in `Todo` directory, update the `scripts` section in `package.json` with the following code:
+  
+  ~~~
+  
+  "scripts": {
+"start": "node index.js",
+"start-watch": "nodemon index.js",
+"dev": "concurrently \"npm run start-watch\" \"cd client && npm start\""
+},
+
+~~~
+
+** - Configure Proxy in `package.json`:**
+  - change directory to client: `cd client`
+  - open `package.json` : `vim package.json`
+  - add in the key-value pair : `"proxy": "http://localhost:5000"`
+  
+  ![key-value-add](https://user-images.githubusercontent.com/92983658/178489768-255aff1c-1b63-4155-9b49-49515f8b255e.png)
+
+  - go back to `Todo` directory: `cd ..`
+  - confirm that server is running on `localhost:3000` : `npm run dev`
+  
+  ![port3000](https://user-images.githubusercontent.com/92983658/178490987-da1821fa-7256-44a1-95fa-ab16308f619f.png)
+
+  - open TCP port 3000 in EC2 
+  
+  
+## Step Seven Test API Endpoints
+  
+  - open POSTMAN, 
+  **- create `POST` request to `http://<PublicIP-or-PublicDNS>:5000`**
+  - set header key to `content-type` and value to `application/json`
+  
+  ![Screenshot 2022-07-12 at 13 47 18](https://user-images.githubusercontent.com/92983658/178493367-2bf77c5b-35cf-4fe9-96ad-23e249291a9d.png)
+  
+  - set body as below
+  
+  ![Screenshot 2022-07-12 at 13 47 18](https://user-images.githubusercontent.com/92983658/178493794-ba3a3495-ccd6-4c86-9790-05ec6868284e.png)
+
+- confirm there are no errors.
+  
+**- create a `GET` request to `http://<PublicIP-or-PublicDNS>:5000`**
+
+  ![Screenshot 2022-07-12 at 13 58 32](https://user-images.githubusercontent.com/92983658/178495551-ea05fad6-07bd-4453-acf1-02b1aada1311.png)
+
+  
 ## Step Seven: Create Components
+
+- go to `client` directory : `cd client`
+- create a `components` directory inside the `src` directory and create component files
+  - `cd src && mkdir components && touch Input.js ListTodo.js Todo.js`
+  
+- open `input.js` file: `vim input.js`
+- paste the following code:
+~~~
+
+import React, { Component } from 'react';
+import axios from 'axios';
+
+class Input extends Component {
+
+state = {
+action: ""
+}
+
+addTodo = () => {
+const task = {action: this.state.action}
+
+    if(task.action && task.action.length > 0){
+      axios.post('/api/todos', task)
+        .then(res => {
+          if(res.data){
+            this.props.getTodos();
+            this.setState({action: ""})
+          }
+        })
+        .catch(err => console.log(err))
+    }else {
+      console.log('input field required')
+    }
+
+}
+
+handleChange = (e) => {
+this.setState({
+action: e.target.value
+})
+}
+
+render() {
+let { action } = this.state;
+return (
+<div>
+<input type="text" onChange={this.handleChange} value={action} />
+<button onClick={this.addTodo}>add todo</button>
+</div>
+)
+}
+}
+
+export default Input
+
+~~~
+  
+- change to `client` directory : `cd ..`
+- install `axios` : `npm install axios`
+
+  
 ## Step Eight: Connect Front End To Back End.
+- go to `components` directory: `cd src/components`
+- open `ListTodo.js` : `vim ListTodo.js`
+- paste the following code:
+
+~~~
+  
+  import React from 'react';
+
+const ListTodo = ({ todos, deleteTodo }) => {
+
+return (
+<ul>
+{
+todos &&
+todos.length > 0 ?
+(
+todos.map(todo => {
+return (
+<li key={todo._id} onClick={() => deleteTodo(todo._id)}>{todo.action}</li>
+)
+})
+)
+:
+(
+<li>No todo(s) left</li>
+)
+}
+</ul>
+)
+}
+
+export default ListTodo
+  
+~~~
+  
+- in `Todo.js` write the following:
+
+~~~
+
+import React, {Component} from 'react';
+import axios from 'axios';
+
+import Input from './Input';
+import ListTodo from './ListTodo';
+
+class Todo extends Component {
+
+state = {
+todos: []
+}
+
+componentDidMount(){
+this.getTodos();
+}
+
+getTodos = () => {
+axios.get('/api/todos')
+.then(res => {
+if(res.data){
+this.setState({
+todos: res.data
+})
+}
+})
+.catch(err => console.log(err))
+}
+
+deleteTodo = (id) => {
+
+    axios.delete(`/api/todos/${id}`)
+      .then(res => {
+        if(res.data){
+          this.getTodos()
+        }
+      })
+      .catch(err => console.log(err))
+
+}
+
+render() {
+let { todos } = this.state;
+
+    return(
+      <div>
+        <h1>My Todo(s)</h1>
+        <Input getTodos={this.getTodos}/>
+        <ListTodo todos={todos} deleteTodo={this.deleteTodo}/>
+      </div>
+    )
+
+}
+}
+
+export default Todo;
+
+~~~
+  
+
