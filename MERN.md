@@ -446,7 +446,7 @@ export default App;
 
 ![Screenshot 2022-07-12 at 14 35 57](https://user-images.githubusercontent.com/92983658/178503321-36a93f03-ccb6-4fe8-912e-69173f42be22.png)
 
-- in src directory, open App.css` : `vi App.css`
+- in src directory, open `App.css` : `vim App.css`
 - paste the following and exit
 
 ```
@@ -541,7 +541,7 @@ margin-top: 0;
   
  ```
 
- - in `src` directory, open `index.css` : `vi, index.css`
+ - in `src` directory, open `index.css` : `vi index.css`
  - paste the following code and exit:
  
  ```
