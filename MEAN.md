@@ -45,7 +45,7 @@ var bodyParser = require('body-parser');
 var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
-require('./apps/routes')(app);
+require('./apps/routes');
 app.set('port', 3300);
 app.listen(app.get('port'), function() {
     console.log('Server up: http://localhost:' + app.get('port'));
@@ -134,6 +134,7 @@ module.exports = mongoose.model('Book', bookSchema);
 ```
 
 ![BOOKJS](https://user-images.githubusercontent.com/92983658/178777124-601287c4-8ac9-44db-83a8-4ec30efa0e4e.png)
+
 
 ## Step Five: Build Client-Side Angular Web Application
 
@@ -249,3 +250,7 @@ app.controller('myCtrl', function($scope, $http) {
   - `cd ..`
   - `node server.js`
   
+  ![SERVER](https://user-images.githubusercontent.com/92983658/178781478-96e35189-0c7a-4ba0-8f6c-4a28ad35f26c.png)
+  
+  
+- in EC2 security group, open `TCP port 3300`
