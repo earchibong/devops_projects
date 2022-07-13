@@ -6,5 +6,6 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">LAMP stack installation</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/LEMP.md">LEMP stack installation</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/MERN.md">MERN stack installation</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/MEAN.md">MEAN stack installation</a></li>
 </ul>
 
