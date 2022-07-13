@@ -138,6 +138,7 @@ module.exports = mongoose.model('Book', bookSchema);
 
 ## Step Five: Build Client-Side Angular Web Application
 
+- in root directory, install angular using node package manager: `sudo npm install @angular/cli --save`
 - in Book directory, create a new directory named `public` and create file named `script.js`: 
   - `cd ../..`
   - `mkdir public`
