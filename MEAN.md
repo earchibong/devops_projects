@@ -10,10 +10,11 @@ The NodeSource nodejs package contains both the node binary and npm, so no need 
   - add certificates: `sudo apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates`
   - install `Node.js` package: `sudo apt install nodejs`
  
-## Step Two: Install Dependencies
+## Step Two: Install MongoDB And Dependencies
 
-- `sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6`
-- `echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list`
+- install certificates:
+  - `sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6`
+  - `echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list`
 
 ![RECORDS](https://user-images.githubusercontent.com/92983658/178759715-fdf84168-68d3-4f8e-b64f-7b24fba2ceef.png)
 
@@ -56,7 +57,7 @@ app.listen(app.get('port'), function() {
 ![SERVER](https://user-images.githubusercontent.com/92983658/178773398-246968fa-3607-4fc0-b6f2-89c88c60643e.png)
 
 
-## Step Four: Create API Endpoints
+## Step Four: Create Server Routes
 
 - in `Books` directory, create a new directory `apps` and a new file inside `apps` names `routes.js` : 
   - `cd Books`
@@ -113,7 +114,7 @@ module.exports = function(app) {
   - `cd apps`
   - `mkdir models && cd models && touch book.js`
 
-- paste the follwoing code insode `book.js`:
+- paste the follwoing code inside `book.js`:
 
 ```
 
@@ -136,18 +137,17 @@ module.exports = mongoose.model('Book', bookSchema);
 ![BOOKJS](https://user-images.githubusercontent.com/92983658/178777124-601287c4-8ac9-44db-83a8-4ec30efa0e4e.png)
 
 
-## Step Five: Build Client-Side Angular Web Application
+## Step Five: Connect To Routes With Angular JS
 
-- in root directory, install angular using node package manager: `sudo npm install @angular/cli --save`
 - in Book directory, create a new directory named `public` and create file named `script.js`: 
   - `cd ../..`
   - `mkdir public`
   -  `touch script.js`
-- paste the following in `touch.js` file:
+- paste the following in `script.js` file:
 
 ```
 
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ["ngRoute"]);
 app.controller('myCtrl', function($scope, $http) {
   $http( {
     method: 'GET',
@@ -255,3 +255,6 @@ app.controller('myCtrl', function($scope, $http) {
   
   
 - in EC2 security group, open `TCP port 3300`
+
+![BROWSER](https://user-images.githubusercontent.com/92983658/178985099-3d5386ca-1495-4e7b-a25a-49a1986afe53.png)
+
