@@ -1,5 +1,5 @@
 ## DEPLOY A FULL SCALE THREE-TIER WEB SOLUTION WITH WORDPRESS CONTENT MANAGEMENT
-## Step One: Launch Server
+## Step One: Launch Web Server
 
 - Launch an EC2 instance with 3 additional volumes in the same availability zone each with 10GB storage
 
