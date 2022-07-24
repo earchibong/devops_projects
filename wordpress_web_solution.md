@@ -119,6 +119,6 @@ sudo systemctl daemon-reload
 ## Step Four: Create Database Server
 - Launch redhat EC2 instance with named `DB server`
 - repeat the above. But,
-  - instead of `app-lv` create `db-lv`
-  - mont `db-lv` to `/db` instead of `/var/www/html` 
+  - instead of creating logical volume named `app-lv` create one named `db-lv`
+  - mount `db-lv` to `/db` instead of `/var/www/html` 
 
