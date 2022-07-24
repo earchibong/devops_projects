@@ -122,3 +122,103 @@ sudo systemctl daemon-reload
   - instead of creating logical volume named `app-lv` create one named `db-lv`
   - mount `db-lv` to `/db` instead of `/var/www/html` 
 
+![DB_logical_volume](https://user-images.githubusercontent.com/92983658/180644300-705ac101-d80e-45a6-ab23-6938c29d49d2.png)
+
+## Step Five: Install Wordpress on Web Server
+
+- update repository: `sudo yum -y update`
+- install wget, Apache and dependencies: `sudo yum -y install wget httpd php php-mysqlnd php-fpm php-json`
+- start Apache :
+```
+
+sudo systemctl enable httpd
+sudo systemctl start httpd
+
+```
+- install PHP and dependencies:
+```
+
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo yum install yum-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo yum module list php
+sudo yum module reset php
+sudo yum module enable php:remi-7.4
+sudo yum install php php-opcache php-gd php-curl php-mysqlnd
+sudo systemctl start php-fpm
+sudo systemctl enable php-fpm
+sudo setsebool -P httpd_execmem 1
+
+```
+- restart Apache: `sudo systemctl restart httpd`
+- download wordpress and copy to `var/www/html`:
+```
+
+mkdir wordpress
+  cd   wordpress
+  sudo wget http://wordpress.org/latest.tar.gz
+  sudo tar xzvf latest.tar.gz
+  sudo rm -rf latest.tar.gz
+  sudo cp wordpress/wp-config-sample.php wordpress/wp-config.php
+  sudo cp -R wordpress /var/www/html/
+  
+ ```
+ ![wordpress](https://user-images.githubusercontent.com/92983658/180645032-30799f5c-9431-497d-ab53-a0a6d38cbd10.png)
+
+- Configure SELinux Policies:
+```
+
+sudo chown -R apache:apache /var/www/html/wordpress
+  sudo chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R
+  sudo setsebool -P httpd_can_network_connect=1
+
+```
+
+![SELinux](https://user-images.githubusercontent.com/92983658/180645137-9d03bd3a-c7a3-4a9a-9614-56de420b6bf3.png)
+
+
+## Step Six: Install Mysql on Database Server
+```
+
+sudo yum update
+sudo yum install mysql-server
+
+```
+- verify system status: `sudo systemctl status mysqld`
+- if not running, restart server and enable so it runs even after a reboot:
+```
+
+sudo systemctl restart mysqld
+sudo systemctl enable mysqld
+
+```
+![mysql_restart_enable_status](https://user-images.githubusercontent.com/92983658/180645620-83cccafd-7536-4fae-9654-df3b03c28a08.png)
+
+
+
+## Step Seven: Configure Database Server To Work With Wordpress
+
+```
+
+sudo mysql
+CREATE DATABASE wordpress;
+CREATE USER `myuser`@`<Web-Server-Private-IP-Address>` IDENTIFIED BY 'mypass';
+GRANT ALL ON wordpress.* TO 'myuser'@'<Web-Server-Private-IP-Address>';
+FLUSH PRIVILEGES;
+SHOW DATABASES;
+exit
+
+```
+![database_configure](https://user-images.githubusercontent.com/92983658/180645871-caa575e2-7f86-460f-a45d-2a02f1481244.png)
+
+
+- on Database server, open `port 3306`:
+  - for `Type` choose `Mysql/Aurora`
+  - for `source` input `webserver private ip address/32`
+
+![security_group](https://user-images.githubusercontent.com/92983658/180646072-8f4dc5bc-eb05-4093-83ad-8712736fb9ce.png)
+
+
+## Step Eight: Configure Wordpress To Connect To Remote Database
+
+- on webserver, install `mysql client`: `sudo yum install mysql`
+- test connection to database: `sudo mysql -u myuser -p -h <DB-Server-Private-IP-address>`
