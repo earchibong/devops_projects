@@ -221,4 +221,15 @@ exit
 ## Step Eight: Configure Wordpress To Connect To Remote Database
 
 - on webserver, install `mysql client`: `sudo yum install mysql`
-- test connection to database: `sudo mysql -u myuser -p -h <DB-Server-Private-IP-address>`
+- test connection to database: `sudo mysql -u myser -p -h <DB-Server-Private-IP-address>`
+
+![test_connection](https://user-images.githubusercontent.com/92983658/180655091-f894e9ec-d6f7-49b0-baf2-ef128f5d80f4.png)
+
+## Step Nine: Configure Apache For Wordpress
+
+- in web server security group, edit inbound rules:
+  - for `type`: enable port 80
+  - for `source`: `custom 0.0.0.0/0`
+- access wordpress from browser using webserver local ip: `http://<Web-Server-Public-IP-Address>/wordpress/`
+
+
