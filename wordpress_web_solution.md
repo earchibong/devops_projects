@@ -221,7 +221,7 @@ exit
 ## Step Eight: Configure Wordpress To Connect To Remote Database
 
 - on webserver, install `mysql client`: `sudo yum install mysql`
-- test connection to database: `sudo mysql -u myser -p -h <DB-Server-Private-IP-address>`
+- test connection to database: `sudo mysql -u myuser -p -h <DB-Server-Private-IP-address>`
 
 ![test_connection](https://user-images.githubusercontent.com/92983658/180655091-f894e9ec-d6f7-49b0-baf2-ef128f5d80f4.png)
 
