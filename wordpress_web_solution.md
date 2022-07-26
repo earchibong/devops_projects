@@ -135,6 +135,11 @@ sudo systemctl enable httpd
 sudo systemctl start httpd
 
 ```
+- test webserver: open browser and access public DNS name: `http://ec2-13-41-188-119.eu-west-2.compute.amazonaws.com/`
+
+![public_dns](https://user-images.githubusercontent.com/92983658/180831598-c5e47a9d-cad4-4039-a077-e9a9e5990b7d.png)
+
+
 - install PHP and dependencies:
 ```
 
@@ -150,6 +155,24 @@ sudo setsebool -P httpd_execmem 1
 
 ```
 - restart Apache: `sudo systemctl restart httpd`
+- test PHP installation:
+  - create a page for the test:
+  ```
+  
+  cd /var/www/html
+  sudo touch test.php
+  sudo vi test.php
+  
+  ```
+  - Type i to start the insert mode
+  - Type <?php phpinfo() ?>
+  - Type :wq to write the file and quit vi
+- Open a browser and access `test.php` to test PHP installation: `http://ec2-13-41-188-119.eu-west-2.compute.amazonaws.com/`
+
+![PHP_test](https://user-images.githubusercontent.com/92983658/180834760-06891f05-f984-4a42-877b-af1bc8a0efa3.png)
+
+
+  
 - download wordpress and copy to `var/www/html`:
 ```
 
@@ -225,11 +248,29 @@ exit
 
 ![test_connection](https://user-images.githubusercontent.com/92983658/180655091-f894e9ec-d6f7-49b0-baf2-ef128f5d80f4.png)
 
+- Update the Database credentials detail on the wordpress configuration file in `var/www/html`
+  - `cd var/www/html/wordpress`
+  - `sudo vi wp-config.php`
+  -  follow prompts to update database details in `wp-config` file using details from step 7:
+    - `DB_USER`: user created in step 7 `myuser`
+    - `DB_NAME`: `wordpress` 
+    - `DB_PASSWORD`: `mypass`
+    - `DB_HOSTNAME`: `DB_server private IP`
+ 
+  ![wp_config](https://user-images.githubusercontent.com/92983658/181012820-7f5e34fc-597a-4f15-9e1e-8ecf750b74e6.png)
+
+
 ## Step Nine: Configure Apache For Wordpress
 
 - in web server security group, edit inbound rules:
   - for `type`: enable port 80
   - for `source`: `custom 0.0.0.0/0`
-- access wordpress from browser using webserver local ip: `http://<Web-Server-Public-IP-Address>/wordpress/`
+- access wordpress from browser using webserver local ip: `http://<Web-Server-Public-DNS-Address>/wordpress/`
+
+![wordpress](https://user-images.githubusercontent.com/92983658/181013127-64e50f08-100c-4b18-ace0-d2538963f038.png)
+
+![wordpress_2](https://user-images.githubusercontent.com/92983658/181014533-d53ca1a0-5afc-4cfa-9eae-c7d43f12abe3.png)
+
+![wordpress_3](https://user-images.githubusercontent.com/92983658/181014603-0e52fb83-af61-4ebf-b278-ac01e083b59e.png)
 
 
