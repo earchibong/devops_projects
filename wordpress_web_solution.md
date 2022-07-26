@@ -241,6 +241,11 @@ exit
 ![security_group](https://user-images.githubusercontent.com/92983658/180646072-8f4dc5bc-eb05-4093-83ad-8712736fb9ce.png)
 
 
+*note: confirm IP allowed to connect to DB_server: `SELECT host FROM mysql.user WHERE User = 'insert usernname here';`*
+*only users from IP addresses shown can connect to this database*
+*if the following error comes up : “ERROR 1130 (HY000): Host ‘10.120.152.137’ is not allowed to connect to this MySQL server”..then the above will usually tell you which hosts are allowed to connect*
+
+
 ## Step Eight: Configure Wordpress To Connect To Remote Database
 
 - on webserver, install `mysql client`: `sudo yum install mysql`
