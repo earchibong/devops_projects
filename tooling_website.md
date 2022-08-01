@@ -6,7 +6,7 @@
 
 ![rhel](https://user-images.githubusercontent.com/92983658/182121870-99f13101-81fa-472f-a09f-78de6e180e9c.png)
 
-** Configure the server **
+**Configure The Server**
 
 - ssh into server
 - inspect block devices to the server: `lsblk`
@@ -83,16 +83,16 @@ sudo mkfs -t xfs /dev/webdata-vg/lv-logs
 ```
 - create mount directory `/mnt` for logical volumes: `sudo mkdir -p /mnt`
   - Mount `lv-apps` on `/mnt/apps`:
-    -- `sudo mkdir -p /mnt/apps`
-    --  `sudo mount /dev/webdata-vg/lv-apps /mnt/apps`
+   - `sudo mkdir -p /mnt/apps`
+   -  `sudo mount /dev/webdata-vg/lv-apps /mnt/apps`
   - Mount `lv-logs` on `/mnt/logs`:
-    -- `sudo mkdir -p /mnt/logs`
-    -- backup all the files in the log directory `/mnt/logs` into `/home/recovery/logs`: `sudo rsync -av /mnt/logs/. /home/recovery/logs/`
-    -- `sudo mount /dev/webdata-vg/lv-logs /mnt/logs`
-    -- Restore log files back into `/mnt/logs`: `sudo rsync -av /home/recovery/logs/. /mnt/logs`
+   - `sudo mkdir -p /mnt/logs`
+   - backup all the files in the log directory `/mnt/logs` into `/home/recovery/logs`: `sudo rsync -av /mnt/logs/. /home/recovery/logs/`
+   - `sudo mount /dev/webdata-vg/lv-logs /mnt/logs`
+   - Restore log files back into `/mnt/logs`: `sudo rsync -av /home/recovery/logs/. /mnt/logs`
   - Mount `lv-opt` on `/mnt/opt`:
-    -- `sudo mkdir -p /mnt/opt`
-    -- `sudo mount /dev/webdata-vg/lv-opt /mnt/opt`
+   - `sudo mkdir -p /mnt/opt`
+   - `sudo mount /dev/webdata-vg/lv-opt /mnt/opt`
   
   **Update /ETC/FSTAB File**
   
@@ -124,4 +124,55 @@ sudo systemctl enable nfs-server.service
 sudo systemctl status nfs-server.service
 
 ```
+![nfs_install](https://user-images.githubusercontent.com/92983658/182148092-0a5eaf9e-a00c-4713-a9cd-601310370a4d.png)
 
+- Export the mounts for webservers’ `subnet cidr` to connect as clients
+  - check `subnet cidr`:
+   - open your EC2 details in AWS web console and locate ‘Networking’ tab
+   - click a Subnet ID link to open the VPC management console
+   
+ ![subnet_CIDR](https://user-images.githubusercontent.com/92983658/182153567-101cd7f3-cdca-4b22-8915-d9c060e981d3.png)
+
+ 
+  - set up permission that will allow our Web servers to read, write and execute files on NFS:
+```
+
+sudo chown -R nobody: /mnt/apps
+sudo chown -R nobody: /mnt/logs
+sudo chown -R nobody: /mnt/opt
+
+sudo chmod -R 777 /mnt/apps
+sudo chmod -R 777 /mnt/logs
+sudo chmod -R 777 /mnt/opt
+
+sudo systemctl restart nfs-server.service
+
+```
+
+- Configure access to NFS for clients within the same subnet
+```
+
+sudo vi /etc/exports
+
+/mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+/mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+/mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+
+Esc + :wq!
+
+sudo exportfs -arv
+
+```
+![nfs_access_configure](https://user-images.githubusercontent.com/92983658/182150411-08dfa95c-131d-441b-af70-235b36d01f31.png)
+
+- open NFS ports on server
+  - check nfs port: `rpcinfo -p | grep nfs`
+  - open ports in server security group with new inbound rule: `NFS | 2049 | subnet CIDR/32`
+  - also open the following ports:
+   - `TCP 111 subnet CIDR/32`
+   - `UDP 111 subnet CIDR/32`
+   - `UDP 2049 subnet CIDR/32`
+ 
+ ## Step Two: Set Up Database Server
+ 
+ 
