@@ -1,12 +1,13 @@
-## Devops Tooling Website Solution
+# Devops Tooling Website Solution
 
-## Step One: Prepare NFS Server
+## Part One: Prepare NFS Server
+### Requirements:
 - deploy a new EC2 instance with RHEL Linux 8 Operating System.
 - attach 3 additional volumes in the same availability zone each with 10GB storage
 
 ![rhel](https://user-images.githubusercontent.com/92983658/182121870-99f13101-81fa-472f-a09f-78de6e180e9c.png)
 
-**Configure The Server**
+### Step One: Configure The Server
 
 - ssh into server
 - inspect block devices to the server: `lsblk`
@@ -94,7 +95,7 @@ sudo mkfs -t xfs /dev/webdata-vg/lv-logs
    - `sudo mkdir -p /mnt/opt`
    - `sudo mount /dev/webdata-vg/lv-opt /mnt/opt`
   
-  **Update /ETC/FSTAB File**
+  ### Step Two: Update /ETC/FSTAB File
   
   - `sudo blkid`
   - `sudo vi /etc/fstab`
@@ -113,7 +114,7 @@ sudo systemctl daemon-reload
 
 ![setup_verify](https://user-images.githubusercontent.com/92983658/182141415-7e5c92a9-81d2-44f9-95cd-1fcc44077a0b.png)
 
-**Install NFS SERVER**
+### Step Three: Install NFS SERVER
 
 ```
 
@@ -173,6 +174,10 @@ sudo exportfs -arv
    - `UDP 111 subnet CIDR/32`
    - `UDP 2049 subnet CIDR/32`
  
- ## Step Two: Set Up Database Server
+ ## Part Two: Set Up Database Server
+ - Launch redhat EC2 instance with named `DB_server`
+ - Repeat step one and step two as above but...
+  - instead of creating logical volume `lv-apps`, create `lv-db` instead
+  - mount `lv-db` on `/mnt/db` 
  
  
