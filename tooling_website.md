@@ -174,10 +174,38 @@ sudo exportfs -arv
    - `UDP 111 subnet CIDR/32`
    - `UDP 2049 subnet CIDR/32`
  
+ 
  ## Part Two: Set Up Database Server
  - Launch redhat EC2 instance with named `DB_server`
  - Repeat step one and step two as above but...
   - instead of creating logical volume `lv-apps`, create `lv-db` instead
   - mount `lv-db` on `/mnt/db` 
  
+ ### Step One: Install MySQL server on database server
+ ```
  
+sudo yum update
+sudo yum install mysql-server
+
+```
+- verify system status: `sudo systemctl status mysqld`
+- if not running, restart server and enable so it runs even after a reboot:
+```
+
+sudo systemctl restart mysqld
+sudo systemctl enable mysqld
+
+```
+
+### Step Two: Configure Database to work with NFS server
+```
+
+sudo mysql
+CREATE DATABASE tooling;
+CREATE USER `webaccess`@`<Web-Server-SUBNET-CIDR>` IDENTIFIED BY 'webpass';
+GRANT ALL ON tooling.* TO 'webaccess'@'<Web-Server-SUBNET-CIDR>';
+FLUSH PRIVILEGES;
+SHOW DATABASES;
+exit
+
+```
