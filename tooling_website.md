@@ -280,3 +280,56 @@ sudo systemctl restart httpd
 
 - *If you encounter 403 Error – check permissions to your `/var/www/html` folder and also disable SELinux: `sudo setenforce 0`*
 *To make this change permanent – open following config file `sudo vi /etc/sysconfig/selinux` and set `SELINUX=disabledthen restrt httpd`.*
+
+- Verify that Apache files and directories are available on the Web Server in `/var/www` and also on the NFS server in `/mnt/apps`:
+  - on webservers: `ls -la /var/www`
+  - on nfs server: `ls -la /mnt/apps`
+  - If you see the same files – it means NFS is mounted correctly
+
+![verify_apache_nfs](https://user-images.githubusercontent.com/92983658/182607487-4e5903d2-7685-443b-b6af-bf3a73f4ce02.png)
+
+- Locate the `log` folder for Apache on the `Web Server` and mount it to `NFS` server’s export for logs:
+```
+
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log
+
+```
+- Verify that NFS was mounted successfully by running : `df -h`
+
+![verfiy_log_mount](https://user-images.githubusercontent.com/92983658/182638891-753f53cd-d00b-44a8-8b57-4d24d1a618c4.png)
+
+
+- Make sure that the changes will persist on Web Server after reboot:
+  - `sudo vi /etc/fstab`
+  - add the following: `<NFS-Server-Private-IP-Address>:/mnt/logs /var/log nfs defaults 0 0`
+
+![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
+
+- Deploy the tooling website’s code to the Webserver: 
+  - install git on EC2 instance: `sudo yum install git -y` 
+  - Generate SSH keys on EC2 instance:
+   - `ssh-keygen -t rsa -C "your-email@gmail.com"`
+   - press enter 3 times and private and public keys will be generated without a passphrase
+   - access public key in `.ssh` file: `cat /home/ec2-user/.ssh/id_rsa.pub`
+   - add public key to github account: follow steps <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">here</a>
+   
+  - navigate into `var/www/html` folder: `cd /var/www/html`
+  - remove all files including hidden files (just keep . and .. in the directory): 
+  ```
+  
+  ls -la
+  rm -rf *
+  
+  ```
+  
+  - clone contents of repo into `var/www/html` using SSH:
+  ```
+  eval $(ssh-agent -s)
+  ssh-add ~/.ssh/id_rsa
+  cd /var/www
+  
+  sudo git clone git@github.com:<your_git_user_name>/<repo_name>.git .
+  *(Note: The ‘.’ at the end of the command is to put the contents of the repository into the current directory)*
+  
+  cp html var/www/html
+  - 
