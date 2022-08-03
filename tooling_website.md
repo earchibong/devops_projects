@@ -7,7 +7,7 @@
 
 ![rhel](https://user-images.githubusercontent.com/92983658/182121870-99f13101-81fa-472f-a09f-78de6e180e9c.png)
 
-### Step One: Configure The Server
+### Step One: Configure The NFS Server
 
 - ssh into server
 - inspect block devices to the server: `lsblk`
@@ -114,7 +114,7 @@ sudo systemctl daemon-reload
 
 ![setup_verify](https://user-images.githubusercontent.com/92983658/182141415-7e5c92a9-81d2-44f9-95cd-1fcc44077a0b.png)
 
-### Step Three: Install NFS SERVER
+### Step Three: Install NFS on the NFS server
 
 ```
 
@@ -164,7 +164,8 @@ Esc + :wq!
 sudo exportfs -arv
 
 ```
-![nfs_access_configure](https://user-images.githubusercontent.com/92983658/182150411-08dfa95c-131d-441b-af70-235b36d01f31.png)
+![nfs_access](https://user-images.githubusercontent.com/92983658/182597158-7eb7d949-9d6f-4015-9675-bab58a6a5139.png)
+
 
 - open NFS ports on server
   - check nfs port: `rpcinfo -p | grep nfs`
@@ -196,6 +197,8 @@ sudo systemctl restart mysqld
 sudo systemctl enable mysqld
 
 ```
+![mysql](https://user-images.githubusercontent.com/92983658/182589074-c57d9e75-2d8e-47a6-abcb-589110c150d0.png)
+
 
 ### Step Two: Configure Database to work with NFS server
 ```
@@ -209,3 +212,71 @@ SHOW DATABASES;
 exit
 
 ```
+![tooling_database](https://user-images.githubusercontent.com/92983658/182588092-1bea131f-fffb-421c-9f07-824d588c5bfb.png)
+
+
+- on Database server, open `port 3306`:
+  - for `Type` choose `Mysql/Aurora`
+  - for `source` input `webserver SUBNET-CIDR`
+
+![database_port_3306](https://user-images.githubusercontent.com/92983658/182589862-c8b0f4f3-6a0c-435b-bfdb-350a83268201.png)
+
+*note: confirm IP allowed to connect to DB_server: SELECT host FROM mysql.user WHERE User = 'insert usernname here'; only users from IP addresses shown can connect to this database if the following error comes up : “ERROR 1130 (HY000): Host ‘10.120.152.137’ is not allowed to connect to this MySQL server”..then the above will usually tell you which hosts are allowed to connect*
+
+### Step Three: Configure NFS server to work with database
+
+- on `NFS server` install `mysql client`: sudo yum install mysql
+- test connection to database: `sudo mysql -u webaccess -p -h <DB-Server-Private-IP-address>`
+
+![nfs_database](https://user-images.githubusercontent.com/92983658/182591813-dbfe2834-bf37-47a6-9ccf-90436ca5f0fa.png)
+
+
+## Part Three: Configure Web Server
+
+- launch a red hat instance
+- install `nfs client`: `sudo yum install nfs-utils nfs4-acl-tools -y`
+- Mount `/var/www/` and target the NFS server’s export for apps:
+```
+sudo mkdir /var/www
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+
+```
+- verify that NFS was mounted successfully: `df -h`
+
+![verfiy_nfs_mount](https://user-images.githubusercontent.com/92983658/182597693-47a17202-2e1c-443a-ad15-a9ae65255863.png)
+
+- Make sure that the changes will persist on Web Server after reboot:
+  - `sudo vi /etc/fstab`
+  - add the following: `<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0`
+
+![poersistent_changes](https://user-images.githubusercontent.com/92983658/182598305-da81954b-79c1-4ea4-bb3d-86173553c233.png)
+
+- Install `Remi’s repository`, `Apache` and `PHP`
+```
+sudo yum install httpd -y
+
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+sudo dnf module reset php
+
+sudo dnf module enable php:remi-7.4
+
+sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
+
+sudo systemctl start php-fpm
+
+sudo systemctl enable php-fpm
+
+sudo setsebool -P httpd_execmem 1
+
+sudo systemctl restart httpd
+
+```
+- open `TCP port 80` on the Web Server
+
+**repeat the above steps for 2 new web servers**
+
+- *If you encounter 403 Error – check permissions to your `/var/www/html` folder and also disable SELinux: `sudo setenforce 0`*
+*To make this change permanent – open following config file `sudo vi /etc/sysconfig/selinux` and set `SELINUX=disabledthen restrt httpd`.*
