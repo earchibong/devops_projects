@@ -278,8 +278,6 @@ sudo systemctl restart httpd
 
 **repeat the above steps for 2 new web servers**
 
-- *If you encounter 403 Error – check permissions to your `/var/www/html` folder and also disable SELinux: `sudo setenforce 0`*
-*To make this change permanent – open following config file `sudo vi /etc/sysconfig/selinux` and set `SELINUX=disabledthen restrt httpd`.*
 
 - Verify that Apache files and directories are available on the Web Server in `/var/www` and also on the NFS server in `/mnt/apps`:
   - on webservers: `ls -la /var/www`
@@ -306,30 +304,12 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 ![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
 
 - Deploy the tooling website’s code to the Webserver: 
-  - install git on EC2 instance: `sudo yum install git -y` 
-  - Generate SSH keys on EC2 instance:
-   - `ssh-keygen -t rsa -C "your-email@gmail.com"`
-   - press enter 3 times and private and public keys will be generated without a passphrase
-   - access public key in `.ssh` file: `cat /home/ec2-user/.ssh/id_rsa.pub`
-   - add public key to github account: follow steps <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">here</a>
-   
-  - navigate into `var/www/html` folder: `cd /var/www/html`
-  - remove all files including hidden files (just keep . and .. in the directory): 
-  ```
-  
-  ls -la
-  rm -rf *
-  
-  ```
-  
-  - clone contents of repo into `var/www/html` using SSH:
-  ```
-  eval $(ssh-agent -s)
-  ssh-add ~/.ssh/id_rsa
-  cd /var/www
-  
-  sudo git clone git@github.com:<your_git_user_name>/<repo_name>.git .
-  *(Note: The ‘.’ at the end of the command is to put the contents of the repository into the current directory)*
-  
-  cp html var/www/html
-  - 
+  - install git on EC2 instance: `sudo yum install git -y`
+  - clone the repository from git to EC2 using `HTTPS`: `sudo git clone repo url`
+  - follow steps to git clone <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">here</a>
+
+  ![clone](https://user-images.githubusercontent.com/92983658/182809894-7ef5d6a0-8e09-4cfc-beb0-a3cf2a102403.png)
+
+  - copy `html` folder from cloned repo to `var/www/html` : `sudo cp -r tooling/html /var/www/html`
+
+
