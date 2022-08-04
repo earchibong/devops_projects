@@ -310,7 +310,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
   ![clone](https://user-images.githubusercontent.com/92983658/182809894-7ef5d6a0-8e09-4cfc-beb0-a3cf2a102403.png)
 
-  - copy `html` folder from cloned repo to `var/www/html` : `sudo cp -r tooling/html /var/www/ht
+  - copy `html` folder from cloned repo to `var/www/html` : `sudo cp -a tooling/html/. /var/www/html`
 
 - test all three browsers
 - if connection is refused while trying to test web server ip:
