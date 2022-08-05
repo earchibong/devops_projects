@@ -318,4 +318,14 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   - find the line `SELINUX=enforcing` and change to `SELINUX=disabled`
   - type the following: `sudo setenforce 0`
   - restart `httpd` 
+  - also check permissions on `var/www/html`: sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
 
+- update website configuration on `/var/www/html/functions.php` to connect to database:
+  - `sudo vi /var/www/html/functions.php`
+  - under `connect to database`: update database details
+   - in the 2nd and 3rd placeholders: input username and password
+ 
+ ![db_connect](https://user-images.githubusercontent.com/92983658/183071679-9edb962a-53e2-452d-8f80-7181183a4504.png)
+
+  - Apply `tooling-db.sql` script to your database using this command:
+  `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
