@@ -347,8 +347,29 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
  
  ![db_connect](https://user-images.githubusercontent.com/92983658/183071679-9edb962a-53e2-452d-8f80-7181183a4504.png)
 
-  - Apply `tooling-db.sql` script to your database using this command:
-  `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
+  - On `webserver_1` Apply `tooling-db.sql` script to your database using this command:
+  ```
+  
+  cd /var/www/html
+  mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> <da-name> < <path to script>
+  example: mysql -h 172.31.8.127 -u webaccess -p webpass tooling < /var/www/html/tooling-db.sql
+  
+  ```
+  
+  - on `webserver_1` log-in to database: `mysql -h <databse-private-ip> -u <db-username> -p`
+  - show datase: `SHOW DATABASES;`
+  - create admin user `myuser` with password `password:` : `CREATE USER `myuser`@`%` IDENTIFIED BY 'password:';
+  - grant privildeges to `myuser`: `GRANT ALL ON tooling.* TO 'myuser'@'%';
+  - create table and description:
+  ```
+  show databases;
+  use <databaseName>;
+  show tables;
+  
+  if tables emptym, create new table: users
+  
+  
+  - `SELECT * from users;
   
   
   - test all three browsers
