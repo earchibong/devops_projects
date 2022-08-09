@@ -200,7 +200,7 @@ sudo systemctl enable mysqld
 ![mysql](https://user-images.githubusercontent.com/92983658/182589074-c57d9e75-2d8e-47a6-abcb-589110c150d0.png)
 
 
-### Step Two: Configure Database to work with NFS server
+### Step Two: Configure Database
 ```
 
 sudo mysql
@@ -214,7 +214,15 @@ exit
 ```
 ![tooling_database](https://user-images.githubusercontent.com/92983658/182588092-1bea131f-fffb-421c-9f07-824d588c5bfb.png)
 
-
+- edit bind address:
+  - `sudo vi /etc/my.cnf`
+  - Navigate to the line that begins with the `bind-address` and set it to : `0.0.0.0` or `*`
+  - if `bind address is not in the `my.cnf` file add the following : `bind-address = 0.0.0.0`
+  - save and exit
+  
+ ![bind_address](https://user-images.githubusercontent.com/92983658/183647003-e3fbded0-555d-4b23-8856-e2ee5608a36e.png)
+  - restart mysql: `sudo systemctl restart mysqld`
+ 
 - on Database server, open `port 3306`:
   - for `Type` choose `Mysql/Aurora`
   - for `source` input `webserver SUBNET-CIDR`
@@ -223,12 +231,7 @@ exit
 
 *note: confirm IP allowed to connect to DB_server: SELECT host FROM mysql.user WHERE User = 'insert usernname here'; only users from IP addresses shown can connect to this database if the following error comes up : “ERROR 1130 (HY000): Host ‘10.120.152.137’ is not allowed to connect to this MySQL server”..then the above will usually tell you which hosts are allowed to connect*
 
-### Step Three: Configure NFS server to work with database
 
-- on `NFS server` install `mysql client`: sudo yum install mysql
-- test connection to database: `sudo mysql -u webaccess -p -h <DB-Server-Private-IP-address>`
-
-![nfs_database](https://user-images.githubusercontent.com/92983658/182591813-dbfe2834-bf37-47a6-9ccf-90436ca5f0fa.png)
 
 
 ## Part Three: Configure Web Server
@@ -286,6 +289,9 @@ sudo systemctl restart httpd
 
 ![verify_apache_nfs](https://user-images.githubusercontent.com/92983658/182607487-4e5903d2-7685-443b-b6af-bf3a73f4ce02.png)
 
+  - on `webserver_1` create a file named `test.md` in `/var/www/html`
+  - on `webserver_2` check if `test.md` exists in `/var/www/html`
+
 - Locate the `log` folder for Apache on the `Web Server` and mount it to `NFS` server’s export for logs:
 ```
 
@@ -303,23 +309,37 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
 ![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
 
-- Deploy the tooling website’s code to the Webserver: 
+- Deploy the tooling website’s code to the `Webserver_1`: 
   - install git on EC2 instance: `sudo yum install git -y`
+  - `cd var/www/html`
   - clone the repository from git to EC2 using `HTTPS`: `sudo git clone repo url`
   - follow steps to git clone <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">here</a>
 
   ![clone](https://user-images.githubusercontent.com/92983658/182809894-7ef5d6a0-8e09-4cfc-beb0-a3cf2a102403.png)
 
-  - copy `html` folder from cloned repo to `var/www/html` : `sudo cp -a tooling/html/. /var/www/html`
-
-- test all three browsers
-- if connection is refused while trying to test web server ip:
-  - edit SELinux configuration: `sudo vi /etc/sysconfig/selinux`
-  - find the line `SELINUX=enforcing` and change to `SELINUX=disabled`
-  - type the following: `sudo setenforce 0`
-  - restart `httpd` 
-  - also check permissions on `var/www/html`: sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
-
+  - move all the contents of `tooling` into `var/www/html`: 
+  ```
+  
+  cd var/www/html
+  sudo mv tooling/* .
+  sudo rm -r tooling
+  
+  ```
+  
+  - copy contents of `html` folder in the `var/www/html` directory directly into `var/www/html` :
+  ```
+  
+  cd var/www/html
+  sudo mv html/* .
+  sudo rm -r html
+  
+  ```
+  - check that contents on `var/www/html` on `webserver_1` are the same on `webserver_2` and 'webserver_3`
+  - change permissions on `var/www/html/ directory: `sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
+  
+  ### Install Mysql Client on all webservers
+  `sudo yum install mysql`
+ 
 - update website configuration on `/var/www/html/functions.php` to connect to database:
   - `sudo vi /var/www/html/functions.php`
   - under `connect to database`: update database details
@@ -329,3 +349,12 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
   - Apply `tooling-db.sql` script to your database using this command:
   `mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql`
+  
+  
+  - test all three browsers
+- if connection is refused while trying to test web server ip:
+  - edit SELinux configuration: `sudo vi /etc/sysconfig/selinux`
+  - find the line `SELINUX=enforcing` and change to `SELINUX=disabled`
+  - type the following: `sudo setenforce 0`
+  - restart `httpd` 
+  - also check permissions on `var/www/html`: sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
