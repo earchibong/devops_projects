@@ -288,10 +288,10 @@ sudo systemctl restart httpd
   - on `webserver_1` create a file named `test.md` in `/var/www/html`
   - on `webserver_2` check if `test.md` exists in `/var/www/html`
 
-- Locate the `log` folder for Apache on the `Web Server` and mount it to `NFS` server’s export for logs:
+- On all websesrvers, locate the `log` folder for Apache on the `Web Server` and mount it to `NFS` server’s export for logs:
 ```
 
-sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
 
 ```
 - Verify that NFS was mounted successfully by running : `df -h`
