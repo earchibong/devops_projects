@@ -301,7 +301,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
 - Make sure that the changes will persist on Web Server after reboot:
   - `sudo vi /etc/fstab`
-  - add the following: `<NFS-Server-Private-IP-Address>:/mnt/logs /var/log nfs defaults 0 0`
+  - add the following: `<NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd nfs defaults 0 0`
 
 ![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
 
