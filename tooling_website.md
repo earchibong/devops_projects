@@ -283,13 +283,14 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 ```
 - Verify that NFS was mounted successfully by running : `df -h`
 
-![verfiy_log_mount](https://user-images.githubusercontent.com/92983658/182638891-753f53cd-d00b-44a8-8b57-4d24d1a618c4.png)
+![df_httpd](https://user-images.githubusercontent.com/92983658/183918054-bdcdfc18-45fb-47a1-84b2-af96a0c3a154.png)
+
 
 - Make sure that the changes will persist on Web Server after reboot:
   - `sudo vi /etc/fstab`
   - add the following: `<NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd nfs defaults 0 0`
 
-![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
+![var_log_httpd](https://user-images.githubusercontent.com/92983658/183917956-a81c45a9-4842-4726-89b2-a881449b07f1.png)
 
 **repeat the above steps for 2 new web servers**
 
@@ -300,6 +301,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   - If you see the same files – it means NFS is mounted correctly
 
 ![verify_apache_nfs](https://user-images.githubusercontent.com/92983658/182607487-4e5903d2-7685-443b-b6af-bf3a73f4ce02.png)
+
 
   - on `webserver_1` create a file named `test.md` in `/var/www/html`
   - on `webserver_2` check if `test.md` exists in `/var/www/html`
