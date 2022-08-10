@@ -168,18 +168,15 @@ sudo exportfs -arv
 
 - open NFS ports on server
   - check nfs port: `rpcinfo -p | grep nfs`
-  - open ports in server security group with new inbound rule: `NFS | 2049 | subnet CIDR/32`
+  - open ports in server security group with new inbound rule: `NFS | 2049 | subnet CIDR`
   - also open the following ports:
-   - `TCP 111 subnet CIDR/32`
-   - `UDP 111 subnet CIDR/32`
-   - `UDP 2049 subnet CIDR/32`
+   - `TCP 111 subnet CIDR`
+   - `UDP 111 subnet CIDR`
+   - `UDP 2049 subnet CIDR`
  
  
  ## Part Two: Set Up Database Server
  - Launch redhat EC2 instance with named `DB_server`
- - Repeat step one and step two as above but...
-  - instead of creating logical volume `lv-apps`, create `lv-db` instead
-  - mount `lv-db` on `/mnt/db` 
  
  ### Step One: Install MySQL server on database server
  ```
