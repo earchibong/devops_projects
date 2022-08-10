@@ -275,6 +275,22 @@ sudo systemctl restart httpd
 ```
 - open `TCP port 80` on the Web Server
 
+- On all websesrvers, locate the `log` folder for Apache on the `Web Server` and mount it to `NFS` server’s export for logs:
+```
+
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
+
+```
+- Verify that NFS was mounted successfully by running : `df -h`
+
+![verfiy_log_mount](https://user-images.githubusercontent.com/92983658/182638891-753f53cd-d00b-44a8-8b57-4d24d1a618c4.png)
+
+- Make sure that the changes will persist on Web Server after reboot:
+  - `sudo vi /etc/fstab`
+  - add the following: `<NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd nfs defaults 0 0`
+
+![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
+
 **repeat the above steps for 2 new web servers**
 
 
@@ -288,22 +304,6 @@ sudo systemctl restart httpd
   - on `webserver_1` create a file named `test.md` in `/var/www/html`
   - on `webserver_2` check if `test.md` exists in `/var/www/html`
 
-- On all websesrvers, locate the `log` folder for Apache on the `Web Server` and mount it to `NFS` server’s export for logs:
-```
-
-sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
-
-```
-- Verify that NFS was mounted successfully by running : `df -h`
-
-![verfiy_log_mount](https://user-images.githubusercontent.com/92983658/182638891-753f53cd-d00b-44a8-8b57-4d24d1a618c4.png)
-
-
-- Make sure that the changes will persist on Web Server after reboot:
-  - `sudo vi /etc/fstab`
-  - add the following: `<NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd nfs defaults 0 0`
-
-![var_log_persist](https://user-images.githubusercontent.com/92983658/182640308-804028e7-a587-4f7c-95e7-5823e4a0a303.png)
 
 - Deploy the tooling website’s code to the `Webserver_1`: 
   - install git on EC2 instance: `sudo yum install git -y`
