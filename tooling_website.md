@@ -125,15 +125,8 @@ sudo systemctl status nfs-server.service
 ```
 ![nfs_install](https://user-images.githubusercontent.com/92983658/182148092-0a5eaf9e-a00c-4713-a9cd-601310370a4d.png)
 
-- Export the mounts for webservers’ `subnet cidr` to connect as clients
-  - check `subnet cidr`:
-   - open your EC2 details in AWS web console and locate ‘Networking’ tab
-   - click a Subnet ID link to open the VPC management console
-   
- ![subnet_CIDR](https://user-images.githubusercontent.com/92983658/182153567-101cd7f3-cdca-4b22-8915-d9c060e981d3.png)
 
- 
-  - set up permission that will allow our Web servers to read, write and execute files on NFS:
+- set up permission that will allow our Web servers to read, write and execute files on NFS:
 ```
 
 sudo chown -R nobody: /mnt/apps
@@ -147,6 +140,14 @@ sudo chmod -R 777 /mnt/opt
 sudo systemctl restart nfs-server.service
 
 ```
+
+- Export the mounts for webservers’ `subnet cidr` to connect as clients
+  - check `subnet cidr`:
+   - open your EC2 details in AWS web console and locate ‘Networking’ tab
+   - click a Subnet ID link to open the VPC management console
+   
+ ![subnet_CIDR](https://user-images.githubusercontent.com/92983658/182153567-101cd7f3-cdca-4b22-8915-d9c060e981d3.png)
+ 
 
 - Configure access to NFS for clients within the same subnet
 ```
