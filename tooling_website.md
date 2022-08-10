@@ -83,15 +83,13 @@ sudo mkfs -t xfs /dev/webdata-vg/lv-logs
 
 ```
 - create mount directory `/mnt` for logical volumes: `sudo mkdir -p /mnt`
-  - Mount `lv-apps` on `/mnt/apps`:
+  - **Mount `lv-apps` on `/mnt/apps`:**
    - `sudo mkdir -p /mnt/apps`
    -  `sudo mount /dev/webdata-vg/lv-apps /mnt/apps`
-  - Mount `lv-logs` on `/mnt/logs`:
+  - **Mount `lv-logs` on `/mnt/logs`:**
    - `sudo mkdir -p /mnt/logs`
-   - backup all the files in the log directory `/mnt/logs` into `/home/recovery/logs`: `sudo rsync -av /mnt/logs/. /home/recovery/logs/`
    - `sudo mount /dev/webdata-vg/lv-logs /mnt/logs`
-   - Restore log files back into `/mnt/logs`: `sudo rsync -av /home/recovery/logs/. /mnt/logs`
-  - Mount `lv-opt` on `/mnt/opt`:
+  - **Mount `lv-opt` on `/mnt/opt`:**
    - `sudo mkdir -p /mnt/opt`
    - `sudo mount /dev/webdata-vg/lv-opt /mnt/opt`
   
@@ -114,7 +112,7 @@ sudo systemctl daemon-reload
 
 ![setup_verify](https://user-images.githubusercontent.com/92983658/182141415-7e5c92a9-81d2-44f9-95cd-1fcc44077a0b.png)
 
-### Step Three: Install NFS on the NFS server
+### Step Three: Install NFS
 
 ```
 
