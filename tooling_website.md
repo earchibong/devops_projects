@@ -1,4 +1,4 @@
-# LAMP stack with remove Database And NFS Server
+# LAMP stack with remote Database And NFS Server
 
 ## Part One: Prepare NFS Server
 ### Requirements:
