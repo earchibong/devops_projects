@@ -361,12 +361,13 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   
   ## Add Data To Database
   - log-in to database server: 
-  - create admin user `myuser` with password `password:` : `CREATE USER `myuser`@`%` IDENTIFIED BY 'password:';`
-  - grant privildeges to `myuser`: `GRANT ALL ON tooling.* TO 'myuser'@'%';`
+  - create admin user `myuser` with password `password:` :    
+  - grant privildeges to `myuser`: 
   - create table and description:
   
   ```
-  
+  CREATE USER `myuser`@`%` IDENTIFIED BY 'password:';
+  GRANT ALL ON tooling.* TO 'myuser'@'%';
   show databases;
   use <databaseName>;
   show tables;
@@ -426,4 +427,10 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
      - find the line `SELINUX=enforcing` and change to `SELINUX=disabled`
      - type the following: `sudo setenforce 0`
      - restart `httpd` 
-  
+ 
+ 
+![web](https://user-images.githubusercontent.com/92983658/184147660-634192e5-dc11-4abb-8ac2-96ab806c5d92.png)
+
+
+![website](https://user-images.githubusercontent.com/92983658/184146967-5ca601e9-6967-4da4-ad67-ea032ed6c1e8.png)
+
