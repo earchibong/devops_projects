@@ -201,7 +201,7 @@ sudo systemctl enable mysqld
 
 sudo mysql
 CREATE DATABASE tooling;
-CREATE USER `webaccess`@`<Web-Server-SUBNET-CIDR>` IDENTIFIED BY 'webpass';
+CREATE USER `webaccess`@`<Web-Server-SUBNET-CIDR>` IDENTIFIED BY 'pass';
 GRANT ALL ON tooling.* TO 'webaccess'@'<Web-Server-SUBNET-CIDR>';
 FLUSH PRIVILEGES;
 SHOW DATABASES;
@@ -343,34 +343,73 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 - update website configuration on `/var/www/html/functions.php` to connect to database:
   - `sudo vi /var/www/html/functions.php`
   - under `connect to database`: update database details
-   - in the 2nd and 3rd placeholders: input username and password
+   - in the 1st placeholder: `database private ip`
+   - 2nd placeholder: `database username`
+   - 3rd placeholder: `database password`
  
- ![db_connect](https://user-images.githubusercontent.com/92983658/183071679-9edb962a-53e2-452d-8f80-7181183a4504.png)
+ ![functions_php](https://user-images.githubusercontent.com/92983658/184134693-5a7e99a9-09c4-4ca2-ad2e-c2d94230cdee.png)
+
 
   - On `webserver_1` Apply `tooling-db.sql` script to your database using this command:
   ```
   
   cd /var/www/html
-  mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> <da-name> < <path to script>
-  example: mysql -h 172.31.8.127 -u webaccess -p webpass tooling < /var/www/html/tooling-db.sql
+  mysql -h <database-private-ip> -u <db-username> -p <db-pasword> <da-name> < <path to script>
+  example: mysql -h 172.31.8.127 -u webaccess -p pass tooling < /var/www/html/tooling-db.sql
   
   ```
   
-  - on `webserver_1` log-in to database: `mysql -h <databse-private-ip> -u <db-username> -p`
-  - show datase: `SHOW DATABASES;`
-  - create admin user `myuser` with password `password:` : `CREATE USER `myuser`@`%` IDENTIFIED BY 'password:';
-  - grant privildeges to `myuser`: `GRANT ALL ON tooling.* TO 'myuser'@'%';
+  ## Add Data To Database
+  - log-in to database server: 
+  - create admin user `myuser` with password `password:` : `CREATE USER `myuser`@`%` IDENTIFIED BY 'password:';`
+  - grant privildeges to `myuser`: `GRANT ALL ON tooling.* TO 'myuser'@'%';`
   - create table and description:
   ```
   show databases;
   use <databaseName>;
   show tables;
   
-  if tables emptym, create new table: users
+  if tables empty, create new table: `users` with the following columns: `‘id’, ‘username’, ‘password’, ’email’, ‘user_type’, ‘status'`
   
+  ```
   
-  - `SELECT * from users;
+  create table users(
+    -> id varchar(255),
+    -> username varchar(255),
+    -> email varchar(255),
+    -> user_type varchar(255),
+    -> status varchar(255)
+    -> );
   
+  desc databaseName.tableName;
+  ```
+  
+  ![tables](https://user-images.githubusercontent.com/92983658/184139181-57b28f0a-f67d-4798-a6c3-d083af1ad43d.png)
+  
+  - insert values into `users` table : `1, ‘myuser’, ‘5f4dcc3b5aa765d61d8327deb882cf99’, ‘user@mail.com’, ‘admin’, ‘1'`
+  
+  ```
+  
+  insert into users
+    -> values
+    -> ('1','myuser','5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1' );
+  
+  ```
+  
+  ![insert_into](https://user-images.githubusercontent.com/92983658/184142061-bd506bb4-657f-41f5-a059-96f7cfa415d6.png)
+
+
+  - log into database from webserver: `mysql -h <databse-private-ip> -u <db-username> -p`
+  - see all data in users table:
+  
+  ```
+  use databaseName;          example: use tooling;
+  select * from tableName;   example: SELECT * from users;
+  
+  ```
+  
+  ![select_data](https://user-images.githubusercontent.com/92983658/184142648-189b9afc-36f5-4997-b5e5-032225ecf638.png)
+
   
   - test all three browsers
 - if connection is refused while trying to test web server ip:
