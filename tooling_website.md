@@ -364,13 +364,16 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   - create admin user `myuser` with password `password:` : `CREATE USER `myuser`@`%` IDENTIFIED BY 'password:';`
   - grant privildeges to `myuser`: `GRANT ALL ON tooling.* TO 'myuser'@'%';`
   - create table and description:
+  
   ```
+  
   show databases;
   use <databaseName>;
   show tables;
   
-  if tables empty, create new table: `users` with the following columns: `‘id’, ‘username’, ‘password’, ’email’, ‘user_type’, ‘status'`
+  ```
   
+  if tables empty, create new table: `users` with the following columns: (‘id’, ‘username’, ‘password’, ’email’, ‘user_type’, ‘status')
   ```
   
   create table users(
@@ -382,17 +385,21 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
     -> );
   
   desc databaseName.tableName;
+  
   ```
   
   ![tables](https://user-images.githubusercontent.com/92983658/184139181-57b28f0a-f67d-4798-a6c3-d083af1ad43d.png)
   
+  
   - insert values into `users` table : `1, ‘myuser’, ‘5f4dcc3b5aa765d61d8327deb882cf99’, ‘user@mail.com’, ‘admin’, ‘1'`
+  
   
   ```
   
   insert into users
     -> values
     -> ('1','myuser','5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1' );
+  
   
   ```
   
@@ -411,10 +418,12 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   ![select_data](https://user-images.githubusercontent.com/92983658/184142648-189b9afc-36f5-4997-b5e5-032225ecf638.png)
 
   
-  - test all three browsers
-- if connection is refused while trying to test web server ip:
-  - edit SELinux configuration: `sudo vi /etc/sysconfig/selinux`
-  - find the line `SELINUX=enforcing` and change to `SELINUX=disabled`
-  - type the following: `sudo setenforce 0`
-  - restart `httpd` 
-  - also check permissions on `var/www/html`: sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
+  - test all three browsers:
+  - Open the website in your browser `http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php` 
+  - login into the website with myuser user.
+  - if connection is refused while trying to test web server ip:
+    - edit SELinux configuration: `sudo vi /etc/sysconfig/selinux`:
+     - find the line `SELINUX=enforcing` and change to `SELINUX=disabled`
+     - type the following: `sudo setenforce 0`
+     - restart `httpd` 
+  
