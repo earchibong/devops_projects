@@ -1,4 +1,4 @@
-# Devops Tooling Website Solution
+# LAMP stack with remove Database And NFS Server
 
 ## Part One: Prepare NFS Server
 ### Requirements:
