@@ -309,7 +309,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
 - Deploy the tooling website’s code to the `Webserver_1`: 
   - install git on EC2 instance: `sudo yum install git -y`
-  - `cd var/www/html`
+  - `cd /var/www/html`
   - clone the repository from git to EC2 using `HTTPS`: `sudo git clone repo url`
   - follow steps to git clone <a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">here</a>
 
@@ -324,10 +324,10 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   
   ```
   
-  - copy contents of `html` folder in the `var/www/html` directory directly into `var/www/html` :
+  - copy contents of `html` folder in the `var/www/html` directory directly into `/var/www/html` :
   ```
   
-  cd var/www/html
+  cd /var/www/html
   sudo mv html/* .
   sudo rm -r html
   
