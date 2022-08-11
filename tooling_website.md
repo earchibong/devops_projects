@@ -1,5 +1,16 @@
 # LAMP stack with remote Database And NFS Server
 
+Project: deploy a tooling website solution which makes access to DevOps tools within the corporate infrastructure easily accessible.
+
+In this project the following components will be used for the solution:
+- **Infrastructure:** AWS
+- **Webserver Linux:** Red Hat Enterprise Linux 8
+- **Database Server:** Ubuntu 20.04 + MySQL
+- **Storage Server:** Red Hat Enterprise Linux 8 + NFS Server
+- **Programming Language:** PHP
+- **Code Repository:** GitHub
+
+
 ## Part One: Prepare NFS Server
 ### Requirements:
 - deploy a new EC2 instance with RHEL Linux 8 Operating System.
