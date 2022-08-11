@@ -327,12 +327,14 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   - copy contents of `html` folder in the `var/www/html` directory directly into `/var/www/html` :
   ```
   
-  cd /var/www/html
   sudo mv html/* .
   sudo rm -r html
   
   ```
   - check that contents on `var/www/html` on `webserver_1` are the same on `webserver_2` and 'webserver_3`
+  
+  ![tooling](https://user-images.githubusercontent.com/92983658/184131151-124147b5-ada6-4793-8480-1de518f36fbb.png)
+
   - change permissions on `var/www/html/ directory: `sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
   
   ### Install Mysql Client on all webservers
