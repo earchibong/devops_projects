@@ -187,21 +187,21 @@ sudo exportfs -arv
  
  
  ## Part Two: Set Up Database Server
- - Launch redhat EC2 instance with named `DB_server`
+ - Launch Ubuntu EC2 instance with named `DB_server`
  
  ### Step One: Install MySQL server on database server
  ```
  
-sudo yum update
-sudo yum install mysql-server
+sudo apt update
+sudo apt install mysql-server
 
 ```
-- verify system status: `sudo systemctl status mysqld`
+- verify system status: `sudo systemctl status mysql`
 - if not running, restart server and enable so it runs even after a reboot:
 ```
 
-sudo systemctl restart mysqld
-sudo systemctl enable mysqld
+sudo systemctl restart mysql
+sudo systemctl enable mysql
 
 ```
 ![mysql](https://user-images.githubusercontent.com/92983658/182589074-c57d9e75-2d8e-47a6-abcb-589110c150d0.png)
@@ -222,13 +222,13 @@ exit
 ![tooling_database](https://user-images.githubusercontent.com/92983658/182588092-1bea131f-fffb-421c-9f07-824d588c5bfb.png)
 
 - edit bind address:
-  - `sudo vi /etc/my.cnf`
+  - `sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf` (sudo vi /etc/my.cnf for redhat)
   - Navigate to the line that begins with the `bind-address` and set it to : `0.0.0.0` or `*`
   - if `bind address is not in the `my.cnf` file add the following : `bind-address = 0.0.0.0`
   - save and exit
   
  ![bind_address](https://user-images.githubusercontent.com/92983658/183647003-e3fbded0-555d-4b23-8856-e2ee5608a36e.png)
-  - restart mysql: `sudo systemctl restart mysqld`
+  - restart mysql: `sudo systemctl restart mysql`
  
 - on Database server, open `port 3306`:
   - for `Type` choose `Mysql/Aurora`
@@ -258,6 +258,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/ww
 - Make sure that the changes will persist on Web Server after reboot:
   - `sudo vi /etc/fstab`
   - add the following: `<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0`
+  - run the command: `sudo mount <NFS-Server-Private-IP-Address>:/mnt/apps` or `sudo mount /var/www`
 
 ![poersistent_changes](https://user-images.githubusercontent.com/92983658/182598305-da81954b-79c1-4ea4-bb3d-86173553c233.png)
 
@@ -389,8 +390,9 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   ```
   
   create table users(
-    -> id varchar(255),
+    -> id int,
     -> username varchar(255),
+    -> password varchar(255),
     -> email varchar(255),
     -> user_type varchar(255),
     -> status varchar(255)
@@ -410,7 +412,7 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   
   insert into users
     -> values
-    -> ('1','myuser','5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1' );
+    -> ( 1, 'myuser','5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1' );
   
   
   ```
