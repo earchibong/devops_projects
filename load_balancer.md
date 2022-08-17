@@ -1,7 +1,6 @@
 # Project: Deploy And Configure An Apache Load Balancer
 
-Load Balancer to be used with tooling website solution that makes access to DevOps tools within the corporate infrastructure easily 
-accessible. Users should be served by Web servers through the Load Balancer.
+Horizontal scalability with a Load Balancer to be used on a tooling website solution that creates access to DevOps tools within a corporate infrastructure. Users will be served by Web servers through the Load Balancer.
 
 ## Pre-requisite:
 In this project the following components will be used for the solution:
