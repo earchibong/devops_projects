@@ -84,3 +84,8 @@ sudo systemctl restart apache2
 - Open two ssh/Putty consoles for both Web Servers and run following command: `sudo tail -f /var/log/httpd/access_log`
 - Refresh your browser page `http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php` several times
 - make sure that both servers receive HTTP GET requests from the load balancer
+
+![get_web1](https://user-images.githubusercontent.com/92983658/185140479-977d8c36-9057-4137-acec-ba79ff8a6264.png)
+
+![get_web2](https://user-images.githubusercontent.com/92983658/185140563-7c1a437e-f442-42ce-8e02-49db583011ad.png)
+
