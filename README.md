@@ -10,5 +10,6 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/client_server_msql.md">Mysql Client-Server Architecture</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/wordpress_web_solution.md">Three-Tier Architecture With Wordpress and AWS EC2</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/tooling_website.md">LAMP stack with remote database and NFS server</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/load_balancer.md">Horizontal scaling with load balancer</a></li>
 </ul>
 
