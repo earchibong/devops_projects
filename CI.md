@@ -38,5 +38,45 @@ sudo apt-get install jenkins
 - ### Perform Jenkins Initial Setup
 - From the browser access: `http://<Jenkins-Server-Public-IP-Address-or-Public-DNS-Name>:8080`
   - retrieve defaul admin password from server: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
-  - install suggested plugins`
+  - install `suggested plugins`
+  - create `admin user` once plugin installation is complete
+  - get jenkins server address
 
+![jenkins_server](https://user-images.githubusercontent.com/92983658/185386534-6cc7297b-73f4-444c-abe7-2fce0c8c98f9.png)
+
+![jenkins_ready](https://user-images.githubusercontent.com/92983658/185386683-27e1c008-9b35-449c-8566-b27ce7a20296.png)
+
+
+## Configure Jenkins TO retrienve Srouce Codes From Github Using Webhooks
+
+- enable `webhooks` in github repository settings: `github repository -> settings -> webhooks`
+
+![webhook](https://user-images.githubusercontent.com/92983658/185389015-62743475-8eb3-4bb5-8ec4-fef03b0c365e.png)
+
+- on Jenkins Console, click `New Item` and create a `Freestyle Project` called `tooling-github`
+    - connect to github repository: get the repository URL
+    
+![https](https://user-images.githubusercontent.com/92983658/185390017-96390495-f6f4-47fe-bd73-3494d06cf277.png)
+
+    - in jenkins, under the `general`tab, in te `source code management` section
+    - input `github url`
+    - save configutation
+    - check configuration: click `build now` button
+    - if configuration is correct, then `build` will be successful and will appear under `#1` at the bottom left of the dashboard
+    
+ ![build_now](https://user-images.githubusercontent.com/92983658/185391629-826a2cba-39be-49d9-9e30-f0ae65450f2d.png)
+
+
+    - open `build` and check in `console output` to confirm successful run
+![console_output](https://user-images.githubusercontent.com/92983658/185391965-d8175c4a-ee6a-4728-92c6-805f748999e6.png)
+
+- add the following configurations to the project:
+    - go back to `project` dashboard
+    - click `configure`
+    - under the `build triggers` tab:
+     - Configure triggering the job from GitHub webhook: click `github hook trigger for GITScm polling`
+    - Under the `post-build` tab: 
+     - Configure "Post-build Actions" to archive all the files: 
+ 
+ - in github repository, make changes to any file to test configurations in Jenkins.
+    - create a file `TEST.md` and push the changes to the master branch
