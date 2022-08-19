@@ -80,3 +80,27 @@ sudo apt-get install jenkins
  
  - in github repository, make changes to any file to test configurations in Jenkins.
     - create a file `TEST.md` and push the changes to the master branch
+    - head over to `jenkins` and the changes should have updated automatically.
+ 
+# Configure Jenkins To copy File To NFS Via SSH
+
+- Install "Publish Over SSH" plugin:
+  - From main dashboard, select "Manage Jenkins" and choose "Manage Plugins" menu item.
+  - On "Available" tab search for "Publish Over SSH" plugin and `install without restart`
+
+- Configure the job/project to copy artifacts over to NFS server
+  - On main dashboard select `Manage Jenkins` and choose `Configure System` menu item.
+  - Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to your NFS server:
+   - Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty): 
+    - on terminal, navigte to where EC2-private key is stored on system
+    - access privatre key: `cat "EC2 private key.pem"`
+  
+  - click `add ssh server`:
+   - Name: can be any arbitrary name
+   - Hostname: can be `private IP address of your NFS server`
+   - Username: `ec2-user` (since NFS server is based on EC2 with RHEL 8)
+   - Remote directory – `/mnt/apps` since our Web Servers use it as a mointing point to retrieve files from the NFS server
+   
+  - Test the configuration and make sure the connection returns Success.
+
+
