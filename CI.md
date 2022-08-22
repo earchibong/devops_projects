@@ -47,7 +47,7 @@ sudo apt-get install jenkins
 ![jenkins_ready](https://user-images.githubusercontent.com/92983658/185386683-27e1c008-9b35-449c-8566-b27ce7a20296.png)
 
 
-## Configure Jenkins TO retrienve Srouce Codes From Github Using Webhooks
+### Step Two: Configure Jenkins TO retrieve Srouce Codes From Github Using Webhooks
 
 - enable `webhooks` in github repository settings: `github repository -> settings -> webhooks`
 
@@ -76,13 +76,16 @@ sudo apt-get install jenkins
     - under the `build triggers` tab:
      - Configure triggering the job from GitHub webhook: click `github hook trigger for GITScm polling`
     - Under the `post-build` tab: 
-     - Configure "Post-build Actions" to archive all the files: 
+     - Select "Archive the artifacts" to archive all the files:
+     - use `**` under `files to archive`
+     - save configuration 
  
  - in github repository, make changes to any file to test configurations in Jenkins.
     - create a file `TEST.md` and push the changes to the master branch
     - head over to `jenkins` and the changes should have updated automatically.
  
-# Configure Jenkins To copy File To NFS Via SSH
+ 
+## Configure Jenkins To copy File To NFS Via SSH
 
 - Install "Publish Over SSH" plugin:
   - From main dashboard, select "Manage Jenkins" and choose "Manage Plugins" menu item.
@@ -93,7 +96,7 @@ sudo apt-get install jenkins
   - Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to your NFS server:
    - Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty): 
     - on terminal, navigte to where EC2-private key is stored on system
-    - access privatre key: `cat "EC2 private key.pem"`
+    - access private key: `cat "EC2 private key.pem"`
   
   - click `add ssh server`:
    - Name: can be any arbitrary name
@@ -103,4 +106,8 @@ sudo apt-get install jenkins
    
   - Test the configuration and make sure the connection returns Success.
 
+
+![private_key](https://user-images.githubusercontent.com/92983658/185879366-b84ac88f-f6c9-4f9a-a133-8f11ea9f6416.png)
+
+![ssh_config](https://user-images.githubusercontent.com/92983658/185879391-3e71a4a5-30e5-4efd-8e27-62cc1f34cb6e.png)
 
