@@ -51,7 +51,8 @@ sudo apt-get install jenkins
 
 - enable `webhooks` in github repository settings: `github repository -> settings -> webhooks`
 
-![webhook](https://user-images.githubusercontent.com/92983658/185389015-62743475-8eb3-4bb5-8ec4-fef03b0c365e.png)
+![webhook](https://user-images.githubusercontent.com/92983658/185939093-8560742f-6162-4c5a-8b44-91eba9bcdd2b.png)
+
 
 - on Jenkins Console, click `New Item` and create a `Freestyle Project` called `tooling-github`
     - connect to github repository: get the repository URL
@@ -84,8 +85,13 @@ sudo apt-get install jenkins
      - save configuration 
  
  - in github repository, make changes to any file to test configurations in Jenkins.
-    - create a file `TEST.md` and push the changes to the master branch
+    - update the `README.md` and push the changes to the master branch
     - head over to `jenkins` and the changes should have updated automatically.
+ 
+ ![changes_file](https://user-images.githubusercontent.com/92983658/185940025-d03740d7-56f9-45b3-bfbc-070c5ae7ada4.png)
+
+![console_output_1](https://user-images.githubusercontent.com/92983658/185940041-15fa6605-4c01-4ad9-9a99-a524867601d2.png)
+
  
  
 ## Configure Jenkins To copy File To NFS Via SSH
