@@ -60,6 +60,9 @@ sudo apt-get install jenkins
 
     - in jenkins, under the `general`tab, in te `source code management` section
     - input `github url`
+    - under `credentials`, click `add` and select `username and password option`
+    - input github username and password -> save
+    - under `credentials` selct new added user credentials
     - save configutation
     - check configuration: click `build now` button
     - if configuration is correct, then `build` will be successful and will appear under `#1` at the bottom left of the dashboard
