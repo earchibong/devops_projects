@@ -104,10 +104,14 @@ sudo apt-get install jenkins
   - On main dashboard select `Manage Jenkins` and choose `Configure System` menu item.
   - Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to your NFS server:
    - Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty): 
-    - on terminal, navigte to where EC2-private key is stored on system
-    - access private key: `cat "EC2 private key.pem"`
+   ```
+   Get the private key with the following steps:
+    - on terminal, navigate to where EC2-private key is stored on system
+    - access private key: cat "EC2 private key.pem"
+   
+   ```
   
-  - click `add ssh server`:
+  - on jenkins `SSH plugin configuration section` click `add ssh server`:
    - Name: can be any arbitrary name
    - Hostname: can be `private IP address of your NFS server`
    - Username: `ec2-user` (since NFS server is based on EC2 with RHEL 8)
@@ -120,3 +124,16 @@ sudo apt-get install jenkins
 
 ![ssh_config](https://user-images.githubusercontent.com/92983658/185879391-3e71a4a5-30e5-4efd-8e27-62cc1f34cb6e.png)
 
+
+- head over to the project configuration -> add another "Post-build Action" -> `send build artifacts over SSH`
+    - source files: `**`
+    - remote directory: `/mnt/apps`
+    - exec command: same as source files : `**`
+
+- head over to github and edit the `README.md` file
+- Webhook should trigger a new job in Jenkins and in the "Console Output" of the job you will find something like this:
+```
+SSH: Transferred 25 file(s)
+Finished: SUCCESS
+
+```
