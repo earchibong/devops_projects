@@ -54,20 +54,22 @@ sudo apt-get install jenkins
 ![webhook](https://user-images.githubusercontent.com/92983658/185939093-8560742f-6162-4c5a-8b44-91eba9bcdd2b.png)
 
 
-- on Jenkins Console, click `New Item` and create a `Freestyle Project` called `tooling-github`
+- on Jenkins Console, click "New Item" and create a "Freestyle Project" called "tooling-github"
     - connect to github repository: get the repository URL
     
 ![https](https://user-images.githubusercontent.com/92983658/185390017-96390495-f6f4-47fe-bd73-3494d06cf277.png)
 
-    - in jenkins, under the `general`tab, in te `source code management` section
-    - input `github url`
-    - under `credentials`, click `add` and select `username and password option`
-    - input github username and password -> save
-    - under `credentials` selct new added user credentials
-    - save configutation
-    - check configuration: click `build now` button
-    - if configuration is correct, then `build` will be successful and will appear under `#1` at the bottom left of the dashboard
-    
+
+ - in jenkins, under the `general`tab, in the `source code management` section
+ - input `github url`
+ - under `credentials`, click `add` and select `username and password option`
+ - input github username and password -> save
+ - under `credentials` selct new added user credentials
+ - save configutation
+ - check configuration: click `build now` button
+ - if configuration is correct, then `build` will be successful and will appear under `#1` at the bottom left of the dashboard
+   
+ 
  ![build_now](https://user-images.githubusercontent.com/92983658/185391629-826a2cba-39be-49d9-9e30-f0ae65450f2d.png)
 
 
