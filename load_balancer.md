@@ -2,6 +2,9 @@
 
 Horizontal scalability with a Load Balancer to be used on a tooling website solution that creates access to DevOps tools within a corporate infrastructure. Users will be served by Web servers through the Load Balancer.
 
+![3-tier-web-architecture=lb](https://user-images.githubusercontent.com/92983658/186165094-2bd547d6-8311-4626-8407-33e442efd31a.png)
+
+
 ## Pre-requisite:
 In this project the following components will be used for the solution:
 
