@@ -75,3 +75,7 @@ sudo systemctl status nginx
 
 ![nginx_status](https://user-images.githubusercontent.com/92983658/186171043-b87c0236-533d-42fa-8345-99a4c6197bb6.png)
 
+
+## Part Two: Register A New Domain And Configure Secured Connection Using SSL/TLS Certificates
+- Register a new domain name with any registrar of your choice in any domain zone (e.g. .com, .net, .org, .edu, .info, .xyz or any other)
+- 
