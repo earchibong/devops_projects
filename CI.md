@@ -137,3 +137,11 @@ SSH: Transferred 25 file(s)
 Finished: SUCCESS
 
 ```
+![console](https://user-images.githubusercontent.com/92983658/186126836-df0b96d9-cd5d-4157-89d3-77af7714b433.png)
+
+- make sure that the files in /mnt/apps have been udated:
+ - connect via SSH/Putty to your NFS server
+ - check README.MD file : `cat /mnt/apps/README.md`
+ - If you see the changes you had previously made in your GitHub – the job works as expected.
+ 
+ 
