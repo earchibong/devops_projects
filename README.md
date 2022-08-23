@@ -10,7 +10,7 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/client_server_msql.md">PROJECT FIVE: Mysql Client-Server Architecture</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/wordpress_web_solution.md">PROJECT SIX: Three-Tier Architecture With Wordpress and AWS EC2</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/tooling_website.md">PROJECT SEVEN: LAMP stack with remote database and NFS server</a></li>
-    <li><a href="https://github.com/earchibong/devops_training/blob/main/load_balancer.md">PROJECT EIGHT: Horizontal scaling with load balancer</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/load_balancer.md">PROJECT EIGHT: Horizontal scaling with Apache load balancer</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/CI.md">PROJECT NINE: Website Deployment Automation With Continuous Integration</a></li>
 </ul>
 
