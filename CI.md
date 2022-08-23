@@ -128,7 +128,9 @@ sudo apt-get install jenkins
 - head over to the project configuration -> add another "Post-build Action" -> `send build artifacts over SSH`
     - source files: `**`
     - remote directory: `/mnt/apps`
-    - exec command: same as source files : `**`
+ 
+- ensure that file ownsership on NFS server is `nobody` : `sudo chown -R nobody:nobody /mnt/apps`
+- change file permissions on NFS server: `sudo chmod -R 777 /mnt/apps`
 
 - head over to github and edit the `README.md` file
 - Webhook should trigger a new job in Jenkins and in the "Console Output" of the job you will find something like this:
