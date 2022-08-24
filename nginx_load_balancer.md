@@ -1,4 +1,4 @@
-# Horizontal Scalability With NginX And SSL/TLS Encryption
+# Load Balancer With NginX And SSL/TLS Encryption
 
 This project consists of two parts:
 - Configure Nginx as a Load Balancer
