@@ -90,7 +90,26 @@ sudo systemctl status nginx
 ![elastic_nginx_association](https://user-images.githubusercontent.com/92983658/186363962-0491a62c-84ea-465e-8ed6-d57deadd406d.png)
 
 
-- ### Associate new domain name with this Elastic IP:
+- ### Connect new domain with Elastic IP:
+- **Create hosted zone:**
+ - in AWS Route 53 menu, click on `hosted zones`
+ - select new domain and click on `create hosted zone`
+  - Enter the name of the domain you just purchased, a description, and whether you want the domain to be publicly accessible or private to your internal network.
+  - Click on `CREATE HOSTED ZONE` button to finish the configuration.  
+
+- **configure DNS RECORDS:**
+ - in AWS Route 53 menu, click on `hosted zones`
+ - select new domain and click on domain name
+  - Click the `CREATE RECORD` button to get started:
+  - Enter in your `A record` information and ensure "A" is selected in the Record Type field.
+  - Enter the Elastic IP address into the value.
+  - Click the CREATE RECORDS button once you have finished.
+
+ ![A_record](https://user-images.githubusercontent.com/92983658/186440451-f0ca251e-8c3a-4086-80ec-10ecba84731d.png)
+ 
+ note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
 
 
-note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
+
+- Check that Web Server can be reached from browser using new domain name using HTTP protocol - http://<your-domain-name.com>
+
