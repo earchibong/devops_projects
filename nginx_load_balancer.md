@@ -78,7 +78,8 @@ sudo systemctl status nginx
 
 ## Part Two: Register A New Domain And Configure Secured Connection Using SSL/TLS Certificates
 - Register a new domain name with any registrar of your choice in any domain zone (e.g. .com, .net, .org, .edu, .info, .xyz or any other)
-- Assign an Elastic IP to your Nginx LB server: 
+
+- ### Assign an Elastic IP to your Nginx LB server: 
  - In the top search bar of AWS console, enter "Elastic IP". The search bar will return several results on services and features available.
  - Click the ELASTIC IPs - EC2 feature from the list:
    - Once on the Elastic IP addresses screen, click ALLOCATE ELASTIC IP ADDRESS on the top right of the page.
@@ -89,7 +90,7 @@ sudo systemctl status nginx
 ![elastic_nginx_association](https://user-images.githubusercontent.com/92983658/186363962-0491a62c-84ea-465e-8ed6-d57deadd406d.png)
 
 
-- associate new domain name with this Elastic IP:
+- ### Associate new domain name with this Elastic IP:
 
 
 note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
