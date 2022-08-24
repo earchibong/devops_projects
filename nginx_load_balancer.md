@@ -92,18 +92,18 @@ sudo systemctl status nginx
 
 - ### Connect new domain with Elastic IP:
 - **Create hosted zone:**
- - in AWS Route 53 menu, click on `hosted zones`
- - select new domain and click on `create hosted zone`
-  - Enter the name of the domain you just purchased, a description, and whether you want the domain to be publicly accessible or private to your internal network.
-  - Click on `CREATE HOSTED ZONE` button to finish the configuration.  
+  - in AWS Route 53 menu, click on `hosted zones`
+  - select new domain and click on `create hosted zone`
+   - Enter the name of the domain you just purchased, a description, and whether you want the domain to be publicly accessible or private to your internal network.
+   - Click on `CREATE HOSTED ZONE` button to finish the configuration.  
 
 - **configure DNS RECORDS:**
- - in AWS Route 53 menu, click on `hosted zones`
- - select new domain and click on domain name
-  - Click the `CREATE RECORD` button to get started:
-  - Enter in your `A record` information and ensure "A" is selected in the Record Type field.
-  - Enter the Elastic IP address into the value.
-  - Click the CREATE RECORDS button once you have finished.
+  - in AWS Route 53 menu, click on `hosted zones`
+  - select new domain and click on domain name
+   - Click the `CREATE RECORD` button to get started:
+   - Enter in your `A record` information and ensure "A" is selected in the Record Type field.
+   - Enter the Elastic IP address into the value.
+   - Click the CREATE RECORDS button once you have finished.
 
  ![A_record](https://user-images.githubusercontent.com/92983658/186440451-f0ca251e-8c3a-4086-80ec-10ecba84731d.png)
  
