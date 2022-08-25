@@ -107,6 +107,12 @@ sudo systemctl status nginx
 
  ![A_record](https://user-images.githubusercontent.com/92983658/186440451-f0ca251e-8c3a-4086-80ec-10ecba84731d.png)
  
+  - create another `A record`:
+   - Enter `www` in the `record name`
+   - for `record type` and `value` enter the same information as above .
+ 
+ 
+ 
  note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
 
 
