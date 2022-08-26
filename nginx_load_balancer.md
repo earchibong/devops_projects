@@ -111,11 +111,36 @@ sudo systemctl status nginx
    - Enter `www` in the `record name`
    - for `record type` and `value` enter the same information as above .
  
- 
- 
  note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
 
+- test access to webserver using HTTP protocol - http://<your-domain-name.com>
 
 
-- Check that Web Server can be reached from browser using new domain name using HTTP protocol - http://<your-domain-name.com>
 
+- **Install certbot and request for an SSL/TLS certificate**
+ - Make sure snapd service is active and running : `sudo systemctl status snapd` 
+ - install cerbot: `sudo snap install --classic certbot`
+ - Request your certificate:
+ ```
+ 
+ sudo ln -s /snap/bin/certbot /usr/bin/certbot
+ sudo certbot --nginx
+
+```
+
+![cert](https://user-images.githubusercontent.com/92983658/186872705-c3dec8a4-babd-4315-a329-b32325c4d33c.png)
+
+- Test secured access to your Web Solution by trying to reach `https://<your-domain-name.com>`
+
+ image!!
+ 
+ 
+- **Set up periodical renewal of your SSL/TLS certificate:**
+ - You can test renewal command in dry-run mode: `sudo certbot renew --dry-run`
+ 
+![certbot_renew_dryrun](https://user-images.githubusercontent.com/92983658/186874355-d8db9e29-c59d-43f5-af7e-09799e4e4d95.png)
+
+ - schedule job that to runs renew command periodically: 
+  - edit the crontab file: `crontab -e`
+  - add the following line: `* */12 * * *   root /usr/bin/certbot renew > /dev/null 2>&1`
+  - 
