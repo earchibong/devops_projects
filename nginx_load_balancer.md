@@ -51,7 +51,7 @@ sudo vi /etc/hosts
 
 server {
     listen 80;
-    server_name www.domain.com;
+    server_name www.your_new_domain.com;
     location / {
       proxy_pass http://myproject;
     }
@@ -62,7 +62,7 @@ server {
 
 ```
 
-![nginx_config_update](https://user-images.githubusercontent.com/92983658/186170657-9f3eb4b0-a94b-4d2d-a13b-19f307df155d.png)
+![config_nginx](https://user-images.githubusercontent.com/92983658/186703987-07dd1ad4-86b0-4481-8cdc-54be16afb2b6.png)
 
 
 - Restart Nginx and make sure the service is up and running
