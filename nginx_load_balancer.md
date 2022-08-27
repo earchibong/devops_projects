@@ -8,9 +8,50 @@ The target architecture will look like this:
 
 ![nginx_lb_architecture](https://user-images.githubusercontent.com/92983658/186160254-c8319f4d-736d-431b-a5ab-c97982a4d6c8.png)
 
-## Part One: Configure NginX as a Load Balancer
+## Part One: Register And Configure New DOmain WIth Elastic IP
+- Register a new domain name with any registrar of your choice in any domain zone (e.g. .com, .net, .org, .edu, .info, .xyz or any other)
 - Create an EC2 VM based on Ubuntu Server 20.04 LTS and name it `Nginx LB` 
-- open TCP port 80 for HTTP connections, also open TCP port 443 (this port is used for secured HTTPS connections)
+ - open TCP port 80 for HTTP connections, also open TCP port 443 (this port is used for secured HTTPS connections)
+
+- ### Assign an Elastic IP to your Nginx LB server: 
+ - In the top search bar of AWS console, enter "Elastic IP". The search bar will return several results on services and features available.
+ - Click the ELASTIC IPs - EC2 feature from the list:
+   - Once on the Elastic IP addresses screen, click ALLOCATE ELASTIC IP ADDRESS on the top right of the page.
+   - Enter details on allocation page and allocate elastic IP
+ - Under the Actions menu of `elastic ip addresses` click `associate elastic ip address`:
+   - on the asocialte elastic ip address screen, assign the elastic ip to the Nginx LB server
+
+![elastic_nginx_association](https://user-images.githubusercontent.com/92983658/186363962-0491a62c-84ea-465e-8ed6-d57deadd406d.png)
+
+
+- ### Connect new domain with Elastic IP:
+- **Create hosted zone:**
+  - in AWS Route 53 menu, click on `hosted zones`
+  - select new domain and click on `create hosted zone`
+   - Enter the name of the domain you just purchased, a description, and whether you want the domain to be publicly accessible or private to your internal network.
+   - Click on `CREATE HOSTED ZONE` button to finish the configuration.  
+
+- **configure DNS RECORDS:**
+  - in AWS Route 53 menu, click on `hosted zones`
+  - select new domain and click on domain name
+   - Click the `CREATE RECORD` button to get started:
+   - Enter in your `A record` information and ensure "A" is selected in the Record Type field.
+   - Enter the Elastic IP address into the value.
+   - Click the CREATE RECORDS button once you have finished.
+
+ ![A_record](https://user-images.githubusercontent.com/92983658/186440451-f0ca251e-8c3a-4086-80ec-10ecba84731d.png)
+ 
+  - create another `A record`:
+   - Enter `www` in the `record name`
+   - for `record type` and `value` enter the same information as above .
+ 
+ note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
+
+
+
+## Part Two: Configure NginX Server as a Load Balancer
+
+- SSH into EC2 instance
 - Update the instance and Install Nginx: 
 
 ```
@@ -69,51 +110,17 @@ server {
 ```
 
 sudo systemctl restart nginx
-sudo systemctl status nginx
+  
 
 ```
 
 ![nginx_status](https://user-images.githubusercontent.com/92983658/186171043-b87c0236-533d-42fa-8345-99a4c6197bb6.png)
 
 
-## Part Two: Register A New Domain And Configure Secured Connection Using SSL/TLS Certificates
-- Register a new domain name with any registrar of your choice in any domain zone (e.g. .com, .net, .org, .edu, .info, .xyz or any other)
-
-- ### Assign an Elastic IP to your Nginx LB server: 
- - In the top search bar of AWS console, enter "Elastic IP". The search bar will return several results on services and features available.
- - Click the ELASTIC IPs - EC2 feature from the list:
-   - Once on the Elastic IP addresses screen, click ALLOCATE ELASTIC IP ADDRESS on the top right of the page.
-   - Enter details on allocation page and allocate elastic IP
- - Under the Actions menu of `elastic ip addresses` click `associate elastic ip address`:
-   - on the asocialte elastic ip address screen, assign the elastic ip to the Nginx LB server
-
-![elastic_nginx_association](https://user-images.githubusercontent.com/92983658/186363962-0491a62c-84ea-465e-8ed6-d57deadd406d.png)
+- Test access to webserver using `Http` protocol: `http://you-new-domain-name.com`
 
 
-- ### Connect new domain with Elastic IP:
-- **Create hosted zone:**
-  - in AWS Route 53 menu, click on `hosted zones`
-  - select new domain and click on `create hosted zone`
-   - Enter the name of the domain you just purchased, a description, and whether you want the domain to be publicly accessible or private to your internal network.
-   - Click on `CREATE HOSTED ZONE` button to finish the configuration.  
-
-- **configure DNS RECORDS:**
-  - in AWS Route 53 menu, click on `hosted zones`
-  - select new domain and click on domain name
-   - Click the `CREATE RECORD` button to get started:
-   - Enter in your `A record` information and ensure "A" is selected in the Record Type field.
-   - Enter the Elastic IP address into the value.
-   - Click the CREATE RECORDS button once you have finished.
-
- ![A_record](https://user-images.githubusercontent.com/92983658/186440451-f0ca251e-8c3a-4086-80ec-10ecba84731d.png)
- 
-  - create another `A record`:
-   - Enter `www` in the `record name`
-   - for `record type` and `value` enter the same information as above .
- 
- note: more on elastic ips <a href="https://aws.amazon.com/getting-started/hands-on/get-a-domain/">here</a> and <a href="https://medium.com/progress-on-ios-development/connecting-an-ec2-instance-with-a-godaddy-domain-e74ff190c233">here</a>
-
-- test access to webserver using HTTP protocol - http://<your-domain-name.com>
+![http_test](https://user-images.githubusercontent.com/92983658/187036098-fc205cde-405b-4356-ba22-475d03af1895.png)
 
 
 
@@ -130,9 +137,11 @@ sudo systemctl status nginx
 
 ![cert](https://user-images.githubusercontent.com/92983658/186872705-c3dec8a4-babd-4315-a329-b32325c4d33c.png)
 
+
 - Test secured access to your Web Solution by trying to reach `https://<your-domain-name.com>`
 
- image!!
+ ![https_test](https://user-images.githubusercontent.com/92983658/187036461-c87a0e2b-e8e9-47fb-aca6-cb17bc08fb63.png)
+
  
  
 - **Set up periodical renewal of your SSL/TLS certificate:**
@@ -143,4 +152,7 @@ sudo systemctl status nginx
  - schedule job that to runs renew command periodically: 
   - edit the crontab file: `crontab -e`
   - add the following line: `* */12 * * *   root /usr/bin/certbot renew > /dev/null 2>&1`
-  - 
+ 
+ ![cron_job](https://user-images.githubusercontent.com/92983658/187036583-3f55e346-1ad5-4537-91cd-6b70f82b55b8.png)
+
+
