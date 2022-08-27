@@ -12,5 +12,6 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/tooling_website.md">PROJECT SEVEN: LAMP stack with remote database and NFS server</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/load_balancer.md">PROJECT EIGHT: Horizontal scaling with Apache load balancer</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/CI.md">PROJECT NINE: Website Deployment Automation With Continuous Integration</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">PROJECT TEN: NginX LoadBalancer Solution with Https Protocol</a></li>
 </ul>
 
