@@ -234,9 +234,33 @@ git push origin <branch name>
 
 ![compreand pull](https://user-images.githubusercontent.com/92983658/187450096-05082257-7476-4121-a286-103ee5ae0096.png)
 
+<br>
 ![mergepullrequest](https://user-images.githubusercontent.com/92983658/187450122-cdc7ef2d-df20-42b0-858d-372d43df9fe6.png)
 
+<br>
 ![successful_merge](https://user-images.githubusercontent.com/92983658/187450503-3004fdbf-30d0-4b09-9727-01a440045f97.png)
+
+<br>
+
+![updated_repo](https://user-images.githubusercontent.com/92983658/187452549-be8eef4e-3674-4cd9-98ba-3032bf8fb089.png)
+
+<br>
+
+- Head back on terminal, checkout from the feature branch into the master, and pull down the latest changes:
+```
+git checkout main
+git pull
+
+```
+<br>
+- Once code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to `/var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/` directory on `Jenkins-Ansible server.`
+
+![jenkins_confirm](https://user-images.githubusercontent.com/92983658/187456019-fa40193b-f2a2-4683-b888-14ba9b60d03e.png)
+
+![var_confirm](https://user-images.githubusercontent.com/92983658/187456104-326931f2-1ea3-4d36-b7e0-0e7086796bb6.png)
+
+
+
 
 
 
