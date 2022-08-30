@@ -173,6 +173,65 @@ touch prod.yml
 ![dev_yml](https://user-images.githubusercontent.com/92983658/187440923-c9b1d29a-4b2f-4e4d-813b-7477669cc509.png)
 
 
+### Create a common playbook
+
+In common.yml playbook configuration for repeatable, re-usable, and multi-machine tasks that is common to systems within the infrastructure will be written
+
+- Update your playbooks/common.yml file with following code:
+```
+
+---
+- name: update web, nfs and db servers
+  hosts: webservers, nfs, db
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  tasks:
+    - name: ensure wireshark is at the latest version
+      yum:
+        name: wireshark
+        state: latest
+
+- name: update LB server
+  hosts: lb
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+    - name: Update apt repo
+      apt: 
+        update_cache: yes
+
+    - name: ensure wireshark is at the latest version
+      apt:
+        name: wireshark
+        state: latest
+        
+ ```
+ 
+ ![common_yml](https://user-images.githubusercontent.com/92983658/187443293-6b5840c0-cea1-4c81-b34d-c5b16808d878.png)
+
+
+### Commit Code To Github
+
+- use git commands to add, commit and push your branch to GitHub.
+```
+
+git status
+
+git add <selected files>
+
+git commit -m "commit message"
+
+```
+
+![git_status_commit](https://user-images.githubusercontent.com/92983658/187445141-75ccddad-f527-41cd-a8f2-682d1197bcbf.png)
+
+
+- Create a Pull request (PR)
+- 
+
+
 
 
 
