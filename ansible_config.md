@@ -113,5 +113,68 @@ You can upload files or data from your local machine to the EC2 using Cloud9 jus
 
 *Click on “Go to Your Dashboard”. Press the desired environment and from the top right corner then choose Edit. Then Scroll down to the Host and just change the IPv4 address.*
 
+find out more <a href="https://towardsdatascience.com/creating-aws-ec2-and-connecting-it-with-aws-cloud9-ide-and-aws-s3-a6313aa82ec">here</a>
   
-- Configure `cloud9` to connect to the newly created GitHub repository.
+### Configure `cloud9` to connect to the newly created GitHub repository.
+
+- Right-click on root folder and create a new folder under it called `repository`
+- On your terminal windows, navigate to this repository folder: `cd repository`
+- Check if git is installed: `git --version`
+- Clone remote GitHub repository in your environment: `git clone <ansible-config-mgt repo link>`
+
+## BEGIN ANSIBLE DEVELOPMENT
+
+- In your ansible-config-mgt GitHub repository, create a new branch that will be used for development of a new feature.
+- Checkout the newly created feature branch to your local machine and start building your code and directory structure
+```
+git checkout -b PRJ-11
+
+```
+- Create a directory and name it `playbooks` – it will be used to store all your playbook files: `mkdir playbooks`
+- Create a directory and name it `inventory` – it will be used to keep your hosts organised.: `mkdir inventory`
+- Within the playbooks folder, create your first playbook, and name it common.yml
+```
+cd playbooks
+touch common.yml
+
+```
+- Within the inventory folder, create an inventory file (.yml) for each environment (Development, Staging Testing and Production) dev, staging, uat, and prod respectively.
+```
+
+cd ..
+cd inventory
+touch dev.yml
+touch staging.yml
+touch uat.yml
+touch prod.yml
+
+```
+
+- Update inventory/dev.yml file with this snippet of code:
+ *notice, that Load Balancer and database user is ubuntu and user for RHEL-based servers is ec2-user.*
+```
+
+[nfs]
+<NFS-Server-Private-IP-Address> ansible_ssh_user='ec2-user'
+
+[webservers]
+<Web-Server1-Private-IP-Address> ansible_ssh_user='ec2-user'
+<Web-Server2-Private-IP-Address> ansible_ssh_user='ec2-user'
+
+[db]
+<Database-Private-IP-Address> ansible_ssh_user='ubuntu' 
+
+[lb]
+<Load-Balancer-Private-IP-Address> ansible_ssh_user='ubuntu'
+
+```
+
+
+![dev_yml](https://user-images.githubusercontent.com/92983658/187440923-c9b1d29a-4b2f-4e4d-813b-7477669cc509.png)
+
+
+
+
+
+
+
