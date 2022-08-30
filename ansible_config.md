@@ -223,13 +223,21 @@ git add <selected files>
 
 git commit -m "commit message"
 
+git push origin <branch name>
+
 ```
 
 ![git_status_commit](https://user-images.githubusercontent.com/92983658/187445141-75ccddad-f527-41cd-a8f2-682d1197bcbf.png)
 
 
-- Create a Pull request (PR)
-- 
+- Create a Pull request (PR) for branch
+
+![compreand pull](https://user-images.githubusercontent.com/92983658/187450096-05082257-7476-4121-a286-103ee5ae0096.png)
+
+![mergepullrequest](https://user-images.githubusercontent.com/92983658/187450122-cdc7ef2d-df20-42b0-858d-372d43df9fe6.png)
+
+![successful_merge](https://user-images.githubusercontent.com/92983658/187450503-3004fdbf-30d0-4b09-9727-01a440045f97.png)
+
 
 
 
