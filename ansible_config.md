@@ -158,8 +158,11 @@ ssh -i "privatekey.pem" jenkins-ansible.IP
 
 ```
 
-- Clone down your ansible-config-mgt repo to your Jenkins-Ansible instance: `
+- Clone down your `ansible-config-mgt` repository to your Jenkins-Ansible instance: `git clone ansible-config-mgt url`
 
+<br>
+
+![git_clone_ansible_config_mgt](https://user-images.githubusercontent.com/92983658/187920256-cbabedc9-4da8-44e3-9ae1-3c2adc5e531b.png)
 
 
 <br>
