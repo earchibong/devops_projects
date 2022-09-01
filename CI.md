@@ -47,7 +47,7 @@ sudo apt-get install jenkins
 ![jenkins_ready](https://user-images.githubusercontent.com/92983658/185386683-27e1c008-9b35-449c-8566-b27ce7a20296.png)
 
 
-### Step Two: Configure Jenkins TO retrieve Srouce Codes From Github Using Webhooks
+### Step Two: Configure Jenkins To Retrieve Source Codes From Github Using Webhooks
 
 - enable `webhooks` in github repository settings: `github repository -> settings -> webhooks`
 
