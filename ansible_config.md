@@ -4,6 +4,14 @@
 - Install and configure Ansible client to act as a Jump Server/Bastion Host
 - Create a simple Ansible playbook to automate servers configuration
 
+architecture:
+
+<br>
+
+![ansible_architecture](https://user-images.githubusercontent.com/92983658/187944481-edaf388e-6c87-4c8a-ba6f-d9f77f2fc3a2.png)
+
+<br>
+
 ## Install And Configure Ansible On EC2
 - Update Name tag on your `Jenkins EC2` Instance (from project 9) to `Jenkins-Ansible`.
 - In GitHub create a new repository and name it `ansible-config-mgt`.
