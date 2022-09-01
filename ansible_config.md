@@ -215,7 +215,7 @@ touch prod.yml
 ```
 
 eval `ssh-agent -s`
-ssh-add <path-to-private-key>
+ssh-add ./<path-to-private-key>
 
 ```
 
