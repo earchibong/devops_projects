@@ -203,17 +203,18 @@ git config --global user.email "somebody@somewhere.net"
 
 - ssh into jenkins-ansible` from cloud9 environment
 ```
+# upload privatekey to local environment in cloud9 first.
 
 chmod 400 privatekey.pem
 ssh -i "privatekey.pem" jenkins-ansible.IP
 
 ```
 
+- Clone down your ansible-config-mgt repo to your Jenkins-Ansible instance: `
 
-- Right-click on root folder and create a new folder under it called `repository`
-- On your terminal windows, navigate to this repository folder: `cd repository`
-- Check if git is installed: `git --version`
-- Clone remote GitHub repository in your environment: `git clone <ansible-config-mgt repo link>`
+
+
+<br>
 
 ## BEGIN ANSIBLE DEVELOPMENT
 
