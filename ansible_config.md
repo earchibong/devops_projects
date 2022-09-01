@@ -34,10 +34,12 @@ sudo apt install ansible
 <br>
 
   - Configure Webhook in GitHub and set webhook to trigger ansible build: `ansible-config-mgt` -> settings -> webhooks 
-  - 
+  
   <br>
   
- ![git_webhook](https://user-images.githubusercontent.com/92983658/187188260-9e17d485-f287-47cb-9b58-a8db2b4da203.png)
+ 
+ ![ansible_jenkins_webhook](https://user-images.githubusercontent.com/92983658/187915459-1ea88589-b194-49dc-b5a2-e002185f4e55.png)
+
 
 <br>
 
