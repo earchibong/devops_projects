@@ -2,8 +2,11 @@
 
 Task: Configure a job to automatically deploy source code changes from Git to NFS server.
 
+<br>
+
 ![jenins_architecture](https://user-images.githubusercontent.com/92983658/185145169-c767dad0-02e8-4033-b09f-d573b279049b.png)
 
+<br>
 
 ## Install And Configure Jenkins Server
 ### Step One: install Jenkins Server
@@ -27,13 +30,19 @@ sudo apt-get install jenkins
 ```
 - confirm Jenkins status: `sudo systemctl status jenkins`
 
+<br>
+
 ![jenkins](https://user-images.githubusercontent.com/92983658/185379910-3c24b4e5-2ca0-4e31-91f3-f49f4ba37887.png)
 
+<br>
 
 - open `TCP port 8080` by creating an inbound rule in EC2 security group
 
+<br>
+
 ![security_jenkins](https://user-images.githubusercontent.com/92983658/185380649-d47dc6c4-cdd6-48ff-9236-1288a0e26385.png)
 
+<br>
 
 - ### Perform Jenkins Initial Setup
 - From the browser access: `http://<Jenkins-Server-Public-IP-Address-or-Public-DNS-Name>:8080`
@@ -42,23 +51,32 @@ sudo apt-get install jenkins
   - create `admin user` once plugin installation is complete
   - get jenkins server address
 
+<br>
+
 ![jenkins_server](https://user-images.githubusercontent.com/92983658/185386534-6cc7297b-73f4-444c-abe7-2fce0c8c98f9.png)
+
+<br>
 
 ![jenkins_ready](https://user-images.githubusercontent.com/92983658/185386683-27e1c008-9b35-449c-8566-b27ce7a20296.png)
 
+<br>
 
 ### Step Two: Configure Jenkins To Retrieve Source Codes From Github Using Webhooks
 
 - enable `webhooks` in github repository settings: `github repository -> settings -> webhooks`
 
+<br>
+
 ![webhook](https://user-images.githubusercontent.com/92983658/185939093-8560742f-6162-4c5a-8b44-91eba9bcdd2b.png)
 
+<br>
 
 - on Jenkins Console, click "New Item" and create a "Freestyle Project" called "tooling-github"
     - connect to github repository: get the repository URL
     
 ![https](https://user-images.githubusercontent.com/92983658/185390017-96390495-f6f4-47fe-bd73-3494d06cf277.png)
 
+<br>
 
  - in jenkins, under the `general`tab, in the `source code management` section
  - input `github url`
@@ -69,12 +87,19 @@ sudo apt-get install jenkins
  - check configuration: click `build now` button
  - if configuration is correct, then `build` will be successful and will appear under `#1` at the bottom left of the dashboard
    
+ <br>
  
  ![build_now](https://user-images.githubusercontent.com/92983658/185391629-826a2cba-39be-49d9-9e30-f0ae65450f2d.png)
 
+<br>
 
     - open `build` and check in `console output` to confirm successful run
+ 
+ <br>
+ 
 ![console_output](https://user-images.githubusercontent.com/92983658/185391965-d8175c4a-ee6a-4728-92c6-805f748999e6.png)
+
+<br>
 
 - add the following configurations to the project:
     - go back to `project` dashboard
@@ -89,11 +114,16 @@ sudo apt-get install jenkins
  - in github repository, make changes to any file to test configurations in Jenkins.
     - update the `README.md` and push the changes to the master branch
     - head over to `jenkins` and the changes should have updated automatically.
- 
+
+<br>
+
  ![changes_file](https://user-images.githubusercontent.com/92983658/185940025-d03740d7-56f9-45b3-bfbc-070c5ae7ada4.png)
+
+<br>
 
 ![console_output_1](https://user-images.githubusercontent.com/92983658/185940041-15fa6605-4c01-4ad9-9a99-a524867601d2.png)
 
+ <br>
  
  
 ## Configure Jenkins To copy File To NFS Via SSH
@@ -121,10 +151,15 @@ sudo apt-get install jenkins
    
   - Test the configuration and make sure the connection returns Success.
 
+<br>
 
 ![private_key](https://user-images.githubusercontent.com/92983658/185879366-b84ac88f-f6c9-4f9a-a133-8f11ea9f6416.png)
 
+<br>
+
 ![ssh_config](https://user-images.githubusercontent.com/92983658/185879391-3e71a4a5-30e5-4efd-8e27-62cc1f34cb6e.png)
+
+<br>
 
 
 - head over to the project configuration -> add another "Post-build Action" -> `send build artifacts over SSH`
@@ -141,7 +176,12 @@ SSH: Transferred 25 file(s)
 Finished: SUCCESS
 
 ```
+
+<br>
+
 ![console](https://user-images.githubusercontent.com/92983658/186126836-df0b96d9-cd5d-4157-89d3-77af7714b433.png)
+
+<br>
 
 - make sure that the files in /mnt/apps have been udated:
  - connect via SSH/Putty to your NFS server
