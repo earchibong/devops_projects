@@ -179,6 +179,7 @@ ssh -i "privatekey.pem" jenkins-ansible.IP
 
 - Checkout the newly created feature branch to your local machine and start building your code and directory structure
 ```
+cd ansible-congif-mgt
 git checkout -b PRJ-11
 
 ```
@@ -190,6 +191,9 @@ cd playbooks
 touch common.yml
 
 ```
+
+<br>
+
 - Within the inventory folder, create an inventory file (.yml) for each environment (Development, Staging Testing and Production) dev, staging, uat, and prod respectively.
 ```
 
@@ -201,6 +205,24 @@ touch uat.yml
 touch prod.yml
 
 ```
+<br>
+
+### Set up Ansible Inventory
+
+- exit `Jenkins-Ansible` server
+- **Set up an `SSH agent` and connect to `Jenkins-Ansible` server:**
+  - on local machine: 
+```
+
+eval `ssh-agent -s`
+ssh-add <path-to-private-key>
+
+```
+
+- Confirm the key has been added : `ssh-add -l`
+- ssh into `Jenkins-Ansible` server using ssh-agent: `ssh -A -i "private ec2 key" ubuntu@public-ip`
+
+<br>
 
 - Update inventory/dev.yml file with this snippet of code:
  *notice, that Load Balancer and database user is ubuntu and user for RHEL-based servers is ec2-user.*
@@ -225,7 +247,7 @@ touch prod.yml
 ![dev_yml](https://user-images.githubusercontent.com/92983658/187440923-c9b1d29a-4b2f-4e4d-813b-7477669cc509.png)
 
 
-### Create a common playbook
+## Create a common playbook
 
 In common.yml playbook configuration for repeatable, re-usable, and multi-machine tasks that is common to systems within the infrastructure will be written
 
@@ -298,20 +320,35 @@ git push origin <branch name>
 
 <br>
 
-- Head back on terminal, checkout from the feature branch into the master, and pull down the latest changes:
+- Head back to terminal, checkout from the feature branch into the master, and pull down the latest changes:
 ```
 git checkout main
 git pull
 
 ```
 <br>
+
 - Once code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to `/var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/` directory on `Jenkins-Ansible server.`
+
+<br>
 
 ![jenkins_confirm](https://user-images.githubusercontent.com/92983658/187456019-fa40193b-f2a2-4683-b888-14ba9b60d03e.png)
 
+<br>
+
 ![var_confirm](https://user-images.githubusercontent.com/92983658/187456104-326931f2-1ea3-4d36-b7e0-0e7086796bb6.png)
 
+<br>
 
+## Run First Ansible Test
+
+- verify if `common` playbook works:
+```
+
+cd ansible-config-mgt
+ansible-playbook -i inventory/dev.yml playbooks/common.yml
+
+```
 
 
 
