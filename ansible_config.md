@@ -349,6 +349,19 @@ cd ansible-config-mgt
 ansible-playbook -i inventory/dev.yml playbooks/common.yml
 
 ```
+<br>
+
+![ansible](https://user-images.githubusercontent.com/92983658/187943833-1ea86d39-f1ea-4388-8eea-59923bc12286.png)
+
+<br>
+
+- go to each of the servers and check if wireshark has been installed:  `which wireshark` or `wireshark --version`
+
+<br>
+
+![wireshark_nfs](https://user-images.githubusercontent.com/92983658/187943890-e7066e7c-2b81-4057-b222-efaeea6fc0f3.png)
+
+<br>
 
 
 
