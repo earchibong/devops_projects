@@ -170,6 +170,13 @@ ssh -i "privatekey.pem" jenkins-ansible.IP
 ## BEGIN ANSIBLE DEVELOPMENT
 
 - In your ansible-config-mgt GitHub repository, create a new branch that will be used for development of a new feature.
+
+<br>
+
+![prj_11](https://user-images.githubusercontent.com/92983658/187923223-eaa2e0ce-8f05-44e1-afbc-be729205fb3e.png)
+
+<br>
+
 - Checkout the newly created feature branch to your local machine and start building your code and directory structure
 ```
 git checkout -b PRJ-11
