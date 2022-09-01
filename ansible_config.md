@@ -250,10 +250,11 @@ ssh-add ./<path-to-private-key>
 <Load-Balancer-Private-IP-Address> ansible_ssh_user='ubuntu'
 
 ```
-
+<br>
 
 ![dev_yml](https://user-images.githubusercontent.com/92983658/187440923-c9b1d29a-4b2f-4e4d-813b-7477669cc509.png)
 
+<br>
 
 ## Create a common playbook
 
@@ -291,8 +292,12 @@ In common.yml playbook configuration for repeatable, re-usable, and multi-machin
         
  ```
  
+ <br>
+ 
  ![common_yml](https://user-images.githubusercontent.com/92983658/187443293-6b5840c0-cea1-4c81-b34d-c5b16808d878.png)
 
+
+<br>
 
 ### Commit Code To Github
 
@@ -309,24 +314,28 @@ git push origin <branch name>
 
 ```
 
+<br>
+
 ![git_status_commit](https://user-images.githubusercontent.com/92983658/187445141-75ccddad-f527-41cd-a8f2-682d1197bcbf.png)
 
+<br>
 
 - Create a Pull request (PR) for branch
+
+<br>
 
 ![compreand pull](https://user-images.githubusercontent.com/92983658/187450096-05082257-7476-4121-a286-103ee5ae0096.png)
 
 <br>
+
 ![mergepullrequest](https://user-images.githubusercontent.com/92983658/187450122-cdc7ef2d-df20-42b0-858d-372d43df9fe6.png)
 
 <br>
+
 ![successful_merge](https://user-images.githubusercontent.com/92983658/187450503-3004fdbf-30d0-4b09-9727-01a440045f97.png)
 
 <br>
 
-![updated_repo](https://user-images.githubusercontent.com/92983658/187452549-be8eef4e-3674-4cd9-98ba-3032bf8fb089.png)
-
-<br>
 
 - Head back to terminal, checkout from the feature branch into the master, and pull down the latest changes:
 ```
