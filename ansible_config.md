@@ -162,7 +162,7 @@ ssh -i "privatekey.pem" jenkins-ansible.IP
 
 <br>
 
-![git_clone_ansible_config_mgt](https://user-images.githubusercontent.com/92983658/187920256-cbabedc9-4da8-44e3-9ae1-3c2adc5e531b.png)
+![ansible_config_clone](https://user-images.githubusercontent.com/92983658/187921544-4214f053-3184-4936-ab37-d235c07a0c99.png)
 
 
 <br>
