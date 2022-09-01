@@ -13,5 +13,5 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/load_balancer.md">PROJECT EIGHT: Horizontal scaling with Apache load balancer</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/CI.md">PROJECT NINE: Website Deployment Automation With Continuous Integration</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">PROJECT TEN: NginX Load Balancer Solution with Https Protocol</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/ansible_config.md">PROJECT ELEVEN: Ansible Configuration Management</a></li>
 </ul>
-
