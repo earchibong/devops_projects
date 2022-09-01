@@ -98,7 +98,19 @@ sudo apt install ansible
 - Create environment in `AWS could9`: 
   - From AWS Management Console, inside the Developer Tools choose `Cloud9`.
   - Press Create environment. Add any name for that environment then press `next`. 
-  - In the configure settings, change the Environment type to Connect and run in remote server (SSH). In the user, write `ubuntu` (name you used to connect to the instance in terminal). Add the instance’s public DNS IPv4. Then press Copy Key to Clipboard. 
+  - In the configure settings, select `Create a new EC2 instance for environment (direct access)` and leave other options as selected.
+  - click `next step` and review settings
+  - click `create environment`
+  - `Cloud9` is now ready to be used as a local machine
+  
+  <br>
+  
+  ![cloud9](https://user-images.githubusercontent.com/92983658/187868164-c2985cd9-2dfc-499e-83d7-cfb0012677ef.png)
+
+<br>
+
+
+  change the Environment type to Connect and run in remote server (SSH). In the user, write `ubuntu` (name you used to connect to the instance in terminal). Add the instance’s public DNS IPv4. Then press Copy Key to Clipboard. 
   - ssh into `Jenkins-Ansible`
   - in the terminal that is connected to `jenkins-ansible`, write the following commands to save the key in the machine:
 ```
@@ -153,6 +165,50 @@ find out more <a href="https://towardsdatascience.com/creating-aws-ec2-and-conne
 
   
 ### Configure `cloud9` to connect to the newly created GitHub repository.
+
+- in bash shell check if git is installed: `which git`
+- Create user config for git:
+```
+
+git config --global user.name "First Last"
+git config --global user.email "somebody@somewhere.net"
+
+```
+
+- Create `SSH key`: `ssh-keygen -t ed25519 -C "darey"`
+  -  specify the path for the key pair: copy and paste the recommended path by AWS
+  -  select a passphrase
+  -  press `enter` and create key pair
+
+<br>
+
+![keypair](https://user-images.githubusercontent.com/92983658/187872205-440ba6e5-00da-4979-97b9-49606999217a.png)
+
+<br>
+
+- in github at the top right corner of the page, click on the profile picture and select `settings`
+- select `SSH and GPG keys`
+  - under `SSH keys` click `new SSH key`
+  - select any title
+  - select authentication under "key type"
+  - paste in public key
+   - in cloud9 copy created public key: `cat ~/.ssh/id_ed25519.pub`
+   - paste in github
+
+<br>
+
+![add_ssh_key](https://user-images.githubusercontent.com/92983658/187874384-18d2bdb3-918f-4202-baad-662373040dde.png)
+
+<br>
+
+- ssh into jenkins-ansible` from cloud9 environment
+```
+
+chmod 400 privatekey.pem
+ssh -i "privatekey.pem" jenkins-ansible.IP
+
+```
+
 
 - Right-click on root folder and create a new folder under it called `repository`
 - On your terminal windows, navigate to this repository folder: `cd repository`
