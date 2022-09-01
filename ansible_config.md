@@ -114,6 +114,10 @@ You can upload files or data from your local machine to the EC2 using Cloud9 jus
 *Click on “Go to Your Dashboard”. Press the desired environment and from the top right corner then choose Edit. Then Scroll down to the Host and just change the IPv4 address.*
 
 find out more <a href="https://towardsdatascience.com/creating-aws-ec2-and-connecting-it-with-aws-cloud9-ide-and-aws-s3-a6313aa82ec">here</a>
+
+- create`SSH key` for ansible: `ssh-keygen -t ed25519 -C "ansible"`
+
+
   
 ### Configure `cloud9` to connect to the newly created GitHub repository.
 
