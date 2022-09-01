@@ -23,7 +23,7 @@ sudo apt install ansible
 <br>
 
 - ### Configure Jenkins build job to save repository content every time it is changed
-  - Create a new Freestyle project ansible in Jenkins and point it to your ‘ansible-config-mgt’ repository.
+  - Create a new Freestyle project `ansible` in Jenkins and point it to your ‘ansible-config-mgt’ repository.
 
 ![git_](https://user-images.githubusercontent.com/92983658/187188044-04d76543-c349-494f-9985-1c0091037423.png)
 
