@@ -111,60 +111,6 @@ sudo apt install ansible
 
 <br>
 
-
-  change the Environment type to Connect and run in remote server (SSH). In the user, write `ubuntu` (name you used to connect to the instance in terminal). Add the instance’s public DNS IPv4. Then press Copy Key to Clipboard. 
-  - ssh into `Jenkins-Ansible`
-  - in the terminal that is connected to `jenkins-ansible`, write the following commands to save the key in the machine:
-```
-  
-  echo <Paste the Copied Key> >> ~/.ssh/authorized_keys
-sudo apt-get install -y nodejs
-
-```
-
-  - Press Next Step in Configure Settings then Create Environment. 
- 
- <br>
-  
- ![ssh_environment](https://user-images.githubusercontent.com/92983658/187398193-c8e49b4b-c1d1-4edc-a9f7-8777bc2b1a4d.png)
-
-<br>
-
-  - Right click on “C9 install” and copy link address.
-  - Press Next and leave everything ticked.
- 
- <br>
-
-  ![c9_install](https://user-images.githubusercontent.com/92983658/187400295-5d6b8319-9422-442c-a340-fbc36c551397.png)
-  
-  <br>
-
-  - go to terminal and run the following commands:
-
-```
-  
-  wget <Paste the copied c9 install link address>
-chmod a+x c9-install.sh
-sudo apt-get -y install python
-sudo apt-get install build-essential
-./c9-install.sh
-
-```
-  - close terminal and continue from Cloud9.
-
-You can upload files or data from your local machine to the EC2 using Cloud9 just by drag and drop. You can also run/debug the code or use terminal below to interact with the machine / server
-
-**Note:** *If the instance’s IP address changed (Happens when you stop an Instance then restart its running), you will just simply need to copy the new IPv4 address.*
-
-*In Cloud9, on the top left corner, press the Cloud9 icon.*
-
-*Click on “Go to Your Dashboard”. Press the desired environment and from the top right corner then choose Edit. Then Scroll down to the Host and just change the IPv4 address.*
-
-find out more <a href="https://towardsdatascience.com/creating-aws-ec2-and-connecting-it-with-aws-cloud9-ide-and-aws-s3-a6313aa82ec">here</a>
-
-- create`SSH key` for ansible: `ssh-keygen -t ed25519 -C "ansible"`
-
-
   
 ### Configure `cloud9` to connect to the newly created GitHub repository.
 
