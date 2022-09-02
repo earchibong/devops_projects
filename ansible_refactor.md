@@ -371,3 +371,6 @@ git commit -m "update message here"
 <br>
 
 - run the playbook against `uat inventory` :
+```
+cd ansible-config-mgt
+ansible-playbook -i 
