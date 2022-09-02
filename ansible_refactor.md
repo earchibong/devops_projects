@@ -105,3 +105,75 @@ mv ./playbooks/common.yml static-assignments
 
 ```
 
+- Inside site.yml file, import common.yml playbook: `nano ./playbooks/site.yml`
+```
+
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
+
+```
+
+<br>
+
+![import_site_yml](https://user-images.githubusercontent.com/92983658/188113640-1fbe7b16-1456-436b-9ee3-4c367be4e373.png)
+
+<br>
+
+- **Run `ansible-playbook` command against the `dev environment`:**
+  - create another playbook under `static-assignments` and name it `common-del.yml`: `touch ./static-assignments/common-del.yml` 
+  - configure deletion of wireshark utility in `common-del.yml` : `nano ./static-assignments/common-del.yml`
+```
+
+---
+- name: update web, nfs and db servers
+  hosts: webservers, nfs, db
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    yum:
+      name: wireshark
+      state: removed
+
+- name: update LB server
+  hosts: lb
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    apt:
+      name: wireshark-qt
+      state: absent
+      autoremove: yes
+      purge: yes
+      autoclean: yes
+      
+ ```
+ 
+ <br>
+ 
+ ![common-del-configure](https://user-images.githubusercontent.com/92983658/188115649-2fd58d14-ed63-4937-b10d-1492b071eb60.png)
+
+<br>
+
+- update `site.yml`: `nano ./playbooks/site.yml`
+```
+
+---
+- hosts: all
+- import_playbook: ../static-assignments/common-del.yml
+
+```
+
+<br>
+
+![site_yml_update](https://user-images.githubusercontent.com/92983658/188116512-f677a363-b290-4f5d-9907-ee506e3c12ec.png)
+
+<br>
+
+
+ 
+ 
