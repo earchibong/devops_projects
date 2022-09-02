@@ -385,3 +385,31 @@ git pull
 ```
 cd ansible-config-mgt
 ansible-playbook -i ./inventory/uat.yml ./playbooks/site.yml
+
+```
+
+<br>
+
+![ansible_uat](https://user-images.githubusercontent.com/92983658/188179150-a8600228-e5ec-405c-8fa4-b2b1a83aa682.png)
+
+<br>
+
+- confirm UAT Web servers are configured: 
+```
+
+http://<Web1-UAT-Server-Public-IP-or-Public-DNS-Name>/index.php
+
+or
+
+http://<Web2-UAT-Server-Public-IP-or-Public-DNS-Name>/index.php
+
+```
+
+<br>
+
+![uat1](https://user-images.githubusercontent.com/92983658/188179626-facdbdca-849f-4b24-ac7c-0e1e3419d341.png)
+
+<br>
+
+
+
