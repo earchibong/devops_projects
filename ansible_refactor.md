@@ -360,6 +360,17 @@ git add
 git commit -m "update message here"
 
 ```
+
+- merge pull request on `github`
+- Head back to terminal, checkout from the feature branch into the master, and pull down the latest changes:
+
+```
+
+git checkout main
+git pull
+
+```
+
 <br>
 
 ![jenkins_cofirm](https://user-images.githubusercontent.com/92983658/188148708-25f2341f-6e29-4a87-9363-586015f50824.png)
@@ -373,4 +384,4 @@ git commit -m "update message here"
 - run the playbook against `uat inventory` :
 ```
 cd ansible-config-mgt
-ansible-playbook -i 
+ansible-playbook -i ./inventory/uat.yml ./playbooks/site.yml
