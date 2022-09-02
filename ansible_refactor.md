@@ -126,8 +126,8 @@ mv ./playbooks/common.yml static-assignments
 ```
 
 ---
-- name: update web, nfs and db servers
-  hosts: webservers, nfs, db
+- name: update web, nfs servers
+  hosts: webservers, nfs
   remote_user: ec2-user
   become: yes
   become_user: root
@@ -137,8 +137,8 @@ mv ./playbooks/common.yml static-assignments
       name: wireshark
       state: removed
 
-- name: update LB server
-  hosts: lb
+- name: update LB & DB server
+  hosts: lb, db
   remote_user: ubuntu
   become: yes
   become_user: root
@@ -155,7 +155,7 @@ mv ./playbooks/common.yml static-assignments
  
  <br>
  
- ![common-del-configure](https://user-images.githubusercontent.com/92983658/188115649-2fd58d14-ed63-4937-b10d-1492b071eb60.png)
+ ![common_del](https://user-images.githubusercontent.com/92983658/188121949-a0f8ae5a-741f-48b7-b03d-288ba0ae5005.png)
 
 <br>
 
@@ -174,6 +174,19 @@ mv ./playbooks/common.yml static-assignments
 
 <br>
 
+- run playbook against `dev` servers:
+```
 
- 
- 
+cd /home/ubuntu/ansible-config-mgt/
+
+ansible-playbook -i inventory/dev.yml playbooks/site.yml
+
+```
+
+<br>
+
+![ansible_delete_wireshark](https://user-images.githubusercontent.com/92983658/188122455-966770b3-9d46-4383-92e2-75afa5c8a53c.png)
+
+<br>
+
+
