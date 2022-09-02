@@ -300,5 +300,74 @@ nano main.yml
 
 <br>
 
+### Reference `Webserver` Role
+
+- In the `static-assignments` folder, create a new assignment for `uat-webservers` namd  `uat-webservers.yml`:
+```
+
+cd ../../..
+cd static-assignments
+touch uat-webservers.yml
+nano uat-webservers.yml
+
+```
+
+<br>
+
+```
+
+---
+- hosts: uat-webservers
+  roles:
+     - webserver
+
+```
+
+<br>
+
+![uat-webser_yml](https://user-images.githubusercontent.com/92983658/188133008-c90425f5-7fc0-460c-90a1-025f1e3fcc6e.png)
+
+<br>
+
+- update `site.yml` -  refer `uat-webservers.yml` role inside `site.yml` : `nano ./playbooks/site.yml`
+```
+
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
+
+- hosts: uat-webservers
+- import_playbook: ../static-assignments/uat-webservers.yml
 
 
+```
+
+<br>
+
+![site_yml_update](https://user-images.githubusercontent.com/92983658/188136239-ab217bf5-e65f-4756-b586-8fd75e562bd1.png)
+
+<br>
+
+### Commit & Test
+
+- Commit your changes, create a Pull Request and merge them to master branch
+*make sure webhook triggered two consequent Jenkins jobs, they ran successfully and copied all the files to your Jenkins-Ansible server into /home/ubuntu/ansible-config-mgt/ directory.*
+
+```
+
+git status
+git add
+git commit -m "update message here"
+
+```
+<br>
+
+![jenkins_cofirm](https://user-images.githubusercontent.com/92983658/188148708-25f2341f-6e29-4a87-9363-586015f50824.png)
+
+<br>
+
+![var_confirm](https://user-images.githubusercontent.com/92983658/188149685-a9777bfa-e2f3-471b-8e72-7a9d128e5431.png)
+
+<br>
+
+- run the playbook against `uat inventory` :
