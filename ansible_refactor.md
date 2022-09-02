@@ -189,4 +189,116 @@ ansible-playbook -i inventory/dev.yml playbooks/site.yml
 
 <br>
 
+### Configure UAT Webservers with a role `webserver`
+
+- Launch 2 fresh EC2 instances using RHEL 8 image, 
+- instances will used them as `uat servers` named : `Web1-UAT` and `Web2-UAT`.
+- In `Jenkins-Ansible` server, create a role:
+  -  create a directory called `roles/`, relative to the playbook file or in `/etc/ansible/ directory`
+```
+
+cd ansible-config-mgt
+mkdir roles
+cd roles
+ansible-galaxy init webserver
+cd webserver
+rm -R tests
+rm -R vars
+rm -R files
+
+```
+
+- Update the inventory `ansible-config-mgt/inventory/uat.yml` file with IP addresses of the 2 `UAT Web servers`:
+  - `cd ../..`
+  - `nano ./inventory/uat.yml`
+
+```
+
+[uat-webservers]
+<Web1-UAT-Server-Private-IP-Address> ansible_ssh_user='ec2-user' 
+
+<Web2-UAT-Server-Private-IP-Address> ansible_ssh_user='ec2-user'
+
+```
+
+<br>
+
+![uat](https://user-images.githubusercontent.com/92983658/188127172-3e6a1e88-5b7a-4346-b9bc-3b2fcafcaed9.png)
+
+<br>
+
+*NOTE: Ensure you are using ssh-agent to ssh into the Jenkins-Ansible instance*
+
+- In `/etc/ansible/ansible.cfg` file:
+  -  uncomment `roles_path` string :  `sudo vi /etc/ansible/ansible.cfg`
+  -  provide a full path to your roles directory `roles_path` = `/home/ubuntu/ansible-config-mgt/roles`
+
+<br>
+
+![roles_path](https://user-images.githubusercontent.com/92983658/188128924-c5692ec3-79ed-4253-b58e-4b380b603a19.png)
+
+<br>
+
+- in `tasks` directory, and within the main.yml file, start writing configuration tasks to do the following:
+  - Install and configure `Apache` (httpd service)
+  - Clone Tooling website from GitHub `https://github.com/<your-name>/tooling.git`
+  - Ensure the tooling website code is deployed to `/var/www/html` on each of 2 UAT Web servers.
+  - Make sure `httpd` service is started
+
+```
+
+cd roles/webserver/tasks
+nano main.yml
+
+```
+
+<br>
+
+```
+
+---
+- name: install apache
+  become: true
+  ansible.builtin.yum:
+    name: "httpd"
+    state: present
+
+- name: install git
+  become: true
+  ansible.builtin.yum:
+    name: "git"
+    state: present
+
+- name: clone a repo
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/<your-name>/tooling.git
+    dest: /var/www/html
+    force: yes
+
+- name: copy html content to one level up
+  become: true
+  command: cp -r /var/www/html/html/ /var/www/
+
+- name: Start service httpd, if not started
+  become: true
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: recursively remove /var/www/html/html/ directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html/html
+    state: absent
+    
+ ```
+ 
+ <br>
+ 
+ ![tasks](https://user-images.githubusercontent.com/92983658/188130571-008d46ea-cc35-4581-bdef-aa3770c02189.png)
+
+<br>
+
+
 
