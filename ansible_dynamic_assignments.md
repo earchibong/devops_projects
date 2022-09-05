@@ -6,17 +6,6 @@
 ## Update Site.yml with Dynamic Assignment
 
 - Update `site.yml` file:
-  - ssh using `uush agent` into `Jenins-Ansible` Server
-```
-
-eval `ssh-agent -s`
-ssh-add ./<path-to-private-key>
-ssh -A -i "private_key.pem" ubuntu@jenkins_ansible_sever_ip
-cd ansible-config-mgt
-nano playbboks/site.yml
-```
-
-<br>
 
 ```
 
@@ -37,7 +26,8 @@ nano playbboks/site.yml
 
 <br>
 
-![site_yml](https://user-images.githubusercontent.com/92983658/188406774-d3d6d934-e71a-4706-9cc5-46c089012081.png)
+![site_yml](https://user-images.githubusercontent.com/92983658/188451867-3fcd5c32-3674-430e-9f86-5f3b75a1bb5c.png)
+
 
 <br>
 
@@ -72,5 +62,27 @@ git switch roles-feature
 
 - in mysql directory, read README.md file : `cd mysql` -> `cat README.md`
 - edit roles configuration to use correct credentials for MySQL required for the `tooling website`
+  - in `roles/mysql` directory, open up `defaults/main.yml
+  - under `databases` and `users`
+   - uncomment all lines under each of these sections 
+   - change name of database to `tooling website DB name`: `tooling` 
+   - change name of users: `webaccess`
+   - change host to: `0.0.0.0`
+   - change priv to: `'*.*:ALL,GRANT'`
+ 
+ <br>
+ 
+ ![mysql_config](https://user-images.githubusercontent.com/92983658/188450301-107e55de-e0e0-4d0e-9010-3d2366ac2aec.png)
 
+<br>
+
+- upload changes to github
+```
+
+git add .
+git commit -m "Commit new role files into GitHub"
+git push --set-upstream origin roles-feature
+
+```
+- create a Pull Request and merge it to main branch on GitHub.
 
