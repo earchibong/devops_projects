@@ -77,6 +77,9 @@ git switch roles-feature
 <br>
 
 - upload changes to github
+
+<br>
+
 ```
 
 git add .
@@ -84,5 +87,12 @@ git commit -m "Commit new role files into GitHub"
 git push --set-upstream origin roles-feature
 
 ```
+<br>
+
 - create a Pull Request and merge it to main branch on GitHub.
+- on terminal `git chekout main` -> `git pull`
+
+<br>
+
+## Load Balancer Roles
 
