@@ -96,3 +96,73 @@ git push --set-upstream origin roles-feature
 
 ## Load Balancer Roles
 
+- repeat the same steps as with MSQL
+- Inside `roles` directory create new Load Balancer role with `ansible-galaxy install geerlingguy.<nginx or apache>` and rename folder to `<nginx or apache>`
+
+<br>
+
+```
+cd ansible-config-mgt
+cd roles
+ansible-galaxy install geerlingguy.nginx
+ansible-galaxy install geerlingguy.apache
+mv geerlingguy.nginx/ nginx
+mv geerlingguy.apache/ apache
+
+```
+
+<br>
+
+### Configure Nginx
+
+- in nginx directory, read README.md file : `cd nginx` -> `cat README.md`
+- edit roles configuration to use correct credentials for Nginx required for the `tooling website`
+  - in `roles/nginx` directory, open up `defaults/main.yml
+  - under `nginx upstreams`
+   - uncomment all lines under each of this section 
+   - under `servers`: input `UAT servers`
+  - under `nginx_extra_http_options` 
+   - uncomment all lines
+
+<br>
+
+![nginx_upstreams](https://user-images.githubusercontent.com/92983658/188908141-83226b8c-594a-458d-b76e-b07ffe6dea9e.png)
+
+<br>
+
+- in `nginx/tasks` directory, open `main.yml`
+  - under `nginx setup`: add `become: true`
+  - name: Ensure nginx service is running as configured: add `become: true`
+
+<br>
+
+![nginx-setup](https://user-images.githubusercontent.com/92983658/188909397-e47bf445-a17d-40ae-8151-6099db1cb16d.png)
+
+<br>
+
+- under `Setup/install tasks`: delete `or ansible_os_family == 'Rocky'` 
+
+<br>
+
+- under `nginx/templates` directory:
+  - open `nginx.conf.j2`
+  - 
+
+- commit changes to git hub
+```
+git add .
+git commit -m "message"
+
+```
+
+<br>
+
+### Configure Apache
+- in nginx directory, read README.md file : `cd nginx` -> `cat README.md`
+- edit roles configuration to use correct credentials for Nginx required for the `tooling website`
+  - in `roles/nginx` directory, open up `defaults/main.yml
+  - under `nginx upstreams`
+   - uncomment all lines under each of this section 
+   - under `servers`: input `UAT servers`
+  - under `nginx_extra_http_options` 
+   - uncomment all lines
