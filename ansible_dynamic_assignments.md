@@ -148,19 +148,67 @@ mv geerlingguy.apache/ apache
   - open `nginx.conf.j2`
   - 
 
-- commit changes to git hub
+- commit and push changes to git hub
 ```
 git add .
 git commit -m "message"
+git push -u origin main
 
 ```
 
 <br>
 
 ### Configure Apache
-- in nginx directory, read README.md file : `cd nginx` -> `cat README.md`
+- in roles/apache directory, open README.md and `defaults/main.yml` files: use `README.md` to configure
+- in `defaults/main.yml` add in webserver configuration:
+
+```
+
+# Webservers
+loadbalancer_name:"myapp1"
+web1:"<your UAT webserver1 ip>"
+web2:"<your UAT webserver2 ip>"
+
+```
+
+<br>
+
+![loadbalancer_roles_config](https://user-images.githubusercontent.com/92983658/189075858-0897176a-b31a-46c0-b580-a30206dfca0c.png)
+
+<br>
+
+- add `loadbalancer_name:"myapp1"` to `apache_vhosts` in `defaults/main.yml`
+
+<br>
+
+![apache_vhosts](https://user-images.githubusercontent.com/92983658/189076784-78024f54-fd3c-4ba9-acf9-46e3f9b54328.png)
+
+<br>
+
+- in `apache/tasks` directory, open `setup-READHAT.yml`: add `become: true`
+- add the following:
+
+```
+- name: set httpd_can_network_connect flag on and keep it persistent across reboots
+  become: yes
+  ansible.posix.seboolean:
+      name: httpd_can_network_connect
+      state: yes
+      persistent: yes
+      
+```
+
+<br>
+
+![setup_redhat](https://user-images.githubusercontent.com/92983658/189077068-afc60326-0553-4d11-a702-8c2ccc4438b5.png)
+
+<br>
+
+
+
+
 - edit roles configuration to use correct credentials for Nginx required for the `tooling website`
-  - in `roles/nginx` directory, open up `defaults/main.yml
+  - in `roles/apache` directory, open up `defaults/main.yml
   - under `nginx upstreams`
    - uncomment all lines under each of this section 
    - under `servers`: input `UAT servers`
