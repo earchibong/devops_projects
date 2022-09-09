@@ -117,20 +117,37 @@ mv geerlingguy.apache/ apache
 
 - in nginx directory, read README.md file : `cd nginx` -> `cat README.md`
 - edit roles configuration to use correct credentials for Nginx required for the `tooling website`
-  - in `roles/nginx` directory, open up `defaults/main.yml
-  - under `nginx upstreams`
-   - uncomment all lines under each of this section 
-   - under `servers`: input `UAT servers`
-  - under `nginx_extra_http_options` 
-   - uncomment all lines
+  - in `nginx/tasks` directory, open `main.yml`
+   - under `Setup/install tasks`: delete `or ansible_os_family == 'Rocky' 
+  
+<br>
+
+![rocky](https://user-images.githubusercontent.com/92983658/189299335-3a196628-4d26-4aef-8a9a-9b923545ef67.png)
 
 <br>
 
-![nginx_upstreams](https://user-images.githubusercontent.com/92983658/188908141-83226b8c-594a-458d-b76e-b07ffe6dea9e.png)
+  - under `vhost configuration` add the following:
 
-<br>
+```
 
-- in `nginx/tasks` directory, open `main.yml`
+- name: set webservers host name in /etc/hosts
+  become: yes
+  blockinfile: 
+    path: /etc/hosts
+    block: |
+      {{ item.ip }} {{ item.name }}
+  loop:
+    - { name: web1, ip: <your UAT1 IP> }
+    - { name: web2, ip: <your UAT2 ip> }
+    
+  ```
+  
+  <br>
+  
+  ![vhost_setup](https://user-images.githubusercontent.com/92983658/189307165-3a4cb1a1-97cd-4f7d-a0e9-be49b06cdfc2.png)
+  
+  <br>
+
   - under `nginx setup`: add `become: true`
   - name: Ensure nginx service is running as configured: add `become: true`
 
@@ -140,13 +157,33 @@ mv geerlingguy.apache/ apache
 
 <br>
 
-- under `Setup/install tasks`: delete `or ansible_os_family == 'Rocky'` 
+- in `tasks/setup-RedHat.yml`: add `become: yes`
 
 <br>
 
-- under `nginx/templates` directory:
-  - open `nginx.conf.j2`
-  - 
+![setup_redhat_become](https://user-images.githubusercontent.com/92983658/189301404-e3495119-7a4d-43e1-bd3b-5e3885e0e118.png)
+
+<br>
+
+- in `roles/nginx` directory, open up `defaults/main.yml
+  - under `nginx upstreams`: uncomment all lines under each of this section 
+  - under `nginx_extra_http_options`: uncomment all lines
+  - under `servers`: add the following...
+
+```
+
+   servers:
+     - "web1 weight=3"
+     - "web2 weight=3"
+     - "proxy_pass http://myapp1"
+     
+ ```
+
+<br>
+
+![nginx_upstreams_servers](https://user-images.githubusercontent.com/92983658/189308243-e41a1d50-d4f7-4f65-872f-99e57a6a11f6.png)
+
+<br>
 
 - commit and push changes to git hub
 ```
@@ -204,13 +241,14 @@ web2:"<your UAT webserver2 ip>"
 
 <br>
 
+### Declare Variables
+
+- Declare a variable in `defaults/main.yml` file inside the Nginx and Apache roles. Name each variables `enable_nginx_lb` and `enable_apache_lb` respectively.
+- Set both values to false: 
+  - `enable_nginx_lb: false`
+  -  `enable_apache_lb: false`
+
+- Declare another variable in both roles `load_balancer_is_required` and set its value to `false` as well
 
 
 
-- edit roles configuration to use correct credentials for Nginx required for the `tooling website`
-  - in `roles/apache` directory, open up `defaults/main.yml
-  - under `nginx upstreams`
-   - uncomment all lines under each of this section 
-   - under `servers`: input `UAT servers`
-  - under `nginx_extra_http_options` 
-   - uncomment all lines
