@@ -26,7 +26,8 @@
 
 <br>
 
-![site_yml](https://user-images.githubusercontent.com/92983658/188451867-3fcd5c32-3674-430e-9f86-5f3b75a1bb5c.png)
+![site_yml_update](https://user-images.githubusercontent.com/92983658/189911287-b3df1bad-dfec-4400-b6a9-faa01fa61ab7.png)
+
 
 
 <br>
@@ -197,7 +198,7 @@ git push -u origin main
 
 ### Configure Apache
 - in roles/apache directory, open README.md and `defaults/main.yml` files: use `README.md` to configure
-- in `defaults/main.yml` add in webserver configuration: REMOVE THIS!!! 
+- in `defaults/main.yml` add in webserver configuration: 
 
 ```
 
@@ -291,5 +292,16 @@ web2:"<your UAT webserver2 ip>"
 
 <br>
 
-- update `site.yml` and run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml`
+- 
+- run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml
+
+<br>
+
+![ansible-playbook](https://user-images.githubusercontent.com/92983658/189924552-fc2032b0-0f8a-4b96-9523-944e8a0678a1.png)
+
+<br>
+
+
+
+
 
