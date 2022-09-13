@@ -249,6 +249,41 @@ web2:"<your UAT webserver2 ip>"
   -  `enable_apache_lb: false`
 
 - Declare another variable in both roles `load_balancer_is_required` and set its value to `false` as well
+
+<br>
+
+![apache_lb_false](https://user-images.githubusercontent.com/92983658/189856651-09794d76-99eb-4c6e-b177-18ad8fcda13c.png)
+
+<br>
+
+![nginx_lb_false](https://user-images.githubusercontent.com/92983658/189856696-97b0476a-84cc-4cbe-b7c1-942d89f79738.png)
+
+<br>
+
+- in `ansible-config-mgt` create a `dynamic-assignments` directory and add the following:
+ ```
+ 
+ ---
+
+ - name: collate variables from env specific file, if it exists
+   hosts: all
+   tasks:
+      - name: looping through list of available files
+        include_vars: "{{ item }}"
+        with_first_found:
+          - files:
+              - dev.yml
+              - ci.yml
+              - pentest.yml
+              - uat.yml
+            
+            paths:
+              - "{{ playbook_dir }}/../env-vars"
+
+        tags:
+          - always
+          
+ ```
  
 
 
