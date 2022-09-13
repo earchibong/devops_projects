@@ -197,7 +197,7 @@ git push -u origin main
 
 ### Configure Apache
 - in roles/apache directory, open README.md and `defaults/main.yml` files: use `README.md` to configure
-- in `defaults/main.yml` add in webserver configuration:
+- in `defaults/main.yml` add in webserver configuration: REMOVE THIS!!! 
 
 ```
 
@@ -285,5 +285,11 @@ web2:"<your UAT webserver2 ip>"
           
  ```
  
+<br>
 
+![dynamic-assignment](https://user-images.githubusercontent.com/92983658/189863514-2461d68b-e215-4035-8bbc-af7da73ef7e0.png)
+
+<br>
+
+- update `site.yml` and run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml`
 
