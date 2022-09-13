@@ -293,7 +293,7 @@ web2:"<your UAT webserver2 ip>"
 <br>
 
 - 
-- run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml
+- run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml`
 
 <br>
 
