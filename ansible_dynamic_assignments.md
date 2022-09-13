@@ -249,6 +249,6 @@ web2:"<your UAT webserver2 ip>"
   -  `enable_apache_lb: false`
 
 - Declare another variable in both roles `load_balancer_is_required` and set its value to `false` as well
-
+ 
 
 
