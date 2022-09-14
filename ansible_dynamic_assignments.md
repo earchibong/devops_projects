@@ -3,6 +3,73 @@
 **Pre-requisites:**
 - Complete Previous Ansible Projects <a href="https://github.com/earchibong/devops_training/README.me">here</a>
 
+<br>
+
+- In the GitHub repository start a new branch and call it `dynamic-assignments` : `git checkout -b dynamic-assignments`
+- in `ansible-config-mgt` create a `dynamic-assignments` directory and create a file named `env-vars.yml` inside it.
+- add the following to `dynamic-assignments/env-var.yml`:
+
+<br>
+ 
+ ```
+ 
+ ---
+
+ - name: collate variables from env specific file, if it exists
+   hosts: all
+   tasks:
+      - name: looping through list of available files
+        include_vars: "{{ item }}"
+        with_first_found:
+          - files:
+              - dev.yml
+              - ci.yml
+              - pentest.yml
+              - uat.yml
+            
+            paths:
+              - "{{ playbook_dir }}/../env-vars"
+
+        tags:
+          - always
+          
+ ```
+
+<br>
+
+
+![dynamic-assignment](https://user-images.githubusercontent.com/92983658/189863514-2461d68b-e215-4035-8bbc-af7da73ef7e0.png)
+
+<br>
+
+- in `ansible-config-mgt` create another folder named `env-vars`
+  - then for each environment, create new YAML files (`dev`, `stage`, `uat`, `prod`)  in `env-vars` that will be used to set variables
+- file tree should look like this:
+
+```
+
+├── dynamic-assignments
+│   └── env-vars.yml
+├── env-vars
+    └── dev.yml
+    └── stage.yml
+    └── uat.yml
+    └── prod.yml
+├── inventory
+    └── dev
+    └── stage
+    └── uat
+    └── prod
+├── playbooks
+    └── site.yml
+└── static-assignments
+    └── common.yml
+    └── webservers.yml
+    
+ ```
+ 
+<br>
+
 ## Update Site.yml with Dynamic Assignment
 
 - Update `site.yml` file:
@@ -327,39 +394,6 @@ load_balancer_is_required: true
 <br>
 
 ![activate_lb](https://user-images.githubusercontent.com/92983658/190108357-062d37ad-adc7-4904-8a35-b1d6739f9fae.png)
-
-<br>
-
-
-- in `ansible-config-mgt` create a `dynamic-assignments` directory and add the following:
- ```
- 
- ---
-
- - name: collate variables from env specific file, if it exists
-   hosts: all
-   tasks:
-      - name: looping through list of available files
-        include_vars: "{{ item }}"
-        with_first_found:
-          - files:
-              - dev.yml
-              - ci.yml
-              - pentest.yml
-              - uat.yml
-            
-            paths:
-              - "{{ playbook_dir }}/../env-vars"
-
-        tags:
-          - always
-          
- ```
- 
-<br>
-
-
-![dynamic-assignment](https://user-images.githubusercontent.com/92983658/189863514-2461d68b-e215-4035-8bbc-af7da73ef7e0.png)
 
 <br>
 
