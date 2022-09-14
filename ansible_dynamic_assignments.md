@@ -10,25 +10,27 @@
 ```
 
 ---
-- hosts: all
-- name: Include dynamic variables 
-  tasks:
-  import_playbook: ../static-assignments/common.yml 
-  include: ../dynamic-assignments/env-vars.yml
-  tags:
-    - always
+  - name: Include dynamic variables 
+    hosts: all
 
--  hosts: webservers
-- name: Webserver assignment
-  import_playbook: ../static-assignments/webservers.yml
+  - name: import common file
+    import_playbook: ../static-assignments/common.yml
+    tags:
+      - always
+
+  - name: include env-vars file
+    import_playbook: ../dynamic-assignments/env-vars.yml
+    tags:
+      - always
+  
+  - name: import webservers file
+    import_playbook: ../static-assignments/uat-webservers.yml
   
 ```
 
 <br>
 
-![site_yml_update](https://user-images.githubusercontent.com/92983658/189911287-b3df1bad-dfec-4400-b6a9-faa01fa61ab7.png)
-
-
+![site_yml](https://user-images.githubusercontent.com/92983658/190105967-e0b1c6d5-2715-41bb-a85d-ea64194c44e0.png)
 
 <br>
 
@@ -271,6 +273,63 @@ web2: "<your UAT webserver2 ip>"
  
 <br>
 
+- on `db.yml` add the following:
+```
+
+---
+  - hosts: db
+    roles:
+      - mysql
+    become: true
+    
+```
+
+<br>
+
+![db_yml](https://user-images.githubusercontent.com/92983658/190104497-51632e9e-02a0-4490-9071-728989887196.png)
+
+<br>
+
+- `site.yml` add the following:
+```
+
+    
+  - name: import database file
+    import_playbook: ../static-assignments/db.yml
+    
+  - name: import Loadbalancers assignment
+    import_playbook: ../static-assignments/lb.yml
+    when: load_balancer_is_required 
+   
+ ```
+ 
+ <br>
+ 
+ ![site_yml_1](https://user-images.githubusercontent.com/92983658/190105534-62a97ee3-da98-47e3-be05-802a990d51ff.png)
+
+<br>
+
+### Activate Load Balancer
+
+- in `ansible-config-mgt` create an `env-vars` directory and within it, create a `uat.yml` file
+  - in the `env-vars/uat.yml` file add the following:
+
+```
+
+# enable_apache_lb: true
+enable_nginx_lb: true
+load_balancer_is_required: true
+
+```
+
+*The same must work with apache LB, so you can switch it by setting respective environmental variable to true and other to false.*
+
+<br>
+
+![activate_lb](https://user-images.githubusercontent.com/92983658/190108357-062d37ad-adc7-4904-8a35-b1d6739f9fae.png)
+
+<br>
+
 
 - in `ansible-config-mgt` create a `dynamic-assignments` directory and add the following:
  ```
@@ -299,6 +358,7 @@ web2: "<your UAT webserver2 ip>"
  
 <br>
 
+
 ![dynamic-assignment](https://user-images.githubusercontent.com/92983658/189863514-2461d68b-e215-4035-8bbc-af7da73ef7e0.png)
 
 <br>
@@ -313,7 +373,10 @@ git push -u origin main
 
 <br> 
 
-- run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml`
+### Test Environment
+
+- update inventory for each environment and run ansible:
+  - run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml`
 
 <br>
 
