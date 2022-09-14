@@ -186,15 +186,6 @@ mv geerlingguy.apache/ apache
 
 <br>
 
-- commit and push changes to git hub
-```
-git add .
-git commit -m "message"
-git push -u origin main
-
-```
-
-<br>
 
 ### Configure Apache
 - in roles/apache directory, open README.md and `defaults/main.yml` files: use `README.md` to configure
@@ -203,19 +194,20 @@ git push -u origin main
 ```
 
 # Webservers
-loadbalancer_name:"myapp1"
-web1:"<your UAT webserver1 ip>"
-web2:"<your UAT webserver2 ip>"
+loadbalancer_name: "myapp1"
+web1: "<your UAT webserver1 ip>"
+web2: "<your UAT webserver2 ip>"
 
 ```
 
 <br>
 
-![loadbalancer_roles_config](https://user-images.githubusercontent.com/92983658/189075858-0897176a-b31a-46c0-b580-a30206dfca0c.png)
+![main2](https://user-images.githubusercontent.com/92983658/189946446-b208a4a9-2b24-4136-a321-9e6aa0baa51d.png)
+
 
 <br>
 
-- add `loadbalancer_name:"myapp1"` to `apache_vhosts` in `defaults/main.yml`
+- add `loadbalancer_name: "myapp1"` to `apache_vhosts` in `defaults/main.yml`
 
 <br>
 
@@ -292,7 +284,16 @@ web2:"<your UAT webserver2 ip>"
 
 <br>
 
-- 
+- commit and push changes to git hub
+```
+git add .
+git commit -m "message"
+git push -u origin main
+
+```
+
+<br> 
+
 - run playbook: `ansible-playbook -i inventory/uat.yml playbooks/site.yml`
 
 <br>
