@@ -251,7 +251,26 @@ web2: "<your UAT webserver2 ip>"
 
 ![nginx_lb_false](https://user-images.githubusercontent.com/92983658/189856696-97b0476a-84cc-4cbe-b7c1-942d89f79738.png)
 
+
+### Update assignment and site.yml files
+
+- in `static-assignment` folder create new files: `db.yml` and `lb.yml`
+- in `lb.yml` add the following:
+```
+
+- hosts: lb
+  roles:
+    - { role: nginx, when: enable_nginx_lb and load_balancer_is_required }
+    - { role: apache, when: enable_apache_lb and load_balancer_is_required }
+    
+ ```
+ <br>
+ 
+ ![lb_yml](https://user-images.githubusercontent.com/92983658/190103726-e5ec83cd-0d23-459a-90a1-cf4b90c2c167.png)
+
+ 
 <br>
+
 
 - in `ansible-config-mgt` create a `dynamic-assignments` directory and add the following:
  ```
