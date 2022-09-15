@@ -43,7 +43,7 @@
 <br>
 
 - in `ansible-config-mgt` create another folder named `env-vars`
-  - then for each environment, create new YAML files (`dev`, `stage`, `uat`, `prod`)  in `env-vars` that will be used to set variables
+  - then create uat.yml` file  in `env-vars` that will be used to set variables
 - file tree should look like this:
 
 ```
@@ -51,10 +51,7 @@
 ├── dynamic-assignments
 │   └── env-vars.yml
 ├── env-vars
-    └── dev.yml
-    └── stage.yml
     └── uat.yml
-    └── prod.yml
 ├── inventory
     └── dev
     └── stage
@@ -64,9 +61,10 @@
     └── site.yml
 └── static-assignments
     └── common.yml
-    └── webservers.yml
+    └── uat-webservers.yml
     
  ```
+ 
  
 <br>
 
@@ -77,27 +75,22 @@
 ```
 
 ---
-  - name: Include dynamic variables 
-    hosts: all
-
-  - name: import common file
+  - hosts: all
+  - name: include dynamic variables
     import_playbook: ../static-assignments/common.yml
-    tags:
-      - always
-
-  - name: include env-vars file
-    import_playbook: ../dynamic-assignments/env-vars.yml
+    include: ../dynamic-assignments/env-vars.yml
     tags:
       - always
   
   - name: import webservers file
     import_playbook: ../static-assignments/uat-webservers.yml
+    
   
 ```
 
 <br>
 
-![site_yml](https://user-images.githubusercontent.com/92983658/190105967-e0b1c6d5-2715-41bb-a85d-ea64194c44e0.png)
+![site1](https://user-images.githubusercontent.com/92983658/190400429-a190686e-6075-48ed-8a6b-7895b57009b4.png)
 
 <br>
 
@@ -257,6 +250,7 @@ mv geerlingguy.apache/ apache
 
 
 ### Configure Apache
+- run this command to install `posix.boolean` in `roles` directory: `ansible-galaxy collection install ansible.posix`
 - in roles/apache directory, open README.md and `defaults/main.yml` files: use `README.md` to configure
 - in `defaults/main.yml` add in webserver configuration: 
 
@@ -288,12 +282,12 @@ web2: "<your UAT webserver2 ip>"
 - add the following:
 
 ```
-- name: set httpd_can_network_connect flag on and keep it persistent across reboots
-  become: yes
+
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
   ansible.posix.seboolean:
-      name: httpd_can_network_connect
-      state: yes
-      persistent: yes
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
       
 ```
 
@@ -324,7 +318,7 @@ web2: "<your UAT webserver2 ip>"
 ### Update assignment and site.yml files
 
 - in `static-assignment` folder create new files: `db.yml` and `lb.yml`
-- in `lb.yml` add the following:
+- in `loadbalancer.yml` add the following:
 ```
 
 - hosts: lb
@@ -359,10 +353,6 @@ web2: "<your UAT webserver2 ip>"
 
 - `site.yml` add the following:
 ```
-
-    
-  - name: import database file
-    import_playbook: ../static-assignments/db.yml
     
   - name: import Loadbalancers assignment
     import_playbook: ../static-assignments/lb.yml
@@ -372,7 +362,8 @@ web2: "<your UAT webserver2 ip>"
  
  <br>
  
- ![site_yml_1](https://user-images.githubusercontent.com/92983658/190105534-62a97ee3-da98-47e3-be05-802a990d51ff.png)
+ ![site2](https://user-images.githubusercontent.com/92983658/190402022-a1d79368-11a3-4038-a5bb-364ab2e7d2e0.png)
+
 
 <br>
 
@@ -394,6 +385,18 @@ load_balancer_is_required: true
 <br>
 
 ![activate_lb](https://user-images.githubusercontent.com/92983658/190108357-062d37ad-adc7-4904-8a35-b1d6739f9fae.png)
+
+<br>
+
+- in `inventory/uat.yml` add the following:
+```
+
+[lb]
+<UAT-WEB1 private ip> ansible_ssh_user='ec2-user' 
+
+<UAT-WEB2 private ip> ansible_ssh_user='ec2-user'
+
+```
 
 <br>
 
