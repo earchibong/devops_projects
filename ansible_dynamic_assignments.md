@@ -30,7 +30,7 @@
             paths:
               - "{{ playbook_dir }}/../env-vars"
 
-        tags:
+        tags: 
           - always
           
  ```
