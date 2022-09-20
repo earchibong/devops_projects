@@ -269,6 +269,126 @@ mv geerlingguy.apache/ apache
 
 <br>
 
+- update `nginx/templates/nginx.conf.j2` with the following:
+
+```
+
+user  nginx;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+{% block worker %}
+worker_processes  1;
+{% endblock %}
+
+{% if nginx_extra_conf_options %}
+     env VARIABLE;
+     include /etc/nginx/main.d/*.conf;
+{% endif %}
+
+{% block events %}
+events {
+    worker_connections  1024;
+    multi_accept off;
+}
+{% endblock %}
+
+http {
+    {% block http_begin %}{% endblock %}
+
+{% block http_basic %}
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    server_names_hash_bucket_size 64;
+
+    client_max_body_size 64m;
+
+    log_format  main    '$remote_addr - $remote_user [$time_local] "$request" '
+  '$status $body_bytes_sent "$http_referer" '
+  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log main buffer=16k;
+
+    sendfile        on;
+    tcp_nopush      on;
+    tcp_nodelay     on;
+
+    keepalive_timeout  65;
+    keepalive_requests 100;
+
+    server_tokens on;
+{% if nginx_proxy_cache_path %}
+    proxy_cache_path /var/cache/nginx keys_zone=cache:32m;
+{% endif %}
+{% endblock %}
+
+{% block http_gzip %}
+    # gzip on;
+{% endblock %}
+
+{% if nginx_extra_http_options %}
+    proxy_buffering    off;
+      proxy_set_header   X-Real-IP $remote_addr;
+      proxy_set_header   X-Scheme $scheme;
+      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header   Host $http_host;
+      
+{% endif %}
+
+{% block http_upstream %}
+{% for upstream in nginx_upstreams %}
+    upstream myapp1 {
+{% if upstream.strategy is defined %}
+        {{ upstream.strategy }};
+{% endif %}
+{% for server in upstream.servers %}
+        server 172.31.31.44;
+        server 172.31.30.168;
+{% endfor %}
+{% if upstream.keepalive is defined %}
+        keepalive 16;
+{% endif %}
+    }
+{% endfor %}
+{% endblock %}
+
+{% block http_includes %}
+    include /etc/nginx/conf.d/*.conf;
+{% if nginx_conf_path != nginx_vhost_path %}
+    include /etc/nginx/conf.d/*;
+{% endif %}
+{% endblock %}
+
+    {% block http_end %}{% endblock %}
+}
+
+```
+
+<br>
+
+- update `nginx/handlers/main.yml` with the following:
+
+```
+
+---
+- name: restart nginx
+  become: yes
+  service: name=nginx state=restarted
+
+- name: validate nginx configuration
+  become: yes
+  command: nginx -t -c /etc/nginx/nginx.conf
+  changed_when: false
+
+- name: reload nginx
+  become: yes
+  service: name=nginx state=reloaded
+  
+```
+
+
 
 ### Configure Apache
 - run this command to install `posix.boolean` in `roles` directory: `ansible-galaxy collection install ansible.posix`
@@ -405,7 +525,8 @@ load_balancer_is_required: true
 
 <br>
 
-![activate_lb](https://user-images.githubusercontent.com/92983658/190108357-062d37ad-adc7-4904-8a35-b1d6739f9fae.png)
+![env_uat](https://user-images.githubusercontent.com/92983658/191288011-d9801e44-bb9e-44e4-b932-73c93b03535a.png)
+
 
 <br>
 
@@ -438,7 +559,11 @@ git push -u origin main
 
 <br>
 
-![ansible-playbook](https://user-images.githubusercontent.com/92983658/189924552-fc2032b0-0f8a-4b96-9523-944e8a0678a1.png)
+![nginx_ansible](https://user-images.githubusercontent.com/92983658/191301529-2fcd75ad-81b7-438d-a828-a1eff1d0560c.png)
+
+<br>
+
+![ansible-play](https://user-images.githubusercontent.com/92983658/191301561-b4b54d2d-0b92-4324-9a0b-9ff0985641e2.png)
 
 <br>
 
