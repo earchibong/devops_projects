@@ -1,5 +1,7 @@
 # Ansible Dynamic Assignments (Include) And Community Roles
 
+how to use Ansible configuration management tool to prepare UAT environment for Tooling web solution
+
 **Pre-requisites:**
 - Complete Previous Ansible Projects <a href="https://github.com/earchibong/devops_training/README.me">here</a>
 
