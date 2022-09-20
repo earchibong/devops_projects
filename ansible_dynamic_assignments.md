@@ -211,12 +211,33 @@ mv geerlingguy.apache/ apache
   
   <br>
 
-  - under `nginx setup`: add `become: true`
-  - name: Ensure nginx service is running as configured: add `become: true`
+  - under `nginx setup`: add the following 
+  ```
+  
+  # Nginx setup.
+- name: Copy nginx configuration in place.
+  become: yes
+  template:
+    src: "nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+    owner: root
+    group: "{{ root_group }}"
+    mode: 0644
+  notify:
+    - reload nginx
 
+- name: Ensure nginx service is running as configured.
+  become: yes
+  service:
+    name: nginx
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
+    
+  ```
+  
 <br>
 
-![nginx-setup](https://user-images.githubusercontent.com/92983658/188909397-e47bf445-a17d-40ae-8151-6099db1cb16d.png)
+![nginx_setup](https://user-images.githubusercontent.com/92983658/190605360-163fa88f-9a78-440e-a08b-a150683073fa.png)
 
 <br>
 
