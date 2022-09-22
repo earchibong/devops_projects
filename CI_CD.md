@@ -137,7 +137,9 @@ To make your new branch show up in Jenkins, we need to tell Jenkins to scan the 
 
 <br>
 
-
+- Create a pull request to merge the latest code into the main branch
+- After merging the PR, go back into your terminal and switch into the main branch.
+- Pull the latest change
 
 
 
