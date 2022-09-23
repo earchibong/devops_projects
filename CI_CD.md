@@ -3,7 +3,8 @@
 <br>
 
 ## SIMULATING A TYPICAL CI/CD PIPELINE FOR A PHP BASED APPLICATION
-### Configuring Ansible For Jenkins Deployment
+### ANSIBLE ROLES FOR CI ENVIRONMENT
+#### Configuring Ansible For Jenkins Deployment
 
 - Navigate to Jenkins URL
 - Install & Open `Blue Ocean` Jenkins Plugin:
@@ -140,6 +141,80 @@ To make your new branch show up in Jenkins, we need to tell Jenkins to scan the 
 - Create a pull request to merge the latest code into the main branch
 - After merging the PR, go back into your terminal and switch into the main branch.
 - Pull the latest change
+- Create a new branch, add more stages into the Jenkins file to simulate below phases. (Just add an echo command like in build and test stages)
+   1. Package 
+   2. Deploy 
+   3. Clean up
+ 
+ ```
+ 
+ pipeline {
+    agent any
+
+  stages {
+    stage("Initial cleanup") {
+      steps {
+        dir("${WORKSPACE}") {
+          deleteDir()
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        script {
+          sh 'echo "Building Stage"'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        script {
+          sh 'echo "Testing Stage"'
+        }
+      }
+    }
+
+    stage('Package') {
+      steps {
+        script {
+          sh 'echo "Packaging App"'
+        }
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        script {
+          sh 'echo "Deploying To Dev"'
+        }
+      }
+    }
+
+    stage('Clean Up'){
+      steps{
+        cleanWs()
+      }
+    }
+  }
+}
+
+```
+
+<br>
+
+![jenkins_stages](https://user-images.githubusercontent.com/92983658/191984787-8a0c234f-855d-4da6-8214-769d4e5cee93.png)
+
+<br>
+
+- Verify in Blue Ocean that all the stages are working, then merge your feature branch to the main branch
+
+<br>
+
+![ocean_blue_stages](https://user-images.githubusercontent.com/92983658/191986509-216eb766-4efe-4e3d-bf41-2cb72ef57581.png)
+
+<br>
 
 
 
