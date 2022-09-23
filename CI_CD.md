@@ -1,5 +1,7 @@
 # Continuous integration with jenkins | ansible | artifactory | sonarqube | php
 
+Pre-requisite: Projects 9 - 13
+
 <br>
 
 ## SIMULATING A TYPICAL CI/CD PIPELINE FOR A PHP BASED APPLICATION
@@ -139,9 +141,7 @@ To make your new branch show up in Jenkins, we need to tell Jenkins to scan the 
 <br>
 
 - Create a pull request to merge the latest code into the main branch
-- After merging the PR, go back into your terminal and switch into the main branch.
-- Pull the latest change
-- Create a new branch, add more stages into the Jenkins file to simulate below phases. (Just add an echo command like in build and test stages)
+- Add more stages into the Jenkins file to simulate below phases. (Just add an echo command like in build and test stages)
    1. Package 
    2. Deploy 
    3. Clean up
@@ -208,7 +208,7 @@ To make your new branch show up in Jenkins, we need to tell Jenkins to scan the 
 
 <br>
 
-- Verify in Blue Ocean that all the stages are working, then merge your feature branch to the main branch
+- Verify in Blue Ocean that all the stages are working
 
 <br>
 
@@ -216,8 +216,13 @@ To make your new branch show up in Jenkins, we need to tell Jenkins to scan the 
 
 <br>
 
+- After merging the PR, go back into your terminal and switch into the main branch: `git checkout main`
+- Pull the latest change: `git pull`
 
+<br>
 
+#### Running Ansible Playbook From Jenkins
 
-
-
+- Install Ansible on Jenkins Server
+- Install Ansible plugin in Jenkins UI: 
+  - `jenkins dashboard -> manage plugins -> plugin manager - > search for ansible -> install without restart`
