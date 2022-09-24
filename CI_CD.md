@@ -226,3 +226,103 @@ To make your new branch show up in Jenkins, we need to tell Jenkins to scan the 
 - Install Ansible on Jenkins Server
 - Install Ansible plugin in Jenkins UI: 
   - `jenkins dashboard -> manage plugins -> plugin manager - > search for ansible -> install without restart`
+
+<br>
+
+![ansible_jenkins](https://user-images.githubusercontent.com/92983658/192092148-995b1de3-a9ce-4874-a805-f439ef08419a.png)
+
+
+<br>
+
+- launch a redhat instance named `nginx` and an ubuntu instance named `DB`
+- in `deploy` folder create an ansible configuration file named `ansible.cfg`
+- add the following to `ansible.cfg`
+```
+
+[defaults]
+timeout = 160
+callback_whitelist = profile_tasks
+log_path=~/ansible.log
+host_key_checking = False
+gathering = smart
+ansible_python_interpreter=/usr/bin/python3
+allow_world_readable_tmpfiles=true
+
+
+[ssh_connection]
+ssh_args = -o ControlMaster=auto -o ControlPersist=30m -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ServerAliveInterval=60 -o ServerAliveCountMax=60 -o ForwardAgent=yes
+
+```
+
+<br>
+
+- update Jenkins credentials: `jenkins dashboard -> manage jenkins -> manage credentials -> global -> add credentials`
+  - kind: `ssh with private key`
+  - ID: `give_any_name_you_want`
+  - Description: `describe the purpose`
+  - username: `ec2-user` or `ubuntu` depending on what instance being used
+  - private key: `cat private key.pem` -> copy and paste into jenkins
+
+<br>
+
+![credentials1](https://user-images.githubusercontent.com/92983658/192094097-6d094c3c-34f1-4c51-a556-d2c8ff14e1d8.png)
+![credentials_2](https://user-images.githubusercontent.com/92983658/192094116-7776be56-7edd-4700-bf11-08319e032168.png)
+
+<br>
+
+- Create  Jenkinsfile from scratch that runs the ansible playbook
+
+<br>
+
+```
+
+pipeline {
+  agent any
+
+  environment {
+      ANSIBLE_CONFIG="${WORKSPACE}/deploy/ansible.cfg"
+    }
+
+  parameters {
+      string(name: 'inventory', defaultValue: 'dev',  description: 'This is the inventory file for the environment to deploy configuration')
+    }
+
+  stages{
+      stage("Initial cleanup") {
+          steps {
+            dir("${WORKSPACE}") {
+              deleteDir()
+            }
+          }
+        }
+
+      stage('Checkout SCM') {
+         steps{
+            git branch: '<name of git branch>', url: '<git repo url>'
+         }
+       }
+
+      stage('Prepare Ansible For Execution') {
+        steps {
+          sh 'echo ${WORKSPACE}' 
+          sh 'sed -i "3 a roles_path=${WORKSPACE}/roles" ${WORKSPACE}/deploy/ansible.cfg'  
+        }
+     }
+
+      stage('Run Ansible playbook') {
+        steps {
+           ansiblePlaybook become: true, colorized: true, credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'inventory/${inventory}', playbook: 'playbooks/site.yml'
+         }
+      }
+
+      stage('Clean Workspace after build'){
+        steps{
+          cleanWs(cleanWhenAborted: true, cleanWhenFailure: true, cleanWhenNotBuilt: true, cleanWhenUnstable: true, deleteDirs: true)
+        }
+      }
+   }
+
+}
+
+```
+
