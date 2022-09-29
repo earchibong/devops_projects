@@ -256,11 +256,12 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=30m -o ControlPath=/tmp/ansib
 
 <br>
 
-- update Jenkins credentials: `jenkins dashboard -> manage jenkins -> manage credentials -> global -> add credentials`
+- **update Jenkins credentials: **
+- `jenkins dashboard -> manage jenkins -> manage credentials -> global -> add credentials`
   - kind: `ssh with private key`
   - ID: `give_any_name_you_want`
   - Description: `describe the purpose`
-  - username: `ec2-user` or `ubuntu` depending on what instance being used
+  - username: `ec2-user` or `ubuntu` depending on what platform jenkins instance is deployed on.
   - private key: `cat private key.pem` -> copy and paste into jenkins
 
 <br>
@@ -269,6 +270,30 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=30m -o ControlPath=/tmp/ansib
 ![credentialb](https://user-images.githubusercontent.com/92983658/193022611-4d49461a-2a2e-407a-8b49-d28ca800815d.png)
 
 <br>
+
+- configure Ansible in Jenkins
+  - `jenkins dashboard` -> `manage jenkins` -> `global tool configuration`
+  -  under ansible: `add ansible`
+    - name: `ansible`
+    - path to ansible executables: `usr/bin/`
+     - in terminal run: `which ansible` to determine ansible path -> paste this in jenkins
+ 
+ <br>
+ 
+ ![ansible_tool](https://user-images.githubusercontent.com/92983658/193037452-ba349544-3b28-4969-8239-3905c2fa6da9.png)
+
+<br>
+
+- **Generate pipeline script**
+- `jenkins dashboard` -> `project name` -> `pipeline syntax`
+  - playbooks file path in workspace: `playbooks/site.yml`
+  - inventory path in workspace: `inventory/dev.yml` 
+  - ssh connection credentials: select credential created
+  - click `use become`
+  - click `disable host SSH key check`
+  - click `colorized output`
+  - generate pipeline script
+  - copy script and paste in `Jenkinsfile` under `run ansible playbook` stage
 
 - Create  Jenkinsfile from scratch that runs the ansible playbook
 
@@ -326,3 +351,31 @@ pipeline {
 
 ```
 
+<br>
+
+- **update inventory file*
+- open `ansible-config-mgt/inventory/dev.yml`
+  - update `[nginx]`: `nginx ip ansible_ssh_user='ec2-user'`
+  - update `[db]`: `db ip ansible_ssh_user='ubuntu'
+
+<br>
+
+![dev](https://user-images.githubusercontent.com/92983658/193047770-840aa9aa-24b8-44ae-aaa0-9890160ce6cd.png)
+
+<br>
+
+- **update `playbooks/site.yml`**
+- open `playbooks/site.yml`:
+  - add the following:
+```
+---
+
+ - hosts: db
+ - name: database assignment
+   ansible.builtin.import_playbook: ../static-assignments/database.yml
+
+ - hosts: nginx
+ - name: nginx assignment
+   ansible.builtin.import_playbook: ../static-assignments/nginx.yml
+   
+```
