@@ -379,3 +379,75 @@ pipeline {
    ansible.builtin.import_playbook: ../static-assignments/nginx.yml
    
 ```
+
+<br>
+
+
+- **edit roles configuration to use correct credentials for MySQL required for the tooling website**
+- in roles/mysql directory, open up `defaults/main.yml
+  - under databases and users
+  - uncomment all lines under each of these sections
+  - change name of database to tooling website DB name: `tooling`
+  - change name of users: `webaccess`
+  - change host to: `0.0.0.0`
+  - change priv to: '*.*:ALL,GRANT'
+
+- **edit roles configuration for nginx**
+- in roles/nginx/defaults/main: leave empty
+
+```
+---
+# defaults file for nginx
+
+```
+
+<br>
+
+- in `nginx/tasks/main.yml`: add the following:
+
+```
+
+---
+# tasks file for nginx
+- name: install nginx on the webserver
+  ansible.builtin.yum:
+      name: nginx
+      state: present
+
+
+- name: ensure nginx is started and enabled
+  ansible.builtin.service:
+     name: nginx
+     state: started 
+     enabled: yes
+
+- name: install PHP
+  ansible.builtin.yum:
+    name:
+      - php 
+      - php-mysqlnd
+      - php-gd 
+      - php-curl
+    state: present
+    
+ ```
+ 
+ <br>
+ 
+ ![nginx_role](https://user-images.githubusercontent.com/92983658/193055254-79d957c4-d84e-49b7-8065-4fec9aa95316.png)
+
+<br>
+
+upload changes to github
+```
+
+git add .
+git commit -m "create new jenkinsfile"
+git push 
+
+```
+
+<br>
+
+create a Pull Request and merge it to main branch on GitHub.
+on terminal git chekout main -> git pull
