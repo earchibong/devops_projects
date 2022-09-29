@@ -265,8 +265,8 @@ ssh_args = -o ControlMaster=auto -o ControlPersist=30m -o ControlPath=/tmp/ansib
 
 <br>
 
-![credentials_2](https://user-images.githubusercontent.com/92983658/192094116-7776be56-7edd-4700-bf11-08319e032168.png)
-![credentials1](https://user-images.githubusercontent.com/92983658/192094097-6d094c3c-34f1-4c51-a556-d2c8ff14e1d8.png)
+![credentiala](https://user-images.githubusercontent.com/92983658/193022591-6b313376-1b4c-4e84-99d0-002a0d649acf.png)
+![credentialb](https://user-images.githubusercontent.com/92983658/193022611-4d49461a-2a2e-407a-8b49-d28ca800815d.png)
 
 <br>
 
