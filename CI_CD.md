@@ -308,10 +308,6 @@ pipeline {
       ANSIBLE_CONFIG="${WORKSPACE}/deploy/ansible.cfg"
     }
 
-  parameters {
-      string(name: 'inventory', defaultValue: 'dev',  description: 'This is the inventory file for the environment to deploy configuration')
-    }
-
   stages{
       stage("Initial cleanup") {
           steps {
@@ -336,7 +332,7 @@ pipeline {
 
       stage('Run Ansible playbook') {
         steps {
-           ansiblePlaybook become: true, colorized: true, credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'inventory/${inventory}', playbook: 'playbooks/site.yml'
+           ansiblePlaybook become: true, colorized: true, credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'inventory/dev.yml', playbook: 'playbooks/site.yml'
          }
       }
 
@@ -438,6 +434,20 @@ pipeline {
 
 <br>
 
+- create `static-assignments/nginx.yml` and add the following:
+```
+
+---
+- hosts: nginx
+  become: true
+  roles:
+     - nginx
+     
+ ```
+ 
+ <br>
+ 
+
 upload changes to github
 ```
 
@@ -446,6 +456,16 @@ git commit -m "create new jenkinsfile"
 git push 
 
 ```
+
+<br>
+
+- Ensure that Ansible runs against the Dev environment successfully
+
+<br>
+
+![jenkins-ansible-1](https://user-images.githubusercontent.com/92983658/193644654-024054d5-d6ce-4d88-948c-0b27ce11aba3.png)
+![jenkins-ansible-2](https://user-images.githubusercontent.com/92983658/193644670-eb2f2442-1344-4296-8410-a3591f9b383c.png)
+![jenkins-ansible-3](https://user-images.githubusercontent.com/92983658/193644680-9cd00464-7bb2-4e01-9836-14aca67fddc1.png)
 
 <br>
 
