@@ -469,5 +469,58 @@ git push
 
 <br>
 
-create a Pull Request and merge it to main branch on GitHub.
-on terminal git chekout main -> git pull
+#### Parameterizing Jenkinsfile For Ansible Deployment
+
+To deploy to other environments, we will need to use parameters.
+- in `ansible-config-mgt/inventory` create a new folder `sit`
+- Update `sit` inventory with new servers:
+```
+
+[tooling]
+<SIT-Tooling-Web-Server-Private-IP-Address>
+
+[todo]
+<SIT-Todo-Web-Server-Private-IP-Address>
+
+[nginx]
+<SIT-Nginx-Private-IP-Address>
+
+[db:vars]
+ansible_user=ec2-user
+ansible_python_interpreter=/usr/bin/python
+
+[db]
+<SIT-DB-Server-Private-IP-Address>
+
+```
+
+<br>
+
+- Update `Jenkinsfile` to introduce parameterization
+```
+
+pipeline {
+    agent any
+
+    parameters {
+      string(name: 'inventory', defaultValue: 'dev.yml',  description: 'This is the inventory file for the environment to deploy configuration')
+    }
+...
+
+```
+
+- In the Ansible execution section, remove the hardcoded inventory/dev.yml and replace with `inventory/${inventory}`
+
+<br>
+
+![jenkinsfile_parameters](https://user-images.githubusercontent.com/92983658/193806934-e34095a7-4910-4e99-bb4c-0d6d85b37df0.png)
+
+<br>
+
+- upload chanes to github
+- create a Pull Request and merge it to main branch on GitHub.
+- on terminal git chekout main -> `git pull`
+
+<br>
+
+## CI/CD PIPELINE FOR TODO APPLICATION
