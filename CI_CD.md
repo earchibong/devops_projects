@@ -525,5 +525,32 @@ pipeline {
 
 ## CI/CD PIPELINE FOR TODO APPLICATION
 
-- 
- 
+- update Ansible with an Artifactory role
+
+### Phase 1 – Prepare Jenkins
+- Fork the repository below into your GitHub account: `https://github.com/darey-devops/php-todo.git`
+- On Jenkins server, install PHP, its dependencies and Composer tool
+```
+
+# ubuntu:
+sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mbstring,mysql,zip}
+
+<br>
+
+#redhat:
+- yum module reset php -y
+- yum module enable php:remi-7.4 -y
+- yum install -y php  php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd    php-fpm php-json
+- systemctl start php-fpm
+- systemctl enable php-fpm
+- curl -sS https://getcomposer.org/installer | php 
+- sudo mv composer.phar /usr/bin/composer
+- composer --version
+
+```
+
+<br>
+
+- Install Jenkins plugins
+  1. Plot plugin: jenkins dashboard -> manage jenkins -> mange plugins -> search for `plot` -> install without restart
+  2. Artifactory plugin: jenkins dashboard -> manage jenkins -> mange plugins -> search for `artifactory` -> install without restart
