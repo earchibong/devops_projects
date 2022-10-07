@@ -525,7 +525,45 @@ pipeline {
 
 ## CI/CD PIPELINE FOR TODO APPLICATION
 
-- update Ansible with an Artifactory role
+- deploy a new redhat instance named `artifactory` and enable security group inbound rule for port `8081`
+- in `jenkins-ansible` server update Ansible with an Artifactory role
+- update `ci` inventory with artifactory instance private ip
+
+<br>
+
+![artifactory_ci](https://user-images.githubusercontent.com/92983658/194619045-66f9ce85-f318-4c43-a028-06d44651c7ab.png)
+
+<br>
+
+- create `static assignment/artifactory.yml`
+- update `artifactory.yml` with the following:
+```
+
+---
+- hosts: artifactory
+  become: true
+  roles:
+    - artifactory
+    
+```
+
+- update `site.yml` with the following:
+```
+
+---
+
+ - hosts: artifactory
+ - name: artifactory assignment
+   ansible.builtin.import_playbook: ../static-assignments/artifactory.yml
+   
+```
+
+<br>
+
+![artifactory_site](https://user-images.githubusercontent.com/92983658/194619586-9fb0de45-1d12-4085-a5b5-7a93c08c1756.png)
+
+<br>
+
 
 ### Phase 1 – Prepare Jenkins
 - Fork the repository below into your GitHub account: `https://github.com/darey-devops/php-todo.git`
