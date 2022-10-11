@@ -632,7 +632,13 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 
 ### Phase 2 – Integrate Artifactory repository with Jenkins
 - Create a dummy Jenkinsfile in the `php-todo` repository
-- Using Blue Ocean, create a multibranch Jenkins pipeline
+- ensure mysql is installed on `php-todo`: `sudo yum install mysql`
+- change bind address to `0.0.0.0`: `sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
+- Using Blue Ocean, create a multibranch Jenkins pipeline : `jenkins dashboard -> blue ocean -> new pipeline`
+  - store code: `github`
+  - organisation: select your project account
+  - repository: `php-todo`
+   
 - On the database server, create database and user:
   - go to `ansible-config-mgt/roles/msql/defaults/main.yml`
   - under `database` and `users` create a new database and user with the following:
@@ -666,6 +672,20 @@ GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'%';
 ![homestead_confirm](https://user-images.githubusercontent.com/92983658/195128893-e98df7cf-91ef-4eeb-8e03-426c06e12dc4.png)
 
 <br>
+
+- in `php-todo` folder Update the database connectivity requirements in the file `.env.sample`:
+
+```
+DBHOST=private ip of database server
+...
+#add the following
+DB_CONNECTION=mysql
+DB_PORT=3306
+
+```
+
+<br>
+
 
 
 - update jenkinsfile with pipeline configuration
