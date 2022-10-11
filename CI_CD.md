@@ -629,3 +629,77 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 ![artifactory_jenkins2](https://user-images.githubusercontent.com/92983658/195120055-91a41c0b-0807-4e8f-9291-a0189718457b.png)
 
 <br>
+
+### Phase 2 – Integrate Artifactory repository with Jenkins
+- Create a dummy Jenkinsfile in the `php-todo` repository
+- Using Blue Ocean, create a multibranch Jenkins pipeline
+- On the database server, create database and user:
+  - go to `ansible-config-mgt/roles/msql/defaults/main.yml`
+  - under `database` and `users` create a new database and user with the following:
+  
+```
+
+Create database homestead;
+CREATE USER 'homestead'@'%' IDENTIFIED BY 'sePret^i';
+GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'%';
+
+```
+
+<br>
+
+![homestead_Setup](https://user-images.githubusercontent.com/92983658/195124759-4b4370da-be61-4458-9b38-903833610f6a.png)
+
+<br>
+
+- upload changes to gitub and run ansible in jenkins to create new database
+
+<br>
+
+![jenkins_homestead](https://user-images.githubusercontent.com/92983658/195127363-99b62dec-652c-4788-ad88-5ff1aa296caf.png)
+
+<br>
+
+- log into database instance and confirm creation of new database `homestead`
+
+<br>
+
+![homestead_confirm](https://user-images.githubusercontent.com/92983658/195128893-e98df7cf-91ef-4eeb-8e03-426c06e12dc4.png)
+
+<br>
+
+
+- update jenkinsfile with pipeline configuration
+```
+
+pipeline {
+    agent any
+
+  stages {
+
+     stage("Initial cleanup") {
+          steps {
+            dir("${WORKSPACE}") {
+              deleteDir()
+            }
+          }
+        }
+
+    stage('Checkout SCM') {
+      steps {
+            git branch: 'main', url: 'https://github.com/darey-devops/php-todo.git'
+      }
+    }
+
+    stage('Prepare Dependencies') {
+      steps {
+             sh 'mv .env.sample .env'
+             sh 'composer install'
+             sh 'php artisan migrate'
+             sh 'php artisan db:seed'
+             sh 'php artisan key:generate'
+      }
+    }
+  }
+}
+
+```
