@@ -525,7 +525,7 @@ pipeline {
 
 ## CI/CD PIPELINE FOR TODO APPLICATION
 
-- deploy a new redhat instance named `artifactory` and enable security group inbound rule for port `8081`
+- deploy a new redhat instance named `artifactory` and create security group inbound rule for port `8081` and `8082`
 - in `jenkins-ansible` server update Ansible with an Artifactory role
 - update `ci` inventory with artifactory instance private ip
 
@@ -592,3 +592,40 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 - Install Jenkins plugins
   1. Plot plugin: jenkins dashboard -> manage jenkins -> mange plugins -> search for `plot` -> install without restart
   2. Artifactory plugin: jenkins dashboard -> manage jenkins -> mange plugins -> search for `artifactory` -> install without restart
+
+<br>
+
+- in Jenkins, ensure ansible runs against `CI` inventory to install `artifactory`
+- ensure `artifactory is installed`: `artifactory pulic ip:8081`
+
+<br>
+
+![artifactory](https://user-images.githubusercontent.com/92983658/195112387-47941def-4feb-4600-8887-a08ff9f45cd8.png)
+
+<br>
+
+- set up `artifactory`: `username: admin` and `password: password`
+  - change password
+  - skip the rest
+- create local repository 
+
+<br>
+
+![artifactory_local_repo](https://user-images.githubusercontent.com/92983658/195116810-cfcdb1bf-8c28-4606-b6b7-14e6cc89384e.png)
+
+<br>
+
+- In Jenkins UI configure Artifactory: jenkins dashboard -> manage jenkins -> configure systems
+  - Configure JFrog server ID, URL and Credentials and test connection
+   - instance ID: `Artifactory Server`
+   - instance URL: `Artifactory public ip:8081`
+   - deployer credentials: `username: admin` and `password: new artifactory password` 
+  -  run Test Connection. 
+ 
+ <br>
+ 
+ ![artifactory_jenkins_1](https://user-images.githubusercontent.com/92983658/195120025-c85afe44-b542-4d52-a226-39dad8b95d37.png)
+
+![artifactory_jenkins2](https://user-images.githubusercontent.com/92983658/195120055-91a41c0b-0807-4e8f-9291-a0189718457b.png)
+
+<br>
