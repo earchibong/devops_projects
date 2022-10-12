@@ -686,7 +686,9 @@ DB_PORT=3306
 
 <br>
 
+![php_todo_connectivity](https://user-images.githubusercontent.com/92983658/195307634-d80ba5ef-8e2f-44ac-b82f-f7fe1f50143b.png)
 
+<br>     
 
 - update jenkinsfile with pipeline configuration
 ```
