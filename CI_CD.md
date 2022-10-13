@@ -638,7 +638,13 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
   - store code: `github`
   - organisation: select your project account
   - repository: `php-todo`
-   
+
+<br>
+
+![pipeline_creation](https://user-images.githubusercontent.com/92983658/195549613-e5c06759-b4e1-44e7-948d-cb0fefbe531c.png)
+
+<br>
+
 - On the database server, create database and user:
   - go to `ansible-config-mgt/roles/msql/defaults/main.yml`
   - under `database` and `users` create a new database and user with the following:
@@ -646,8 +652,8 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 ```
 
 Create database homestead;
-CREATE USER 'homestead'@'%' IDENTIFIED BY 'sePret^i';
-GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'%';
+CREATE USER 'homestead'@'jenkins private ip' IDENTIFIED BY 'sePret^i';
+GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'jenkins private ip';
 
 ```
 
@@ -676,9 +682,10 @@ GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'%';
 - in `php-todo` folder Update the database connectivity requirements in the file `.env.sample`:
 
 ```
-DBHOST=private ip of database server
-...
-#add the following
+DB_HOST=172.31.4.7
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=sePret^i
 DB_CONNECTION=mysql
 DB_PORT=3306
 
@@ -708,7 +715,7 @@ pipeline {
 
     stage('Checkout SCM') {
       steps {
-            git branch: 'main', url: 'https://github.com/darey-devops/php-todo.git'
+            git branch: 'main', url: '<php todo git repository url>'
       }
     }
 
@@ -725,3 +732,34 @@ pipeline {
 }
 
 ```
+
+<br>
+
+The first stage performs a clean-up which always deletes the previous workspace before running a new one
+
+The second stage connects to the php-todo repository
+
+The third stage performs a shell scripting which renames .env.sample file to .env, then composer is used by PHP to install all the dependent libraries used by the application and then php artisan uses the .env to setup the required database objects
+
+<br>
+
+- upload changes to github and run pipeline in jenkins
+
+<br>
+
+- login to the database, run `show tables` and you will see the tables being created for you
+
+- Update the Jenkinsfile to include Unit tests step
+
+```
+
+stage('Execute Unit Tests') {
+      steps {
+             sh './vendor/bin/phpunit'
+      } 
+      
+ ```
+ 
+ <br>
+ 
+ 
