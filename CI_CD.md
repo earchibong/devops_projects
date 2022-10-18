@@ -354,7 +354,7 @@ pipeline {
 - **update inventory file**
 - open `ansible-config-mgt/inventory/dev.yml`
   - update `[nginx]`: `nginx ip ansible_ssh_user='ec2-user'`
-  - update `[db]`: `db ip ansible_ssh_user='ubuntu'
+  - update `[db]`: `db ip ansible_ssh_user='ubuntu'`
 
 <br>
 
@@ -388,7 +388,7 @@ pipeline {
   - change name of database to tooling website DB name: `tooling`
   - change name of users: `webaccess`
   - change host to: `0.0.0.0`
-  - change priv to: '*.*:ALL,GRANT'
+  - change priv to: `'*.*:ALL,GRANT'`
 
 - **edit roles configuration for nginx**
 - in roles/nginx/defaults/main: leave empty
