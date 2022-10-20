@@ -663,14 +663,6 @@ GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'jenkins private ip';
 
 <br>
 
-- upload changes to gitub and run ansible in jenkins to create new database
-
-<br>
-
-![jenkins_homestead](https://user-images.githubusercontent.com/92983658/195127363-99b62dec-652c-4788-ad88-5ff1aa296caf.png)
-
-<br>
-
 - Using Blue Ocean, create a multibranch Jenkins pipeline : `jenkins dashboard -> blue ocean -> new pipeline`
   - store code: `github`
   - organisation: select your project account
@@ -679,6 +671,14 @@ GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'jenkins private ip';
 <br>
 
 ![pipeline_creation](https://user-images.githubusercontent.com/92983658/195549613-e5c06759-b4e1-44e7-948d-cb0fefbe531c.png)
+
+<br>
+
+- upload changes to gitub and run ansible in jenkins to create new database
+
+<br>
+
+![jenkins_homestead](https://user-images.githubusercontent.com/92983658/195127363-99b62dec-652c-4788-ad88-5ff1aa296caf.png)
 
 <br>
 
