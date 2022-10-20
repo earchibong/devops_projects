@@ -694,7 +694,7 @@ GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'jenkins private ip';
 - in `php-todo` folder Update the database connectivity requirements in the file `.env.sample`:
 
 ```
-DB_HOST=172.31.4.7
+DB_HOST=<Database server private ip>
 DB_DATABASE=homestead
 DB_USERNAME=homestead
 DB_PASSWORD=sePret^i
