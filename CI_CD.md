@@ -643,7 +643,7 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 - Fork the repository below into your GitHub account: `https://github.com/darey-devops/php-todo.git`
 - Create a dummy Jenkinsfile in the `php-todo` repository
 - ensure mysql is installed on `php-todo`: `sudo yum install mysql`
-- change bind address to `0.0.0.0`: `sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
+- in database server, change bind address to `0.0.0.0`: `sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
 - Using Blue Ocean, create a multibranch Jenkins pipeline : `jenkins dashboard -> blue ocean -> new pipeline`
   - store code: `github`
   - organisation: select your project account
