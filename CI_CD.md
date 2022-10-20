@@ -625,7 +625,7 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 <br>
 
 - In Jenkins UI configure Artifactory: jenkins dashboard -> manage jenkins -> configure systems
-  - Configure JFrog server ID, URL and Credentials and test connection
+  - Configure JFrog server ID, URL and Credentials and test connection -> click `add jfrog instance details`
    - instance ID: `Artifactory Server`
    - instance URL: `Artifactory public ip:8081`
    - deployer credentials: `username: admin` and `password: new artifactory password` 
