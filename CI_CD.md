@@ -529,6 +529,13 @@ pipeline {
 
 - deploy a new redhat instance named `artifactory` and create security group inbound rule for port `8081` and `8082`
 - in `jenkins-ansible` server update Ansible with an Artifactory role
+
+<br>
+
+![artifactory-role](https://user-images.githubusercontent.com/92983658/196894000-a109a222-064e-40ee-b4bd-368f87f28fab.png)
+
+<br>
+
 - update `ci` inventory with artifactory instance private ip
 
 <br>
@@ -568,7 +575,7 @@ pipeline {
 
 
 ### Step Three – Configure Jenkins Server
-- Fork the repository below into your GitHub account: `https://github.com/darey-devops/php-todo.git`
+
 - On Jenkins server, install PHP, its dependencies and Composer tool
 ```
 
@@ -633,6 +640,7 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 <br>
 
 ### Step Four – Integrate Artifactory repository with Jenkins
+- Fork the repository below into your GitHub account: `https://github.com/darey-devops/php-todo.git`
 - Create a dummy Jenkinsfile in the `php-todo` repository
 - ensure mysql is installed on `php-todo`: `sudo yum install mysql`
 - change bind address to `0.0.0.0`: `sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
