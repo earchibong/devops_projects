@@ -644,16 +644,6 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 - Create a dummy Jenkinsfile in the `php-todo` repository
 - ensure mysql is installed on `php-todo`: `sudo yum install mysql`
 - in database server, change bind address to `0.0.0.0`: `sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
-- Using Blue Ocean, create a multibranch Jenkins pipeline : `jenkins dashboard -> blue ocean -> new pipeline`
-  - store code: `github`
-  - organisation: select your project account
-  - repository: `php-todo`
-
-<br>
-
-![pipeline_creation](https://user-images.githubusercontent.com/92983658/195549613-e5c06759-b4e1-44e7-948d-cb0fefbe531c.png)
-
-<br>
 
 - On the `jenkins-ansible` server: 
   - go to `ansible-config-mgt/roles/msql/defaults/main.yml`
@@ -680,6 +670,18 @@ GRANT ALL PRIVILEGES ON * . * TO 'homestead'@'jenkins private ip';
 ![jenkins_homestead](https://user-images.githubusercontent.com/92983658/195127363-99b62dec-652c-4788-ad88-5ff1aa296caf.png)
 
 <br>
+
+- Using Blue Ocean, create a multibranch Jenkins pipeline : `jenkins dashboard -> blue ocean -> new pipeline`
+  - store code: `github`
+  - organisation: select your project account
+  - repository: `php-todo`
+
+<br>
+
+![pipeline_creation](https://user-images.githubusercontent.com/92983658/195549613-e5c06759-b4e1-44e7-948d-cb0fefbe531c.png)
+
+<br>
+
 
 - log into database instance and confirm creation of new database `homestead`
 
