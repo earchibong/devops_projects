@@ -655,7 +655,7 @@ sudo apt install -y zip libapache2-mod-php phploc php-{xml,bcmath,bz2,intl,gd,mb
 
 <br>
 
-- On the database server, create database and user:
+- On the `jenkins-ansible` server: 
   - go to `ansible-config-mgt/roles/msql/defaults/main.yml`
   - under `database` and `users` create a new database and user with the following:
   
