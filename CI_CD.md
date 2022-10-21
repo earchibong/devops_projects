@@ -789,7 +789,7 @@ stage('Execute Unit Tests') {
 <br>
 
 ### Step Five – Structuring Jenkins File: Code Quality Analysis
-
+- in `php-todo terminal`, install `phploc`: `sudo dnf --enablerepo=remi install php-phpunit-phploc`
 - Add the code analysis step in `Jenkinsfile`. The output of the data will be saved in `build/logs/phploc.csv file`.
 ```
 stage('Code Analysis') {
@@ -813,7 +813,6 @@ stage('Code Analysis') {
 
 
 - **Plot the data using `plot` Jenkins plugin**:
-- in `php-todo terminal`, install `phploc`: `sudo dnf --enablerepo=remi install php-phpunit-phploc`
 
 - Add the following to `php-todo jenkinsfile`:
 ```
