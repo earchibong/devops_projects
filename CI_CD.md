@@ -895,7 +895,14 @@ stage('Plot Code Coverage Report') {
 
  <br>
  
+ ![upload_to_artifactoryy](https://user-images.githubusercontent.com/92983658/197230513-27a3b705-994e-487e-a328-7a91b0e05215.png)
  
+ <br>
+ 
+![artifactory_artifact_upload](https://user-images.githubusercontent.com/92983658/197230531-890bbb6c-1e5f-40f0-9d7a-a97e5b6afd01.png)
+
+<br>
+
  - Deploy the application to the `dev environment` by launching Ansible pipeline
  
  ```
