@@ -811,19 +811,11 @@ stage('Code Analysis') {
 
 <br>
 
-- install phpunit, phploc:
-```
-
-- sudo dnf --enablerepo=remi install php-phpunit-phploc
-- wget -O phpunit https://phar.phpunit.de/phpunit-7.phar
-- chmod +x phpunit
-- sudo yum  install php-xdebug
-
-```
-
 
 - **Plot the data using `plot` Jenkins plugin**:
-- Add the following to `jenkinsfile`:
+- in `php-todo terminal`, install `phploc`: `sudo dnf --enablerepo=remi install php-phpunit-phploc`
+
+- Add the following to `php-todo jenkinsfile`:
 ```
 
 stage('Plot Code Coverage Report') {
