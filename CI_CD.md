@@ -838,7 +838,13 @@ stage('Plot Code Coverage Report') {
  ```
  
  <br>
+ 
+ ![plot_code_coverage](https://user-images.githubusercontent.com/92983658/197168758-a1504b32-6275-4adf-92eb-7f9515a5b376.png)
+ 
+ <br>
+ 
  - install `zip`: `sudo yum install zip -y`
+ 
  - Bundle the application code for into an artifact (archived package) upload to Artifactory
  
  ```
