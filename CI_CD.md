@@ -902,8 +902,7 @@ stage('Plot Code Coverage Report') {
  
  stage ('Deploy to Dev Environment') {
     steps {
-    build job: 'ansible-project/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
-    }
+    build job: 'ansible-project/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true 
   }
   
 ```
