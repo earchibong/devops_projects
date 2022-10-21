@@ -859,6 +859,9 @@ stage('Plot Code Coverage Report') {
  
  <br>
  
+ ![package_artifact](https://user-images.githubusercontent.com/92983658/197171350-dcaebbe0-4cbe-4530-a606-1384f90f8557.png)
+
+<br>
  
  - Publish the resulted artifact into Artifactory
  ```
