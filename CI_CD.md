@@ -709,7 +709,7 @@ DB_PORT=3306
 
 <br>     
 
-- update jenkinsfile with pipeline configuration
+- update `php-todo jenkinsfile` with pipeline configuration
 ```
 
 pipeline {
