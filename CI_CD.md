@@ -838,7 +838,7 @@ stage('Plot Code Coverage Report') {
  ```
  
  <br>
- 
+ - install `zip`: `sudo yum install zip -y`
  - Bundle the application code for into an artifact (archived package) upload to Artifactory
  
  ```
@@ -853,7 +853,6 @@ stage('Plot Code Coverage Report') {
  
  <br>
  
- - install `zip`: `sudo yum install zip -y` 
  
  - Publish the resulted artifact into Artifactory
  ```
