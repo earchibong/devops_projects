@@ -983,8 +983,8 @@ stage('Plot Code Coverage Report') {
       get_url:
         url: http://3.125.156.235:8082/artifactory/PBL/php-todo
         dest: /home/ec2-user/
-        url_username: admin
-        url_password: APBKm4qXoDaoE4pTfHAD6iPnJMh  
+        url_username: <artifactory username>
+        url_password: <artifactory password> 
 
 
     - name: unzip the artifacts
@@ -1011,8 +1011,28 @@ stage('Plot Code Coverage Report') {
         state: restarted
         
  ```
-   
+ *note: be sure to update `download the artifact` details with `artifactory artifactory url` and `encrypted password`*  
+ 
  <br>
+ 
+ - get encrypted password from artifactory:
+  - click `set me up`
+  - under `configure` enter artifactory password and press green button
+  - under `deploy`: copy encrypted password
+
+<br>
+
+![Screenshot 2022-10-22 at 09 52 07](https://user-images.githubusercontent.com/92983658/197330516-69e85cd5-7789-43be-b354-e69a39652117.png)
+
+<br>
+
+![Screenshot 2022-10-22 at 09 51 23](https://user-images.githubusercontent.com/92983658/197330533-49bfa96a-75dc-48c0-8e06-d67677dc708c.png)
+
+<br>
+
+![Screenshot 2022-10-22 at 09 51 40](https://user-images.githubusercontent.com/92983658/197330554-12fe113c-87b9-45c6-8dda-3e3f36f66ca2.png)
+
+<br>
    
 - update `site.yml`:
 ```
@@ -1030,6 +1050,20 @@ stage('Plot Code Coverage Report') {
  ![todo_site-yml](https://user-images.githubusercontent.com/92983658/197328824-f9160d31-bc06-4955-a9c1-f9e2807b7576.png)
 
 <br>
+
+- upload changes to github
+- build job in jenkins and ensure job in both pipelines: `ansible-config-mgt` and `php-todo` are successfull
+
+<br>
+
+![ansible-config-success](https://user-images.githubusercontent.com/92983658/197331593-94acaf66-e19a-478e-baeb-3b4d5dc62a06.png)
+
+<br>
+
+![php-todo-success](https://user-images.githubusercontent.com/92983658/197331600-9538b5b1-3ce7-4e5a-8a64-625963893321.png)
+
+<br>
+
 
 
 
