@@ -903,16 +903,133 @@ stage('Plot Code Coverage Report') {
 
 <br>
 
- - Deploy the application to the `dev environment` by launching Ansible pipeline
+ - **Deploy the application to the `dev environment` by launching Ansible pipeline**
  
+ - copy the following stage to `php-todo jenkinsfile`:
  ```
  
  stage ('Deploy to Dev Environment') {
     steps {
-    build job: 'ansible-project/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true 
+    build job: '<ansible-project-name>/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true 
   }
   
 ```
- 
- 
+
+<br>
+
+- launch a new redhat instance named: `todo`
+- update `dev inventory` with `todo ip address`
+
+<br>
+
+![todo_inventory](https://user-images.githubusercontent.com/92983658/197328658-ffe892c2-b729-45b1-b507-d31e29326c8f.png)
+
+<br>
+
+- create a new static assignment file named `deployment.yml` and add the following:
+```
+
+---
+- name: Deploying the PHP Applicaion to Dev Enviroment
+  become: true
+  hosts: todo
+
+  tasks:
+    - name: install remi and rhel repo
+      ansible.builtin.yum:
+        name: 
+          - https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+          - dnf-utils
+          - http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+        disable_gpg_check: yes
+
+    
+    - name: install httpd on the webserver
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+
+    - name: ensure httpd is started and enabled
+      ansible.builtin.service:
+        name: httpd
+        state: started 
+        enabled: yes
+      
+    - name: install PHP
+      ansible.builtin.yum:
+        name:
+          - php 
+          - php-mysqlnd
+          - php-gd 
+          - php-curl
+          - unzip
+          - php-common
+          - php-mbstring
+          - php-opcache
+          - php-intl
+          - php-xml
+          - php-fpm
+          - php-json
+        enablerepo: php:remi-7.4
+        state: present
+    
+    - name: ensure php-fpm is started and enabled
+      ansible.builtin.service:
+        name: php-fpm
+        state: started 
+        enabled: yes
+
+    - name: Download the artifact
+      get_url:
+        url: http://3.125.156.235:8082/artifactory/PBL/php-todo
+        dest: /home/ec2-user/
+        url_username: admin
+        url_password: APBKm4qXoDaoE4pTfHAD6iPnJMh  
+
+
+    - name: unzip the artifacts
+      ansible.builtin.unarchive:
+       src: /home/ec2-user/php-todo
+       dest: /home/ec2-user/
+       remote_src: yes
+
+    - name: deploy the code
+      ansible.builtin.copy:
+        src: /home/ec2-user/var/lib/jenkins/workspace/php-todo_main/
+        dest: /var/www/html/
+        force: yes
+        remote_src: yes
+
+    - name: remove nginx default page
+      ansible.builtin.file:
+        path: /etc/httpd/conf.d/welcome.conf
+        state: absent
+
+    - name: restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+        
+ ```
+   
+ <br>
+   
+- update `site.yml`:
+```
+
+---
+
+- hosts: todo
+- name: Deploy the todo application
+   ansible.builtin.import_playbook: ../static-assignments/deployment.yml
+   
+```
+
+<br>
+
+ ![todo_site-yml](https://user-images.githubusercontent.com/92983658/197328824-f9160d31-bc06-4955-a9c1-f9e2807b7576.png)
+
+<br>
+
+
 
