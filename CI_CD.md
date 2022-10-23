@@ -1064,6 +1064,13 @@ stage('Plot Code Coverage Report') {
 
 <br>
 
+## Step Six: Set Up SonarQube Server
 
+**Install SonarQube on Ubuntu 20.04 With PostgreSQL as Backend Database**
+
+- launch an ubuntu instance named `sonarqube`
+- create ansible role for sonarqube:
+  - in `ansible-config-mgt/roles` create a new sonarqube directory with:  `ansible-galaxy install capitanh.sonar_ansible_role`
+  - rename directory to `sonarqube`: `mv capitanh.sonar_ansible_role/ sonarqube`
 
 
