@@ -1072,5 +1072,51 @@ stage('Plot Code Coverage Report') {
 - create ansible role for sonarqube:
   - in `ansible-config-mgt/roles` create a new sonarqube directory with:  `ansible-galaxy install capitanh.sonar_ansible_role`
   - rename directory to `sonarqube`: `mv capitanh.sonar_ansible_role/ sonarqube`
+- install `postgresql community`: `ansible-galaxy collection install community.postgresql`
+- in `static assignment` add new file: `sonar.yml` and add the following:
+```
+
+---
+- hosts: sonar
+  become: true
+  roles:
+     - sonarqube
+     
+```
+
+<br>
+
+![sonar_yml](https://user-images.githubusercontent.com/92983658/197589641-802008e8-c02a-4b8f-b283-cdb1f04e8986.png)
+
+<br>
+
+- update `CI inventory` with `sonarqube private ip`
+
+<br>
+
+![sonarqube_ci](https://user-images.githubusercontent.com/92983658/197581736-fd50422b-e357-4247-973a-f3a42a8f780c.png)
+
+<br>
+
+- update `site.yml`:
+```
+---
+
+ - hosts: sonar
+ - name: sonar assignment
+   ansible.builtin.import_playbook: ../static-assignments/sonar.yml
+  
+```
+
+<br>
+
+![playbook_sonarqube](https://user-images.githubusercontent.com/92983658/197582133-238e17f6-00e6-433b-a195-7a6064c60d27.png)
+
+<br>
+
+- upload changes to git hub
+-  build a job in jenkins with `CI` parameters
+
+<br>
 
 
