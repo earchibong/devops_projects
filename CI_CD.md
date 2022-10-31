@@ -1064,7 +1064,7 @@ stage('Plot Code Coverage Report') {
 
 <br>
 
-## Step Six: Set Up SonarQube Server
+## Step Six: Install And Configure SonarQube Server
 
 **Install SonarQube on Ubuntu 20.04 With PostgreSQL as Backend Database**
 
@@ -1118,5 +1118,131 @@ stage('Plot Code Coverage Report') {
 -  build a job in jenkins with `CI` parameters
 
 <br>
+
+![sonar_ansible_install](https://user-images.githubusercontent.com/92983658/199008257-11c0b691-af32-423d-9e7f-0895bc03ce00.png)
+
+<br>
+
+- open `port 9000` in `sonarqube` security group
+- access `sonarqube`: `sonarqube ip : 9000/sonar`
+
+<br>
+
+![sonarqube](https://user-images.githubusercontent.com/92983658/199010151-667893c6-be11-4681-9afa-f56c008fc628.png)
+
+<br>
+
+- log in to `sonarqube` with default administrator username and password – `admin`
+
+<br>
+
+![sonar_login](https://user-images.githubusercontent.com/92983658/199011022-c09882a4-f2c3-483e-a6a5-fbff5ca100cd.png)
+
+<br>
+
+### CONFIGURE SONARQUBE AND JENKINS FOR QUALITY GATE
+
+- In Jenkins, install `SonarQube Scanner plugin`: `dashboard -> manage jenkins -> manage plugins -> search and install sonarqubescanner`
+- Navigate to configure system in Jenkins. Add SonarQube server as shown below: `Manage Jenkins > Configure System`
+
+<br>
+
+![jenkins_sonar_1](https://user-images.githubusercontent.com/92983658/199014145-061c8616-a115-4906-98f7-e0afb8227736.png)
+
+![jenkins_sonar_2](https://user-images.githubusercontent.com/92983658/199014163-cf8950b4-931d-421f-9bc9-d97aa69ec24a.png)
+
+<br>
+
+Generate authentication token in SonarQube: `User > My Account > Security > Generate Tokens`
+
+<br>
+
+![sonar-jenkins](https://user-images.githubusercontent.com/92983658/199015079-14a79e47-6715-4c03-92b9-ad446818fa6e.png)
+
+<br>
+
+- Configure Quality Gate Jenkins Webhook in SonarQube – The URL should point to Jenkins server `http://{JENKINS_HOST}/sonarqube-webhook/`
+  - `Administration > Configuration > Webhooks > Create`
+
+<br>
+
+![sonar_webhook](https://user-images.githubusercontent.com/92983658/199016580-3f8530bd-dc83-478f-84f1-451a6e005d89.png)
+
+<br>
+
+![sonarqube_webhooks_2](https://user-images.githubusercontent.com/92983658/199016779-4df445ef-2510-457f-bc5f-97fc6d85022c.png)
+
+<br>
+
+- Setup SonarQube scanner from Jenkins – Global Tool Configuration : `Manage Jenkins > Global Tool Configuration`
+
+<br>
+
+![jenkins_sonar_qubescanner](https://user-images.githubusercontent.com/92983658/199017638-9a4a113c-8e68-4bce-8899-8e3c8e3c3a60.png)
+
+<br>
+
+- Update Jenkins Pipeline to include SonarQube scanning and Quality Gate. This should be before the `pacakgeartifact stage`.
+Below is the snippet for a Quality Gate stage in `php-todo Jenkinsfile.`
+
+```
+
+stage('SonarQube Quality Gate') {
+        environment {
+            scannerHome = tool 'SonarQubeScanner'
+        }
+        steps {
+            withSonarQubeEnv('sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner"
+            }
+
+        }
+    }
+
+
+```
+
+<br>
+
+- Configure `sonar-scanner.properties`
+  - From the step above, Jenkins will install the scanner tool on the Linux server
+  - go into the tools directory on the server to configure the properties file in which SonarQube will require to function during pipeline execution
+  
+```
+
+cd /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQubeScanner/conf/
+
+```
+
+<br>
+
+- Open `sonar-scanner.properties` file: `sudo vi sonar-scanner.properties`
+- Add configuration related to `php-todo` project
+```
+
+sonar.host.url=http://<SonarQube-Server-IP-address>:9000
+sonar.projectKey=php-todo
+#----- Default source code encoding
+sonar.sourceEncoding=UTF-8
+sonar.php.exclusions=**/vendor/**
+sonar.php.coverage.reportPaths=build/logs/clover.xml
+sonar.php.tests.reportPath=build/logs/junit.xml
+
+```
+
+<br>
+
+![sonar_scanner_properties](https://user-images.githubusercontent.com/92983658/199022170-88cd90b8-3452-416b-8d07-d4568d24aed0.png)
+
+<br>
+
+*side note: To know what exactly to put inside the sonar-scanner.properties file, SonarQube has a configurations page where you can get some directions.*
+
+- upload to git and run `php-todo pipeline job`
+
+
+
+
+
 
 
