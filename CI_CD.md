@@ -1409,6 +1409,74 @@ pipeline {
 
 ```
 
+<br>
+
+## Additional Tasks:
+### Introduce Jenkins agents/slaves 
+– Add 2 more servers to be used as Jenkins slave. 
+  - launch 2 red hat instances called `jenkins slave`
+  - connect to `jenkins slave` from local terminal
+  - install java snd dependencies:
+
+```
+
+- sudo yum install java-11-openjdk-devel -y
+- yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+- yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+# open the bash profile 
+- vi .bash_profile 
+
+# paste the below in the bash profile
+export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar
+
+# reload the bash profile
+- source ~/.bash_profile
+
+
+```
+
+<br>
+
+- Configure Jenkins to run its pipeline jobs randomly on any available slave nodes.
+  - in jenkins, create a new node named `agent_1`: `manage jenkins -> manage nodes and clouds`
+
+<br>
+
+![new_node_agent](https://user-images.githubusercontent.com/92983658/199229020-9ecd45b4-dc16-432c-b5d0-26fae4d843fb.png)
+
+<br>
+
+- configure `agent_1`:
+  - remote root directory: `home/ec2-user/`
+  - launch method: mauch agent via ssh
+   - host: `jenkins slave private ip`
+   - credentials: `ec2-user credentials created at the start of the project that is stored on jenkins`
+   - host verification strategy: `non-verifying verifaction strategy`
+ 
+ <br>
+ 
+ ![launnch_node](https://user-images.githubusercontent.com/92983658/199230235-b2ba6dff-6e40-4a91-889c-181852765e77.png)
+
+<br>
+
+- Configure webhook between Jenkins and GitHub to automatically run the pipeline when there is a code push.
+  - `php-todo repository -> settings -> webhooks -> add webhook`
+  - payload url: `jenkins url:8080/github-webhook`
+  
+<br>
+
+![github-webhook](https://user-images.githubusercontent.com/92983658/199234119-3fce7f29-fd2f-4d83-936c-ee467c24741d.png)
+
+<br>
+
+![webhook_2](https://user-images.githubusercontent.com/92983658/199234205-d21c5a76-1052-4206-91b3-d12ea260cf73.png)
+
+<br>
+
+
 
 
 
