@@ -10,6 +10,10 @@ from NGINX to achieve this. The infrastructure will look like following diagram:
 
 <br>
 
+![image](https://user-images.githubusercontent.com/92983658/199484750-f45c1807-4153-4e78-ac17-3d033579e735.png)
+
+<br>
+
 The following outlines the steps taken:
 
 <br>
@@ -45,5 +49,8 @@ The following outlines the steps taken:
 
 <br>
 
-
-Login to the newly created AWS account using the new email address.
+- Login to the newly created AWS account using the new email address.
+  - in `aws accounts` copy account id of `devops` 
+  - on AWS navigation bar -> click `adminstrator @ <root user name> -> select `switch role` in the drop down menu
+  - click `switch role button`
+  - 
