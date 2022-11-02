@@ -16,12 +16,9 @@ The following outlines the steps taken:
 
 ## Step One: Configure AWS account and organisational units
 
-- Create an AWS Master account. (Also known as Root Account)
-- Within the Root account, create an AWS Organization Unit (OU). Name it `Dev`
-  - search for `AWS organisations` -> `create AWS organisation`
-  
-- Within `AWS organisations`, create a sub-account and name it `DevOps`.
-  - `AWS organisations` -> `AWS accounts` -> `add an AWS account`
+- Create an AWS Master account. (Also known as Root Account) 
+- Within the Root account, create a sub-account and name it `DevOps`
+  - Search for `AWS organisations` -> `create organisation` -> `AWS accounts` -> `add an AWS account`
 
 <br>
 
@@ -29,5 +26,24 @@ The following outlines the steps taken:
 
 <br>
 
-Move the DevOps account into the Dev OU.
+- Within the Root account, create an AWS Organization Unit (OU). Name it `Dev`
+  - `AWS organisations` -> `AWS accounts` -> `root` -> `children` -> click `actions` -> `organisational unit` -> `create new`
+
+<br>
+
+![dev_ou](https://user-images.githubusercontent.com/92983658/199481770-ed66d92a-b915-4288-97de-bd3a8b86f091.png)
+
+<br>
+
+- Move the DevOps account into the Dev OU.
+  - `aws organisations` -> `aws accounts` -> select `Devops` -> under `Actions` select `move`
+  - set destination account to `dev`
+
+<br>
+
+![move_devops](https://user-images.githubusercontent.com/92983658/199483551-51f3ff0d-646d-44d0-ab98-dc433bb441ba.png)
+
+<br>
+
+
 Login to the newly created AWS account using the new email address.
