@@ -50,7 +50,11 @@ The following outlines the steps taken:
 <br>
 
 - Login to the newly created AWS account using the new email address.
-  - in `aws accounts` copy account id of `devops` 
-  - on AWS navigation bar -> click `adminstrator @ <root user name> -> select `switch role` in the drop down menu
-  - click `switch role button`
-  - 
+  - From the upper-right corner of the AWS Organizations console, choose the link that contains your current sign-in name and 
+  then choose `Switch Role.`
+  - Enter the administrator-provided `account ID` number and role name: `OrganizationAccountAccessRole`
+  - For Display Name, enter the text that you want to show on the navigation bar in the upper-right corner in place of your 
+  user name while you are using the role. You can optionally choose a color
+  - Choose Switch Role. Now all actions that you perform are done with the permissions granted to the role that you switched to. 
+  You no longer have the permissions associated with your original IAM user until you switch back
+  - When you finish performing actions that require the permissions of the role, you can switch back to your normal IAM user. Choose the role name in the upper-right corner (whatever you specified as the Display Name) and then choose `Back to UserName`
