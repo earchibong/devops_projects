@@ -23,10 +23,11 @@ The following outlines the steps taken:
 - Create an AWS Master account. (Also known as Root Account) 
 - Within the Root account, create a sub-account and name it `DevOps`
   - Search for `AWS organisations` -> `create organisation` -> `AWS accounts` -> `add an AWS account`
+  - Leave the IAM role name as the default *OrganizationAccountAccessRole *(this is important).
 
 <br>
 
-![subaccount](https://user-images.githubusercontent.com/92983658/199480089-9e4d87cf-6ca4-406f-ae50-88fb1af25aed.png)
+![DevOps](https://user-images.githubusercontent.com/92983658/199729743-9183cbee-04ac-42c8-99e6-6929b4edc5d3.png)
 
 <br>
 
