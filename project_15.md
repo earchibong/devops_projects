@@ -68,7 +68,7 @@ The following outlines the steps taken:
 
 - Create a free domain name for your fictitious company at <a href="https://www.freenom.com/">Freenom domain registrar</a>
 
-- Create a hosted zone in AWS, and map it to your free domain from Freenom. Read how to do that <ahref="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">here</a> and <ahref="">here</a>
+- Create a hosted zone in AWS, and map it to your free domain from Freenom. Read how to do that <a href="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">here</a> and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html">here</a>
 
 *NOTE : As you proceed with configuration, ensure that all resources are appropriately tagged, for example:*
 *Project: <Give your project a name>*
