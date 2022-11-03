@@ -59,3 +59,19 @@ The following outlines the steps taken:
   - Choose Switch Role. Now all actions that you perform are done with the permissions granted to the role that you switched to. 
   You no longer have the permissions associated with your original IAM user until you switch back
   - When you finish performing actions that require the permissions of the role, you can switch back to your normal IAM user. Choose the role name in the upper-right corner (whatever you specified as the Display Name) and then choose `Back to UserName`
+
+<br>
+
+![switch_role](https://user-images.githubusercontent.com/92983658/199731982-4a3630f3-c445-4880-b9d1-c8efda0e9909.png)
+
+<br>
+
+- Create a free domain name for your fictitious company at <a href="https://www.freenom.com/">Freenom domain registrar</a>
+
+- Create a hosted zone in AWS, and map it to your free domain from Freenom. Read how to do that <ahref="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">here</a> and <ahref="">here</a>
+
+*NOTE : As you proceed with configuration, ensure that all resources are appropriately tagged, for example:*
+*Project: <Give your project a name>*
+*Environment: <dev>*
+*Automated: <No> (If you create a recource using an automation tool, it would be <Yes>)*
+
