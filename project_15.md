@@ -77,6 +77,10 @@ The following outlines the steps taken:
 
 <br>
 
+![hosted_zone_2](https://user-images.githubusercontent.com/92983658/199963864-a9e9e5b4-74fc-4e2b-a1ba-86fcc75114d9.png)
+
+<br>
+
 
 Read how to do that <a href="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">here</a> and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html">here</a> also how to <a href="https://medium.com/@kcabading/getting-a-free-domain-for-your-ec2-instance-3ac2955b0a2f"> map route 53 nameservers to freenom</a>
 
@@ -89,3 +93,21 @@ Read how to do that <a href="https://github.com/earchibong/devops_training/blob/
   
 ## Step Two: SET UP A VIRTUAL PRIVATE NETWORK (VPC)
 Always make reference to the architectural diagram and ensure that your configuration is aligned with it.
+
+### Create a VPC
+- search for VPC in AWS search bar
+- Select `create VPC` in VPC console:
+  - resources to create: `VPC only`
+  - name_tag: `project name`
+  - IPv4 CIDR block: select `IPv4 CIDR manual input`
+  - IPv4 CIDR: `10.0.0.0/16`
+  - IPv6 CIDR block: select `No IPv6 CIDR block`
+  - tanancy: `default`
+
+<br>
+
+![vpc](https://user-images.githubusercontent.com/92983658/199966649-ead54dca-1c57-4c36-b661-a6eea2bd2ea6.png)
+
+<br>
+ 
+  
