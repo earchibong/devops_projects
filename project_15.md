@@ -71,10 +71,21 @@ The following outlines the steps taken:
 - Create a hosted zone in AWS, and map it to your free domain from Freenom.
   - `route 53 dashboard` -> `create hosted zone` 
 
-Read how to do that <a href="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">here</a> and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html">here</a>
+<br>
+
+![hosted_zone](https://user-images.githubusercontent.com/92983658/199962765-0d0f5dd5-b203-4fbe-9e77-a63e91335a2c.png)
+
+<br>
+
+
+Read how to do that <a href="https://github.com/earchibong/devops_training/blob/main/nginx_load_balancer.md">here</a> and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-working-with.html">here</a> also how to <a href="https://medium.com/@kcabading/getting-a-free-domain-for-your-ec2-instance-3ac2955b0a2f"> map route 53 nameservers to freenom</a>
 
 *NOTE : As you proceed with configuration, ensure that all resources are appropriately tagged, for example:*
 *Project: <Give your project a name>*
 *Environment: <dev>*
 *Automated: <No> (If you create a recource using an automation tool, it would be <Yes>)*
 
+<br>
+  
+## Step Two: SET UP A VIRTUAL PRIVATE NETWORK (VPC)
+Always make reference to the architectural diagram and ensure that your configuration is aligned with it.
