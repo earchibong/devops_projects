@@ -109,5 +109,66 @@ Always make reference to the architectural diagram and ensure that your configur
 ![vpc](https://user-images.githubusercontent.com/92983658/199966649-ead54dca-1c57-4c36-b661-a6eea2bd2ea6.png)
 
 <br>
- 
   
+- Edit `DNS hostnames`: click `Your VPCs`, select a VPC, and choose `Actions` -> `Edit VPC settings` -> click `Enable DNS hostnames`
+
+<br>
+
+![edit_DNS_hotstname](https://user-images.githubusercontent.com/92983658/199969284-a96462d1-c0f5-4bfb-ae96-c2b1792a3475.png)
+
+<br>
+ 
+### Create An Internet Gateway
+- select `Internet Gateway` in VPC console:
+  - Select `Create Internet Gateway`
+  - name: `project_15_igw`
+
+<br>
+
+![create_internet_gateway](https://user-images.githubusercontent.com/92983658/199969643-01611e21-5488-4944-9b63-45cbf0ace008.png)
+
+<br>
+
+- Attach internet gateway to VPC
+  - In internet gateway console:
+   - select your newly created internet gateway
+   - under `actions` select `attach to VPC`
+   - select `project_15_vpc`
+
+<br>
+
+![attach_to_vpc](https://user-images.githubusercontent.com/92983658/199970264-553ff3d6-fabe-4561-bd63-16c176991a20.png)
+
+<br>
+  
+![attach_internet_gateway](https://user-images.githubusercontent.com/92983658/199970461-34af05e1-16da-43e3-881f-d7080154dd4f.png)
+
+<br>
+  
+
+### Create 6 subnets as shown in the architecture
+
+- subnets to create:
+  - public subnet 1
+  - public subnet 2
+  - private subnet 1
+  - private subnet 2
+  - private subnet 3
+  - private subnet 4
+ 
+- select `subnets` from VPC console
+  - select `create subnet`
+  - VPC ID: select `project 15` VPC
+  - Subnet Settings:
+   - subnet name:`Public_subnet_1`
+   - Availability zone: pick what is avaialbe according to diagram design and ensure the rest of the subnets match design
+   - IPv4 CIDR block: `10.0.1.0/24`
+
+<br>
+
+![subnet_1](https://user-images.githubusercontent.com/92983658/199973267-a31541df-68cb-407f-99cd-a046a4bc4dfa.png)
+![subnet_b](https://user-images.githubusercontent.com/92983658/199973274-dfcc4798-9dbc-4064-ac8b-54cb71970a07.png)
+
+<br>
+
+
