@@ -149,12 +149,14 @@ Always make reference to the architectural diagram and ensure that your configur
 ### Create 6 subnets as shown in the architecture
 
 - subnets to create:
-  - public subnet 1
-  - public subnet 2
-  - private subnet 1
-  - private subnet 2
-  - private subnet 3
-  - private subnet 4
+  - Availability zone a:
+    - public subnet 1
+    - private subnet 1
+    - private subnet 3
+  - Availability zone b:
+    - public subnet 2
+    - private subnet 2
+    - private subnet 4
  
 - select `subnets` from VPC console
   - select `create subnet`
@@ -170,5 +172,30 @@ Always make reference to the architectural diagram and ensure that your configur
 ![subnet_b](https://user-images.githubusercontent.com/92983658/199973274-dfcc4798-9dbc-4064-ac8b-54cb71970a07.png)
 
 <br>
+
+![2_](https://user-images.githubusercontent.com/92983658/199977818-4bcec5ba-d6b9-4d3e-84fb-5a9567f10000.png)
+
+ <br>
+
+![3_of_6](https://user-images.githubusercontent.com/92983658/199977836-0630fbde-903b-4e0d-8fb5-d601ae1a688b.png)
+
+<br>
+
+![4_of_6](https://user-images.githubusercontent.com/92983658/199977887-71624025-158d-4121-a006-362d271248ed.png)
+
+<br>
+  
+![5_of_6](https://user-images.githubusercontent.com/92983658/199977930-be02b44e-4c20-4d11-8595-09dbe6f3984a.png)
+
+<br>
+  
+![6_of_6](https://user-images.githubusercontent.com/92983658/199977966-adf87c9b-df70-4024-84aa-7757c7be9cd6.png)
+
+<br>
+
+![subnet_dash](https://user-images.githubusercontent.com/92983658/199979034-d803b0cc-de6e-4ccd-a071-e9073996d367.png)
+
+<br>
+  
 
 
