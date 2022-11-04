@@ -197,5 +197,63 @@ Always make reference to the architectural diagram and ensure that your configur
 
 <br>
   
+### Create a route table and associate it with public subnets
 
+- Select `route table` from VPC console
+  - select `create route table`
+  - name: give it name attached to your project
+  - VPC ID: select project 15 VPC
+  
+<br>
+  
+![public_route_Table](https://user-images.githubusercontent.com/92983658/199980534-4deefd13-c5ed-4acd-a17d-4921057cc244.png)
+
+<br>
+ 
+- on `actions` button select `edit subnet associations`
+  - select public subnets
+
+<br>
+  
+![subnet_associations_1](https://user-images.githubusercontent.com/92983658/199981551-c8cbf327-9229-40b6-a54a-b4f770feb0d7.png)
+
+<br>
+  
+![public_subnet_associationsb](https://user-images.githubusercontent.com/92983658/199981586-a1fbd310-23bb-4f15-9318-6635c3b096f9.png)
+
+ <br>
+  
+ - Edit a route in public route table, and associate it with the Internet Gateway. (This is what allows a public subnet to be accisble from the Internet)
+  - `route table dashboard` -> select `public route table` -> click `actions` -> select `edit routes`
+ 
+<br>
+  
+![edit_routes](https://user-images.githubusercontent.com/92983658/199983223-1c7eeda3-9715-4ea3-a753-73e30d9b0790.png)
+
+<br>
+  
+- select `add route`
+  - destination: `0.0.0.0/0`
+  - target: `internet gateway`
+
+<br>
+  
+![edite_route_2](https://user-images.githubusercontent.com/92983658/199983799-ffc4b1fc-84cb-4f74-ae4c-32a8c1e5a4e5.png)
+
+<br>
+
+ ### Create a route table and associate it with private subnets
+ 
+- Select `route table` from VPC console
+  - select `create route table`
+  - name: give it name attached to your project
+  - VPC ID: select project 15 VPC
+  - once route table is created, associate it with private subnets
+
+<br>
+  
+![private_subnet_associations](https://user-images.githubusercontent.com/92983658/199982065-f7020f78-c949-4a23-9b27-42ca54312d54.png)
+
+<br>
+  
 
