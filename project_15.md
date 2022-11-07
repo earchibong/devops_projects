@@ -336,7 +336,7 @@ Always make reference to the architectural diagram and ensure that your configur
 <br>
  
 - Select`Security groups` from VPC console and click `create security group`
-  - name: `external ALB`
+  - name: `Bastion`
   - VPC: select the VPC created for your project
   - Add Inbound Rule:
     - traffic type: `SSH`
@@ -357,3 +357,35 @@ Always make reference to the architectural diagram and ensure that your configur
  <br>
   
  **3. Nginx Servers:** Access to Nginx should only be allowed from a Application Load balancer (ALB). At this point, we have not created a load balancer, therefore we will update the rules later. For now, just create it and put some dummy records as a place holder
+ 
+ <br>
+ 
+ - Select`Security groups` from VPC console and click `create security group`
+  - name: `Nginx-reverse-proxy`
+  - VPC: select the VPC created for your project
+  - Add Inbound Rule:
+    - traffic type: `HTTP`
+    - Destination: `custom` and `<project ALB ip>`
+    - Description: `http traffic from ALB`
+  - Add a 2nd Inbound Rule:
+    - traffic type: `HTTPS`
+    - Destination: `custom` and `<project ALB ip>`
+    - Description: `https traffic from ALB`
+   - Add a 3rd Inbound Rule:
+    - traffic type: `SSH`
+    - Destination: `custom` and `<Bastion Security group ip>`
+    - Description: `SSH access from Bastion`
+  - Add Outbound Rule:
+    - traffic: `All traffic`
+    - Destination: `anywhere ipv4`
+  - Tags:
+    - key: `Name`
+
+  <br>
+  
+  ![nginx_a](https://user-images.githubusercontent.com/92983658/200316922-58930e58-4ee0-4861-99e2-25bbbe2ea19a.png)
+![nginx_b](https://user-images.githubusercontent.com/92983658/200316944-0e970848-5ebb-4794-bffa-ae1e710d1fd5.png)
+![nginx_c](https://user-images.githubusercontent.com/92983658/200316963-575a6389-7ab7-450f-99dd-20eacb58b96c.png)
+
+ <br>
+  
