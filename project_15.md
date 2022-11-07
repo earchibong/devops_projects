@@ -301,5 +301,33 @@ Always make reference to the architectural diagram and ensure that your configur
 
 <br>
   
- 
+ ### Create a Security Group for:
+
+**1. Application Load Balancer:** ALB will be available from the Internet
   
+  - Select`Security groups` from VPC console and click `create security group`
+  - name: `external ALB`
+  - VPC: select the VPC created for your project
+  - Add Inbound Rule:
+    - traffic type: `HTTPS`
+    - Destination: `anywhere ipv4`
+    - Description: `access from anywhere`
+  - Add A 2nd Inbound Rule:
+    - traffic: `HTTP`
+    - Destination: `anywhere ipv4`
+    - Description: `access from anywhere`
+  - Add Outbound Rule:
+   - traffic: `All traffic`
+   - Destination: `anywhere ipv4`
+  - Tags:
+    - key: `Name`
+
+<br>
+
+![ALB_security_group_1](https://user-images.githubusercontent.com/92983658/200307560-830e87d0-2ca2-40d8-ba2f-41195802e2b4.png)
+![ALB_security_group_b](https://user-images.githubusercontent.com/92983658/200307577-f84414fb-d80b-4c6c-a7b5-3aae88985777.png)
+
+<br>
+  
+
+
