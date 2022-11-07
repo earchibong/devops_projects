@@ -365,15 +365,15 @@ Always make reference to the architectural diagram and ensure that your configur
   - VPC: select the VPC created for your project
   - Add Inbound Rule:
     - traffic type: `HTTP`
-    - Destination: `custom` and `<project ALB ip>`
+    - Destination: `custom` and `<ALB security group>`
     - Description: `http traffic from ALB`
   - Add a 2nd Inbound Rule:
     - traffic type: `HTTPS`
-    - Destination: `custom` and `<project ALB ip>`
+    - Destination: `custom` and `<ALB security group>`
     - Description: `https traffic from ALB`
    - Add a 3rd Inbound Rule:
     - traffic type: `SSH`
-    - Destination: `custom` and `<Bastion Security group ip>`
+    - Destination: `custom` and `<Bastion Security group>`
     - Description: `SSH access from Bastion`
   - Add Outbound Rule:
     - traffic: `All traffic`
@@ -388,4 +388,105 @@ Always make reference to the architectural diagram and ensure that your configur
 ![nginx_c](https://user-images.githubusercontent.com/92983658/200316963-575a6389-7ab7-450f-99dd-20eacb58b96c.png)
 
  <br>
+ 
+**4. Internal ALB**
+
+  <br>
+  
+- Select`Security groups` from VPC console and click `create security group`
+  - name: `Internal ALB`
+  - VPC: select the VPC created for your project
+  - Add Inbound Rule:
+    - traffic type: `HTTP`
+    - Destination: `custom` and `<nginx security group>`
+    - Description: `http traffic for internal ALB`
+  - Add a 2nd Inbound Rule:
+    - traffic type: `HTTPS`
+    - Destination: `custom` and `<nginx security group >`
+    - Description: `https traffic for internal ALB`
+  - Add Outbound Rule:
+    - traffic: `All traffic`
+    - Destination: `anywhere ipv4`
+  - Tags:
+    - key: `Name`
+
+<br>
+  
+![internal_ALB_a](https://user-images.githubusercontent.com/92983658/200320088-62f916d6-b949-4f81-b544-509e251ee1f5.png)
+
+![internal](https://user-images.githubusercontent.com/92983658/200320103-486bd116-5e45-4130-9d72-2800bd93882e.png)
+
+ ![internal_ALB_c](https://user-images.githubusercontent.com/92983658/200320125-7fb4acd8-6bc4-4720-97a7-5bf85adf730e.png)
+
+<br>
+
+**5. Web Servers:** Access to Webservers should only be allowed from the Nginx servers. Since we do not have the servers created yet, just put some dummy records as a place holder, we will update it later.
+ 
+  <br>
+  
+- Select`Security groups` from VPC console and click `create security group`
+  - name: `Webserver`
+  - VPC: select the VPC created for your project
+  - Add Inbound Rule:
+    - traffic type: `SSH`
+    - Destination: `custom` and `<bastion security group>`
+    - Description: `ssh access for bastion`
+  - Add a 2nd Inbound Rule:
+    - traffic type: `HTTPS`
+    - Destination: `custom` and `<internal ALB security group >`
+    - Description: `https traffic for internal ALB`
+  - Add a 3rd Inbound Rule:
+    - traffic type: `HTTP`
+    - Destination: `custom` and `<internal ALB security group >`
+    - Description: `http traffic for internal ALB`
+  - Add Outbound Rule:
+    - traffic: `All traffic`
+    - Destination: `anywhere ipv4`
+  - Tags:
+    - key: `Name`
+
+<br>
+
+![webserver_a](https://user-images.githubusercontent.com/92983658/200322161-30dc6782-0365-4595-a529-fc7082cdc538.png)
+
+![webserver_b](https://user-images.githubusercontent.com/92983658/200322182-ff8fdf38-9bb9-4b89-bdda-507f56e6117f.png)
+
+![webserver_c](https://user-images.githubusercontent.com/92983658/200322195-f692cbf8-8d0a-4e10-bc8d-c812f6699076.png)
+
+<br>
+  
+**6. Data Layer:** Access to the Data layer, which is comprised of Amazon Relational Database Service (RDS) and Amazon Elastic File System (EFS) must be carefully desinged – only webservers should be able to connect to RDS, while Nginx and Webservers will have access to EFS Mountpoint.
+
+<br>
+  
+- Select`Security groups` from VPC console and click `create security group`
+  - name: `Webserver`
+  - VPC: select the VPC created for your project
+  - Add Inbound Rule:
+    - traffic type: `Mysql/Aurora`
+    - Destination: `custom` and `<bastion security group>`
+    - Description: `ssh access for bastion`
+  - Add a 2nd Inbound Rule:
+    - traffic type: `NFS`
+    - Destination: `custom` and `<webserver security group >`
+    - Description: `https traffic for webserver`
+  - Add a 3rd Inbound Rule:
+    - traffic type: `Mysql/Aurora`
+    - Destination: `custom` and `<weserver security group >`
+    - Description: ``
+  - Add Outbound Rule:
+    - traffic: `All traffic`
+    - Destination: `anywhere ipv4`
+  - Tags:
+    - key: `Name`
+  
+ <br>
+  
+![data_](https://user-images.githubusercontent.com/92983658/200324004-9c1b3818-dea0-4c8f-b835-dc9bf991490c.png)
+
+![data_b](https://user-images.githubusercontent.com/92983658/200324018-19ffd968-a702-4979-b77f-f6ddc51a95b6.png)
+
+![data_c](https://user-images.githubusercontent.com/92983658/200324049-563f3944-bd90-4183-8234-388833a5bfe8.png)
+
+<br>
   
