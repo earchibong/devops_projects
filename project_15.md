@@ -490,3 +490,41 @@ Always make reference to the architectural diagram and ensure that your configur
 
 <br>
   
+## Step Three:Setup Compute Resources
+The following compute resources will be to be set up inside the VPC
+
+<br>
+  
+### TLS Certificates From Amazon Certificate Manager (ACM)
+TLS certificates handle secured connectivity to Application Load Balancers (ALB).
+
+<br>
+  
+- search for `certificate manager` in AWS search console
+- Request a public wildcard certificate for the domain name you registered in Freenom
+  - in `certificate manager` console, click `request certificate`
+  - domain name: add domain name purchased from `freenom`
+  - validation maethod: `DNS validation`
+  - tags: key -> `Name`, value ->`p15_cert`
+
+<br>
+
+ ![request_certificate](https://user-images.githubusercontent.com/92983658/200328032-dcd679d9-b238-4df1-938d-5626ff778f5d.png)
+![request_public_cert_a](https://user-images.githubusercontent.com/92983658/200328079-b3de0c05-dda6-4cfc-814b-1795baee2d39.png)
+![request_public_cert_b](https://user-images.githubusercontent.com/92983658/200328125-c0e19a0a-e3fc-450f-a704-04a57672e77e.png)
+
+<br>
+ 
+- `view certificate` -> `create record in Route 53` -> `create records`
+
+<br>
+  
+![view_certificate](https://user-images.githubusercontent.com/92983658/200329313-ccbdddd6-0d38-4cec-a115-82c90ecf047c.png)
+
+<br>
+  
+![create_records](https://user-images.githubusercontent.com/92983658/200329312-057aabf9-3fb2-4cb9-8aba-0dae790bc1a3.png)
+
+<br>
+
+  
