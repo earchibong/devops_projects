@@ -256,4 +256,50 @@ Always make reference to the architectural diagram and ensure that your configur
 
 <br>
   
+### Create 3 Elastic IPs
+- on VPC console, select `elastic ips` and then select `allocate elastic ip address`
 
+<br>
+  
+![elastic_ip](https://user-images.githubusercontent.com/92983658/199986916-3f457216-6427-4dcf-8adf-bc77ca63ce25.png)
+
+<br>
+  
+![elastic_ips](https://user-images.githubusercontent.com/92983658/199987797-5f1c606a-3671-452c-8eac-2867458c4ab6.png)
+
+ <br>
+  
+### Create a Nat Gateway and assign one of the Elastic IPs (*The other 2 will be used by Bastion hosts)
+- select `Nat Gateways` from the VPC console and select `create NAT gateway`
+  - name: give it a nemae attached to project
+  - subnets: select `public subnet 1`
+  - connectivity type: `public`
+  - elastic ip ID: `<name of elastic ip for ALB>`
+
+<br>
+  
+![nat_gateway](https://user-images.githubusercontent.com/92983658/199990180-9f80c5b3-2a7c-49cf-8d4a-aadc4408c3dc.png)
+
+<br>
+  
+- Edit a route in private route table, and associate it with the Nat Gateway
+  - select `private route table` and edit routes for `private subnets`
+
+<br>
+  
+ ![edit_routes_private](https://user-images.githubusercontent.com/92983658/199992289-2b7d0055-1ab3-4685-80d4-7df299aaa823.png)
+
+<br>
+  
+- select `add route`
+  - destination: `0.0.0.0`
+  - target: NAT gateway
+
+<br>
+  
+ ![target_natgateway](https://user-images.githubusercontent.com/92983658/199993729-2284318f-9840-4dd1-89d1-91fb93de4ea6.png)
+
+<br>
+  
+ 
+  
