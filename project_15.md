@@ -305,6 +305,8 @@ Always make reference to the architectural diagram and ensure that your configur
 
 **1. Application Load Balancer:** ALB will be available from the Internet
   
+  <br>
+  
   - Select`Security groups` from VPC console and click `create security group`
   - name: `external ALB`
   - VPC: select the VPC created for your project
@@ -317,8 +319,8 @@ Always make reference to the architectural diagram and ensure that your configur
     - Destination: `anywhere ipv4`
     - Description: `access from anywhere`
   - Add Outbound Rule:
-   - traffic: `All traffic`
-   - Destination: `anywhere ipv4`
+    - traffic: `All traffic`
+    - Destination: `anywhere ipv4`
   - Tags:
     - key: `Name`
 
@@ -329,5 +331,29 @@ Always make reference to the architectural diagram and ensure that your configur
 
 <br>
   
+**2. Bastion Servers:** Access to the Bastion servers should be allowed only from workstations that need to SSH into the bastion servers. Hence, you can use your workstation public IP address. To get this information, simply go to your terminal and type curl www.canhazip.com
 
+<br>
+ 
+- Select`Security groups` from VPC console and click `create security group`
+  - name: `external ALB`
+  - VPC: select the VPC created for your project
+  - Add Inbound Rule:
+    - traffic type: `SSH`
+    - Destination: `my ip`
+    - Description: `access from Bastion`
+  - Add Outbound Rule:
+    - traffic: `All traffic`
+    - Destination: `anywhere ipv4`
+  - Tags:
+    - key: `Name`
 
+<br>
+  
+  ![bastion_a](https://user-images.githubusercontent.com/92983658/200309550-abf3863b-f612-4cb5-8e94-8038437d64ba.png)
+
+  ![bastion_b](https://user-images.githubusercontent.com/92983658/200309549-2a835da5-dcdb-4e3b-9239-4dec04976524.png)
+
+ <br>
+  
+ **3. Nginx Servers:** Access to Nginx should only be allowed from a Application Load balancer (ALB). At this point, we have not created a load balancer, therefore we will update the rules later. For now, just create it and put some dummy records as a place holder
