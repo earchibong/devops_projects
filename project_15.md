@@ -527,7 +527,19 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
 
+## Configure Application Load Balancer
+
+<br>
+
 ### Elastic File System
+Amazon Elastic File System (Amazon EFS) provides a simple, scalable, fully managed elastic Network File System (NFS) for use with AWS Cloud services and on-premises resources. In this project, we will use the EFS service to mount filesystems on both Nginx and Webservers to store data.
+
+<br>
+
+**Create an EFS filesystem**
+
+<br>
+
 - search for `EFS` in AWS search console and click `create file system`
   - name: `project name`
   - VPC: `<project VPC>`
@@ -538,8 +550,12 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 ![file_system](https://user-images.githubusercontent.com/92983658/200805262-546c33fb-5c66-4b89-9612-17c69e8d6b69.png)
 
 <br>
-  
-- click `custommise` on the `create file` dashboard
+
+**Create an EFS mount target per AZ in the VPC, associate it with both subnets dedicated for data layer and Associate the Security groups created earlier for data layer.**
+
+<br>
+
+- click `customise` on the `create file` dashboard
 - enter `tags` and click `next`
 - Edit Network Access
   - Mount Targets:
@@ -552,6 +568,11 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 ![mount](https://user-images.githubusercontent.com/92983658/200807206-10228848-6cac-40e7-91e7-5ecc6905e006.png)
 
 <br>
+
+**Create an EFS access point. (Give it a name and leave all other settings as default)**
+
+<br>
+  
 
 - on EFS file system dashboard, select project file system and click `access points` and then `create access points`
 - **Details:**
@@ -567,7 +588,47 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 - **Tags:**
   - key: `Name`
   - value: `wordpress_app`
+   
+- create a second access point named `tooling` with the same configuration as the `wordpress` access point.
+
+<br>
   
-  - create a second access point named `tooling`
+![access_1](https://user-images.githubusercontent.com/92983658/200814014-1747dd86-c836-4d03-ad60-5510d99e2d9f.png)
+
+ ![access_2](https://user-images.githubusercontent.com/92983658/200814037-034a7a79-cc3a-4158-be55-c8cefd59eda1.png)
+
+ <br>
   
+### Set UP RDS
+
+<br>
   
+** Pre-requisite:** Create a KMS key from `Key Management Service (KMS)` to be used to encrypt the database instance.
+
+<br>
+
+- search for `Key Management Service` on AWS search console and click `create a key`
+  - key type: `symmetric`
+  - key usage: `encrypt and decrypt`
+- **Add labels:
+  - name: `p15_RDS**`
+  - description: `for RDS instance`
+  - Tags: key ->`Name` and value -> `p15_RDS_key`
+- ** Define Key Administrative Positions:**
+  - Key Administrators: `<select admin for yout AWS account>`
+- ** Define Key usage permissions: **
+  - This account: `<select admin for your AWS account>`
+
+<br>
+  
+![KMS](https://user-images.githubusercontent.com/92983658/200820296-ef555fd4-c6c3-4a21-8c1d-5fb219cfffe0.png)
+
+<br>
+  
+To ensure that databases are highly available and also have failover support in case one availability zone fails, a multi-AZ set up of RDS MySQL database instance will be configured. In this project case, since there are only 2 AZs, there can only be a failover to one, but the same concept applies to 3 Availability Zones.
+
+To configure RDS, follow steps below:
+
+- search AWS for RDS and on the RDS consolve, select `subnet groups` and click `create DB subnet group`
+  
+
