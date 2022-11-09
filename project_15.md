@@ -527,4 +527,47 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
 
+### Elastic File System
+- search for `EFS` in AWS search console and click `create file system`
+  - name: `project name`
+  - VPC: `<project VPC>`
+  - Storage class: `standard`
+
+<br>
+  
+![file_system](https://user-images.githubusercontent.com/92983658/200805262-546c33fb-5c66-4b89-9612-17c69e8d6b69.png)
+
+<br>
+  
+- click `custommise` on the `create file` dashboard
+- enter `tags` and click `next`
+- Edit Network Access
+  - Mount Targets:
+    - Subnet ID: `private subnet 1` and `private subnet 2`
+    - security group: `data layer`
+- review and create file system
+
+<br>
+  
+![mount](https://user-images.githubusercontent.com/92983658/200807206-10228848-6cac-40e7-91e7-5ecc6905e006.png)
+
+<br>
+
+- on EFS file system dashboard, select project file system and click `access points` and then `create access points`
+- **Details:**
+  - name: `wordpress`
+  - root directory path: `/wordpress`
+- **POSIX USER:**
+  - user iD: `0`
+  - group ID: `0`
+- ** Root directory creation permissions:**
+  - Owner user ID : `0`
+  - Owner user ID: `0`
+  - POSIX permissions to apply to the root directory path: `0755`
+- **Tags:**
+  - key: `Name`
+  - value: `wordpress_app`
+  
+  - create a second access point named `tooling`
+  
   
