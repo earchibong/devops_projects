@@ -581,7 +581,7 @@ Amazon Elastic File System (Amazon EFS) provides a simple, scalable, fully manag
 - **POSIX USER:**
   - user iD: `0`
   - group ID: `0`
-- ** Root directory creation permissions:**
+- **Root directory creation permissions:**
   - Owner user ID : `0`
   - Owner user ID: `0`
   - POSIX permissions to apply to the root directory path: `0755`
@@ -603,20 +603,20 @@ Amazon Elastic File System (Amazon EFS) provides a simple, scalable, fully manag
 
 <br>
   
-** Pre-requisite:** Create a KMS key from `Key Management Service (KMS)` to be used to encrypt the database instance.
+**Pre-requisite:** Create a KMS key from `Key Management Service (KMS)` to be used to encrypt the database instance.
 
 <br>
 
 - search for `Key Management Service` on AWS search console and click `create a key`
   - key type: `symmetric`
   - key usage: `encrypt and decrypt`
-- **Add labels:
-  - name: `p15_RDS**`
+- **Add labels:**
+  - name: `p15_RDS`
   - description: `for RDS instance`
   - Tags: key ->`Name` and value -> `p15_RDS_key`
-- ** Define Key Administrative Positions:**
+- **Define Key Administrative Positions:**
   - Key Administrators: `<select admin for yout AWS account>`
-- ** Define Key usage permissions: **
+- **Define Key usage permissions:**
   - This account: `<select admin for your AWS account>`
 
 <br>
@@ -628,7 +628,50 @@ Amazon Elastic File System (Amazon EFS) provides a simple, scalable, fully manag
 To ensure that databases are highly available and also have failover support in case one availability zone fails, a multi-AZ set up of RDS MySQL database instance will be configured. In this project case, since there are only 2 AZs, there can only be a failover to one, but the same concept applies to 3 Availability Zones.
 
 To configure RDS, follow steps below:
+- **Create a subnet group and add 2 private subnets (data Layer)**
 
-- search AWS for RDS and on the RDS consolve, select `subnet groups` and click `create DB subnet group`
+<br>
+
+- search AWS for RDS and on the RDS console, select `subnet groups` and click `create DB subnet group`
+- subnet group details:
+  - name: `<any name connect to project>`
+  - details: `for RDS subnets`
+  - VPC: `project VPC`
+- add subnet 
+  - availability zones: `<select zones where subnets created at the start of the project>`
+  - subnets: `according to project diagram: subnet 3 and subnet 4 with ips: 10.0.5.0/24 and 10.06.0/24`
+
+<br>
   
+![rds_a](https://user-images.githubusercontent.com/92983658/200824192-8dcebce5-9d50-4d05-9d2d-ddc65c28c9e3.png)
+
+![rds_b](https://user-images.githubusercontent.com/92983658/200824191-a35c29a2-918b-42e6-8f2f-a591336db629.png)
+
+![rds_c](https://user-images.githubusercontent.com/92983658/200824206-385f5d8d-2522-4095-ad05-2343ed05c74a.png)
+
+<br>
+  
+- **Create an RDS Instance for `mysql 8.*.*` **
+  To satisfy the architectural diagram, select either Dev/Test or Production Sample Template. But to minimize AWS cost, you can select the Do not create a standby instance option under Availability & durability sample template (The production template will enable Multi-AZ deployment)
+
+ <br>
+
+- on RDS dashboard, click `create database` and configure
+
+<br>
+
+![database_a](https://user-images.githubusercontent.com/92983658/200830310-e5189fc0-aa00-4e52-90c3-a48d297dc7c8.png)
+![database_b](https://user-images.githubusercontent.com/92983658/200830330-1e6da1b9-ef9a-4c12-ab4b-87de2fab0647.png)
+![database_c](https://user-images.githubusercontent.com/92983658/200830348-bd2c90b0-f29d-4fb1-9a67-948517c42ad1.png)
+![database_d](https://user-images.githubusercontent.com/92983658/200830375-658fe20e-700c-4ee5-9424-0f37daeefb9c.png)
+![database_e](https://user-images.githubusercontent.com/92983658/200830392-048ed067-a617-40d6-9174-23031fb0c002.png)
+![database_f](https://user-images.githubusercontent.com/92983658/200831084-22cbcc95-c0fe-4e6c-a90e-da04e7234903.png)
+![database_g](https://user-images.githubusercontent.com/92983658/200831110-51613244-5f3f-4673-a6ab-81f62ec2ea71.png)
+![database_h](https://user-images.githubusercontent.com/92983658/200831140-d6f0e112-1372-496d-9dc8-552b533c747d.png)
+![database_i](https://user-images.githubusercontent.com/92983658/200831156-65b0f7ad-13c4-4daa-b0ba-10c0c26f7658.png)
+![database_j](https://user-images.githubusercontent.com/92983658/200831180-1b501dd2-2076-4a16-b254-2ccacbdc6baf.png)
+![database_k](https://user-images.githubusercontent.com/92983658/200831206-cfa41c8b-8faf-46c6-beac-8ad6f36ed3d3.png)
+![database_l](https://user-images.githubusercontent.com/92983658/200832440-29992a00-5e0d-454b-9937-341d346122db.png)
+![database_m](https://user-images.githubusercontent.com/92983658/200832442-66da6c8a-042b-4b41-b198-870048ee7484.png)
+![database_n](https://user-images.githubusercontent.com/92983658/200832468-227346bc-0b9e-47e3-97bf-35b1dd0b018f.png)
 
