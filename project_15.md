@@ -562,7 +562,16 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 - sudo yum install -y rpm-build
 - make rpm
 - sudo yum install -y ./build/amazon-efs-utils*rpm
+
+# install self-signed certificates for webservers (nginx)
+- sudo mkdir /etc/ssl/private
+- sudo chmod 700 /etc/ssl/private
+- sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/P15.key -out /etc/ssl/certs/P15.crt
+- sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 ```
+
+**note: for self-signed certificates...Fill out the prompts appropriately. The most important line is the one that requests the Common Name (e.g. server FQDN or YOUR name). You need to enter the domain name associated with your server or, more likely, your server’s public IP address.**
+
 
 <br>
   
@@ -586,6 +595,35 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
+![utils](https://user-images.githubusercontent.com/92983658/201082779-5887e85e-141e-4777-9a2d-a2e31d026548.png)
+
+<br>
+  
+![utils_1](https://user-images.githubusercontent.com/92983658/201082794-d63b8032-c357-4d8c-91cb-918fffeecb05.png)
+
+<br>
+  
+![utils_2](https://user-images.githubusercontent.com/92983658/201082821-05840af4-fb20-419f-bd59-8a22d5bbfb6b.png)
+
+<br>
+  
+![utils_3](https://user-images.githubusercontent.com/92983658/201082862-16d8d92e-3902-4747-a467-2263e8e02367.png)
+
+<br>
+ 
+![utils_4](https://user-images.githubusercontent.com/92983658/201082880-e8fb78cb-d510-4f52-bb2f-9e34dc95e94b.png)
+
+<br>
+
+![self_signed_1](https://user-images.githubusercontent.com/92983658/201089395-4f7e88e7-3e71-43ab-a932-313f78690f1f.png)
+
+<br>
+  
+![self_signed_2](https://user-images.githubusercontent.com/92983658/201089415-577b3ad9-cc10-4f49-aa4f-5eb429a6c5ad.png)
+
+<br>
+
+
 ### Set Up Compute Resources for Bastion
 - Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) with the same Availability Zone and Region as the Nginx servers
 - SSH into the server and ensure that it has the following software installed:
