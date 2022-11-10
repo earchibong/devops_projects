@@ -529,7 +529,76 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 ### Set Up Compute Resources for Nginx
 - Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) in any 2 Availability Zones (AZ) in any AWS Region (it is recommended to use the Region that is closest to your customers). Use EC2 instance of T2 family (e.g. t2.micro or similar)
+- SSH into the server and ensure that it has the following software installed:
 
+  - 1. python
+  - 2. ntp
+  - 3. net-tools
+  - 4. vim
+  - 5. wget
+  - 6. telnet
+  - 7. epel-release
+  - 8. htop
+
+<br>
+
+```
+- sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+- sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+- sudo yum install wget vim python3 telnet htop git mysql net-tools chrony -y
+- sudo systemctl enable chronyd
+- sudo systemctl start chronyd
+
+```
+<br>
+  
+### Set Up Compute Resources for Bastion
+- Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) with the same Availability Zone and Region as the Nginx servers
+- SSH into the server and ensure that it has the following software installed:
+
+  - 1. python
+  - 2. ntp
+  - 3. net-tools
+  - 4. vim
+  - 5. wget
+  - 6. telnet
+  - 7. epel-release
+  - 8. htop
+
+<br>
+
+```
+- sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+- sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+- sudo yum install wget vim python3 telnet htop git mysql net-tools chrony -y
+- sudo systemctl enable chronyd
+- sudo systemctl start chronyd
+
+```
+
+<br>
+
+![stion](https://user-images.githubusercontent.com/92983658/201073662-3307b015-6eb4-4ba4-9be6-d368a710948f.png)
+
+<br>
+  
+![bastion_1](https://user-images.githubusercontent.com/92983658/201073663-cd57cf12-e9c3-4072-bcef-d826c60c346c.png)
+
+<br>
+  
+![bastion_2](https://user-images.githubusercontent.com/92983658/201073696-c9e14e95-bfce-4935-8bf4-d788fbddcc97.png)
+
+<br>
+  
+ ![bastion_3](https://user-images.githubusercontent.com/92983658/201073763-c68fc28a-544f-4895-b5cb-b7f7961adc8b.png)
+
+<br>
+  
+  
+- Associate an Elastic IP with each of the Bastion EC2 Instances
+- Create an AMI out of the EC2 instance
+
+<br>
 
 ## Configure Application Load Balancer
 
