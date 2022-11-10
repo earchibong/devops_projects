@@ -623,6 +623,21 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
 
+- confirm self-signed certificates:
+  - `ls -l /etc/ssl/certs/`
+  - `sudo ls -l /etc/ssl/private.`
+  
+<br>
+  
+![cert_1](https://user-images.githubusercontent.com/92983658/201091179-beb25f8d-406c-49b4-8c17-cff393556e26.png)
+
+<br>
+  
+![cert_2](https://user-images.githubusercontent.com/92983658/201091185-b1c102e9-930f-4c70-b658-11c4b557801f.png)
+
+<br>
+  
+
 
 ### Set Up Compute Resources for Bastion
 - Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) with the same Availability Zone and Region as the Nginx servers
@@ -666,9 +681,46 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
+### Setup Compute Resources For Webservers
+- Create an EC2 Instance (Centos) to be used for the WordPress and Tooling websites in each Availability Zone (in the same Region).
+- - SSH into the server and ensure that it has the following software installed:
+
+  - 1. python
+  - 2. ntp
+  - 3. net-tools
+  - 4. vim
+  - 5. wget
+  - 6. telnet
+  - 7. epel-release
+  - 8. htop
   
-- Associate an Elastic IP with each of the Bastion EC2 Instances
-- Create an AMI out of the EC2 instance
+```
+- sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+- sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+- sudo yum install wget vim python3 telnet htop git mysql net-tools chrony -y
+- sudo systemctl enable chronyd
+- sudo systemctl start chronyd
+
+# configure selinux policies for webservers and nginx servers
+- sudo setsebool -P httpd_can_network_connect=1
+- sudo setsebool -P httpd_can_network_connect_db=1
+- sudo setsebool -P httpd_execmem=1
+- sudo setsebool -P httpd_use_nfs 1
+  
+# install efs-utils for mounting target on efs
+- git clone https://github.com/aws/efs-utils
+- cd efs-utils
+- sudo yum install -y make
+- sudo yum install -y rpm-build
+- make rpm
+- sudo yum install -y ./build/amazon-efs-utils*rpm
+  
+# install self-signed certificates for webservers(apache) 
+- sudo yum install -y mod_ssl
+- sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/P15.key -out /etc/ssl/certs/P15.crt
+- sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+
+```
 
 <br>
 
