@@ -549,7 +549,41 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 - sudo systemctl enable chronyd
 - sudo systemctl start chronyd
 
+# configure selinux policies for webservers and nginx servers
+- sudo setsebool -P httpd_can_network_connect=1
+- sudo setsebool -P httpd_can_network_connect_db=1
+- sudo setsebool -P httpd_execmem=1
+- sudo setsebool -P httpd_use_nfs 1
+
+# install efs-utils for mounting target on efs
+- git clone https://github.com/aws/efs-utils
+- cd efs-utils
+- sudo yum install -y make
+- sudo yum install -y rpm-build
+- make rpm
+- sudo yum install -y ./build/amazon-efs-utils*rpm
 ```
+
+<br>
+  
+![nginx](https://user-images.githubusercontent.com/92983658/201080052-07dd2539-2566-47b6-b418-779a56283555.png)
+
+<br>
+  
+![nginx_1](https://user-images.githubusercontent.com/92983658/201080084-8f537672-cb51-4512-bc76-e2d5d2beee53.png)
+
+<br>
+  
+![nginx_2](https://user-images.githubusercontent.com/92983658/201080109-2209cb3e-9b32-4dd9-bd3c-503766991ba8.png)
+
+<br>
+  
+![nginx_£](https://user-images.githubusercontent.com/92983658/201080135-5239bc5c-2b12-437f-8fe4-4c720200b219.png)
+
+<br>
+  
+![nginx_4](https://user-images.githubusercontent.com/92983658/201080164-ee3dcee6-d8c2-46f7-872b-5b2678f3c094.png)
+
 <br>
   
 ### Set Up Compute Resources for Bastion
