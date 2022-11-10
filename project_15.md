@@ -527,6 +527,10 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
 
+### Set Up Compute Resources for Nginx
+- Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) in any 2 Availability Zones (AZ) in any AWS Region (it is recommended to use the Region that is closest to your customers). Use EC2 instance of T2 family (e.g. t2.micro or similar)
+
+
 ## Configure Application Load Balancer
 
 <br>
