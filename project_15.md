@@ -717,12 +717,31 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
   
 # install self-signed certificates for webservers(apache) 
 - sudo yum install -y mod_ssl
-- sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/P15.key -out /etc/ssl/certs/P15.crt
-- sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-
+- sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/pki/tls/private/P15.key -out /etc/pki/tls/certs/P15.crt
+- sudo vi /etc/httpd/conf.d/ssl.conf
 ```
+  
 
 <br>
+  
+![self_cert](https://user-images.githubusercontent.com/92983658/201100943-e0f84710-d453-45f8-b0d9-dd04b9cbd621.png)
+
+<br>  
+  
+![self_cert_1](https://user-images.githubusercontent.com/92983658/201100882-6d8702ba-5f4a-4443-b76e-04e01e5db940.png)
+
+<br>
+
+- *in the ss.conf file, change the `local host` in the SSL path to `<your certificate key>`*
+  *example: `SSLCertificateFile /etc/pki/tls/certs/localhost.crt` to` SSLCertificateFile /etc/pki/tls/certs/P15.crt`*
+  *example: `SSLCertificateKeyFile /etc/pki/tls/private/localhost.key` to `SSLCertificateKeyFile /etc/pki/tls/private/P15.key`
+  
+<br>
+  
+![conf](https://user-images.githubusercontent.com/92983658/201103388-1c61bafe-eab5-4250-adf5-85fb92c41c8c.png)
+
+<br>
+  
 
 ## Configure Application Load Balancer
 
