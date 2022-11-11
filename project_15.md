@@ -707,7 +707,7 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
-- Create an `AMI` out of the EC2 instance:
+- **Create an `AMI` out of the EC2 instance:**
   - in EC2 dashboard, select `bastion` -> `actions` -> `image and templates` -> `create image`
 
 <br>
@@ -717,7 +717,49 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
 
+- **Create a launch template for bastion:**
+- on EC2 dashboard, select `launch templates` then `create launch template`
+- Make use of the AMI to set up a launch template
+- Ensure the Instances are launched into a public subnet
+- Assign appropriate security group
+- Configure Userdata to update yum package repository and install Ansible and git
+
+<br>
+
+![bastion_temp](https://user-images.githubusercontent.com/92983658/201352867-a9a01eac-9820-4065-9862-4535f4daeb0d.png)
+
+<br>
   
+![bastion_temp2](https://user-images.githubusercontent.com/92983658/201352922-7abe0416-bf17-4455-8650-7e96960d58ce.png)
+  
+![bastion_temp_3](https://user-images.githubusercontent.com/92983658/201353200-aa388982-776b-4c87-bb8e-ae7f5fa3cb32.png)
+
+<br>
+  
+![bastion_te](https://user-images.githubusercontent.com/92983658/201353468-ddf702af-7698-49cf-ae84-282bf96aab39.png)
+
+<br>
+
+![bast_tem_5](https://user-images.githubusercontent.com/92983658/201354931-e995f43e-0402-4454-8698-8a9af12f0e73.png)
+
+<br>
+  
+![bast-tem+5a](https://user-images.githubusercontent.com/92983658/201355421-5bf562aa-0c4b-45f5-b456-29ef54e1353d.png)
+
+<br>
+  
+
+  
+![bastion_temp_5](https://user-images.githubusercontent.com/92983658/201354008-e7c3f729-9ddd-4f7f-9ece-2626e6c84db7.png)
+
+<br>
+  
+![bast_temp_6](https://user-images.githubusercontent.com/92983658/201354374-f5990b30-dd92-4b8e-b78a-dc2c02bbbcd4.png)
+
+<br>
+  
+  
+
 ### Setup Compute Resources For Webservers
 - Create an EC2 Instance (Centos) to be used for the WordPress and Tooling websites in each Availability Zone (in the same Region).
 - - SSH into the server and ensure that it has the following software installed:
