@@ -866,8 +866,22 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
- - add another `listener` to the internal ALB
-  - selct internal ALB from loab balancer dashboard select `listerners` -> `add listeners`
+ - Configuring the Listener on the Internal ALB to route traffic to wordpress server
+  - select internal ALB from loab balancer dashboard select `listerners` tab -> select the listner from the menu -> `view/edit rules`
+
+<br>
+  
+![edit_listener](https://user-images.githubusercontent.com/92983658/201350373-fca204ff-4167-4346-91d3-5878b298a073.png)
+
+<br>
+  
+![listern](https://user-images.githubusercontent.com/92983658/201350404-7de0e515-b0b8-413a-b815-967e5d1e6740.png)
+
+<br>
+  
+![listerner3](https://user-images.githubusercontent.com/92983658/201350432-bc0cd1ce-9083-421e-b0f5-03e96e551a53.png)
+
+<br>
 
 
 ### Elastic File System
