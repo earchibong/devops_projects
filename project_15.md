@@ -503,15 +503,14 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 - search for `certificate manager` in AWS search console
 - Request a public wildcard certificate for the domain name you registered in Freenom
   - in `certificate manager` console, click `request certificate`
-  - domain name: add domain name purchased from `freenom`
+  - domain name: add `*` and domain name purchased from `*.freenom domain name`
   - validation maethod: `DNS validation`
   - tags: key -> `Name`, value ->`p15_cert`
 
 <br>
 
- ![request_certificate](https://user-images.githubusercontent.com/92983658/200328032-dcd679d9-b238-4df1-938d-5626ff778f5d.png)
-![request_public_cert_a](https://user-images.githubusercontent.com/92983658/200328079-b3de0c05-dda6-4cfc-814b-1795baee2d39.png)
-![request_public_cert_b](https://user-images.githubusercontent.com/92983658/200328125-c0e19a0a-e3fc-450f-a704-04a57672e77e.png)
+![cert1](https://user-images.githubusercontent.com/92983658/201343089-44a0066c-2108-44f1-b502-cfda38c64d3a.png)
+![cert2](https://user-images.githubusercontent.com/92983658/201343122-a0544eda-aab9-40a4-a1ce-085a3f24054a.png)
 
 <br>
  
@@ -817,6 +816,30 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 ## Configure Application Load Balancer
 
 <br>
+  
+### Create An External Application Loab Balancer
+- on EC2 dashboard, select `load balancers` then click `create load balancer`
+- select `application laod balancer` for load balancer type and create  
+- Ensure that it listens on HTTPS protocol (TCP port 443)
+- Ensure the ALB is created within the appropriate VPC | AZ | Subnets
+- Choose the Certificate from ACM
+- Select Security Group
+- Select Nginx Instances as the target group
+
+<br>
+
+![ext_alb_5](https://user-images.githubusercontent.com/92983658/201342385-7bc7b4cc-4184-4ea6-b655-a4b25dee8bc2.png)
+![ext_alb_6](https://user-images.githubusercontent.com/92983658/201342401-61c3c4b6-2ce3-4568-bcda-1ad4116c2e1c.png)
+![ext_alb](https://user-images.githubusercontent.com/92983658/201342467-199ed884-f896-494b-bbff-31c54940c811.png)
+![ext_alb_1](https://user-images.githubusercontent.com/92983658/201342506-c258be86-e819-44dc-90cc-431e393d1416.png)
+![ext_alb_2](https://user-images.githubusercontent.com/92983658/201342556-269e5bc4-8f1d-4388-8964-f154b2a1a279.png)
+![ext_alb_£](https://user-images.githubusercontent.com/92983658/201342581-71b022b4-fdd8-4f7d-ba28-e37e3c3c78de.png)
+![ext_alb_4](https://user-images.githubusercontent.com/92983658/201342608-73bb14d6-26a9-44b1-ac1d-727cf34fb2a9.png)
+
+<br>
+  
+  
+
 
 ### Elastic File System
 Amazon Elastic File System (Amazon EFS) provides a simple, scalable, fully managed elastic Network File System (NFS) for use with AWS Cloud services and on-premises resources. In this project, we will use the EFS service to mount filesystems on both Nginx and Webservers to store data.
