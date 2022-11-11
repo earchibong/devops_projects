@@ -636,8 +636,35 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 ![cert_2](https://user-images.githubusercontent.com/92983658/201091185-b1c102e9-930f-4c70-b658-11c4b557801f.png)
 
 <br>
-  
 
+- Create an `AMI` out of the EC2 instance:
+  - in EC2 dashboard, select `nginx` -> `actions` -> `image and templates` -> `create image`
+
+<br>
+  
+![nginx_ami](https://user-images.githubusercontent.com/92983658/201332412-1ef1d061-a586-4017-a5c0-fbb564c5be4f.png)
+![nginx_ami_1](https://user-images.githubusercontent.com/92983658/201332425-5e65b8b8-39c6-4cb6-835a-ad20aa9962e4.png)
+
+<br>
+
+- **Configure Target Groups**
+  - on EC2 dasboard, select `target groups` and `create target group`
+  - Select Instances as the `target type`
+  - Ensure the protocol HTTPS on secure TLS `port 443`
+  - Ensure that the health check path is `/healthstatus`
+  - Register Nginx Instances as targets
+  - Ensure that health check passes for the target group
+  - ensure VPC is the `<VPC created for the project>`
+  
+<br>
+  
+![target_group_nginx](https://user-images.githubusercontent.com/92983658/201335050-994bff3f-5b61-4d81-b80f-386d690380ed.png)
+![target_group_nginx_1](https://user-images.githubusercontent.com/92983658/201335053-1612fc67-5c02-4f60-907a-5636ea9d5025.png)
+![target_group_nginx_2](https://user-images.githubusercontent.com/92983658/201335061-00119e4e-d6c8-4876-8adb-ff8c71af002d.png)
+![target_nginx_3](https://user-images.githubusercontent.com/92983658/201335076-6c88d7b3-7933-4c01-a565-47955d8c05b6.png)
+
+<br>
+  
 
 ### Set Up Compute Resources for Bastion
 - Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) with the same Availability Zone and Region as the Nginx servers
@@ -680,6 +707,17 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
  ![bastion_3](https://user-images.githubusercontent.com/92983658/201073763-c68fc28a-544f-4895-b5cb-b7f7961adc8b.png)
 
 <br>
+  
+- Create an `AMI` out of the EC2 instance:
+  - in EC2 dashboard, select `bastion` -> `actions` -> `image and templates` -> `create image`
+
+<br>
+  
+![bastion](https://user-images.githubusercontent.com/92983658/201331578-b86dc464-0d2f-4800-9e7d-e59e3367e168.png)
+![bastion_1](https://user-images.githubusercontent.com/92983658/201331591-58a6dbbc-6339-4869-813c-acd334f3ca1d.png)
+
+<br>
+
   
 ### Setup Compute Resources For Webservers
 - Create an EC2 Instance (Centos) to be used for the WordPress and Tooling websites in each Availability Zone (in the same Region).
@@ -742,6 +780,39 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
+- Create an `AMI` out of the EC2 instance:
+  - in EC2 dashboard, select `webserver` -> `actions` -> `image and templates` -> `create image`
+
+<br>
+
+![create_image](https://user-images.githubusercontent.com/92983658/201330349-b8933319-3db6-41e2-960f-f2a96e741f26.png)
+
+<br>
+  
+![crate_image_1](https://user-images.githubusercontent.com/92983658/201330394-d8808f95-52f2-451b-83fd-df1874568bde.png)
+![create_image_2](https://user-images.githubusercontent.com/92983658/201330437-bce8f033-0937-40f0-9137-0192d991bcbb.png)
+
+<br>
+
+- **Configure 2 Target Groups for wordpress and tooling servers**
+  - on EC2 dasboard, select `target groups` and `create target group`
+  - Select Instances as the `target type`
+  - Ensure the protocol HTTPS on secure TLS `port 443`
+  - Ensure that the health check path is `/healthstatus`
+  - Register Nginx Instances as targets
+  - Ensure that health check passes for the target group
+  - ensure VPC is the `<VPC created for the project>`
+  
+<br>
+  
+![wordpress](https://user-images.githubusercontent.com/92983658/201336588-d6cad7b9-c6bc-4b3e-a4ab-f6d05311ab2f.png)
+![wordpress_1](https://user-images.githubusercontent.com/92983658/201336593-0885e532-5414-4e67-9843-5674dd6f28d0.png)
+![wordpress_2](https://user-images.githubusercontent.com/92983658/201336609-f66f42bd-4c5b-41bc-b397-226bf3e6b9e9.png)
+![wordpress_3](https://user-images.githubusercontent.com/92983658/201336623-e810bdf3-e81e-4d08-9dbb-ea8ca7fbc732.png)
+
+<br>
+  
+
 
 ## Configure Application Load Balancer
 
