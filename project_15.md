@@ -838,7 +838,36 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
+### Create An Internal Application Loab Balancer
+- on EC2 dashboard, select `load balancers` then click `create load balancer`
+- select `application laod balancer` for load balancer type and create  
+- Ensure that it listens on HTTPS protocol (TCP port 443)
+- Ensure the ALB is created within the appropriate VPC | AZ | Subnets
+- Choose the Certificate from ACM
+- Select Security Group
+- Select webserver Instances as the target group
+
+<br>
+
+![int_alb](https://user-images.githubusercontent.com/92983658/201347272-3e427ccf-0cde-4407-944c-96d002e60611.png)
+
+<br>
   
+![alb1](https://user-images.githubusercontent.com/92983658/201347524-5b266b75-7c33-4eed-9816-430b114f1dc6.png)
+![alb_int2](https://user-images.githubusercontent.com/92983658/201347534-d93abc28-57f3-472f-97b6-1d76732b1dbe.png)
+
+<br>
+  
+![int_alb_4](https://user-images.githubusercontent.com/92983658/201347709-363afbc7-23d5-49a0-972b-11e42e38da3b.png)
+
+![int_ALB_3](https://user-images.githubusercontent.com/92983658/201345475-894a93e5-7c38-4629-8435-d7b53c20e153.png)
+![int_ALB_4](https://user-images.githubusercontent.com/92983658/201345483-657c14a8-a900-492d-8025-c7704266dccc.png)
+![int_ALB_5](https://user-images.githubusercontent.com/92983658/201345490-db9a0c62-d896-4946-9fc5-89ab44232567.png)
+
+<br>
+  
+ - add another `listener` to the internal ALB
+  - selct internal ALB from loab balancer dashboard select `listerners` -> `add listeners`
 
 
 ### Elastic File System
