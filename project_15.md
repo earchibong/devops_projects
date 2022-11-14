@@ -664,6 +664,72 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 
 <br>
   
+- **Create a launch template for nginx:**
+- on EC2 dashboard, select `launch templates` then `create launch template`
+- Make use of the AMI to set up a launch template
+- Ensure the Instances are launched into a public subnet
+- Assign appropriate security group
+- Configure Userdata to update yum package repository and install nginx:
+```
+ 
+#!/bin/bash
+yum install -y nginx
+systemctl start nginx
+systemctl enable nginx
+git clone https://github.com/earchibong/ACS-project-config.git
+mv /ACS-project-config/reverse.conf /etc/nginx/
+mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf-distro
+cd /etc/nginx/
+touch nginx.conf
+sed -n 'w nginx.conf' reverse.conf
+systemctl restart nginx
+rm -rf reverse.conf
+rm -rf /ACS-project-config
+
+```
+  
+<br>
+  
+![nginx_temp_1](https://user-images.githubusercontent.com/92983658/201659215-71c242fd-185c-44bf-ad60-a72708886f11.png)
+ 
+<br>
+  
+![nginx_temp_2a](https://user-images.githubusercontent.com/92983658/201659149-79065922-ddb9-4132-88ff-616a4273e342.png)
+
+![nginx_temp_2b](https://user-images.githubusercontent.com/92983658/201659112-5583cafa-95a6-4d2b-930c-5738be7d216f.png)
+
+<br>
+  
+![nginx_temp_3a](https://user-images.githubusercontent.com/92983658/201658988-eabb8f4d-9229-46aa-94e9-b1c6298c4589.png)
+
+![nginx_temp_3b](https://user-images.githubusercontent.com/92983658/201658944-997bd274-2388-4951-9f59-1947e69f1452.png)
+
+![nginx_temp_3c](https://user-images.githubusercontent.com/92983658/201658910-bfcaab84-1d3a-4f25-8940-11cce3c5cdd4.png)
+
+
+<br>
+
+![nginx_temp_4](https://user-images.githubusercontent.com/92983658/201658818-2166e180-1381-4930-ac90-877230e0f22c.png)
+
+<br>
+  
+ ![nginx_temp_5](https://user-images.githubusercontent.com/92983658/201658696-5712f6f1-a40e-4099-9832-293da5f65dea.png)
+  
+<br>
+  
+![bast_temp_6a](https://user-images.githubusercontent.com/92983658/201652203-7eccb569-9f3e-4ef7-8e02-3574d42db679.png)
+
+![bast_temp_6b](https://user-images.githubusercontent.com/92983658/201652166-d33e70a2-236e-4447-b755-330aec7663e7.png)
+
+![bast_temp_6c](https://user-images.githubusercontent.com/92983658/201652134-4a4b8143-f11d-449b-988b-1322aa43be3c.png)
+
+![bast_temp_6d](https://user-images.githubusercontent.com/92983658/201652105-f3204850-5c8e-4d16-98fb-0373c569ed66.png)
+
+![nginx_temp_6](https://user-images.githubusercontent.com/92983658/201658641-baff6105-5b43-490a-8c6f-e7d755c487ef.png)
+
+  
+<br>
+  
 
 ### Set Up Compute Resources for Bastion
 - Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) with the same Availability Zone and Region as the Nginx servers
