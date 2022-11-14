@@ -729,6 +729,7 @@ rm -rf /ACS-project-config
 
   
 <br>
+
   
 
 ### Set Up Compute Resources for Bastion
@@ -937,7 +938,83 @@ sudo yum install -y ansible
 ![wordpress_3](https://user-images.githubusercontent.com/92983658/201336623-e810bdf3-e81e-4d08-9dbb-ea8ca7fbc732.png)
 
 <br>
+
+- **Create a launch template for wordpress:**
+- on EC2 dashboard, select `launch templates` then `create launch template`
+- Make use of the AMI to set up a launch template
+- Ensure the Instances are launched into a private subnet
+- Assign appropriate security group
+- Configure Userdata to update yum package repository and install Ansible and git:
+```
+ 
+#!/bin/bash
+mkdir /var/www/
+sudo mount -t efs -o tls,accesspoint=fsap-0f9364679383ffbc0 fs-8b501d3f:/ /var/www/
+yum install -y httpd 
+systemctl start httpd
+systemctl enable httpd
+yum module reset php -y
+yum module enable php:remi-7.4 -y
+yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+systemctl start php-fpm
+systemctl enable php-fpm
+wget http://wordpress.org/latest.tar.gz
+tar xzvf latest.tar.gz
+rm -rf latest.tar.gz
+cp wordpress/wp-config-sample.php wordpress/wp-config.php
+mkdir /var/www/html/
+cp -R /wordpress/* /var/www/html/
+cd /var/www/html/
+touch healthstatus
+sed -i "s/localhost/acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com/g" wp-config.php 
+sed -i "s/username_here/ACSadmin/g" wp-config.php 
+sed -i "s/password_here/admin12345/g" wp-config.php 
+sed -i "s/database_name_here/wordpressdb/g" wp-config.php 
+chcon -t httpd_sys_rw_content_t /var/www/html/ -R
+systemctl restart httpd
+
+```
+
+<br>
   
+![wpress_temp_1](https://user-images.githubusercontent.com/92983658/201672736-9afacd1b-04d9-4534-bd97-03cceb6d7f65.png)
+
+<br>
+ 
+![wpress_temp_2a](https://user-images.githubusercontent.com/92983658/201672641-e712ae36-3c97-4caf-ad56-5c4cb701b867.png)
+
+![wpress_2b](https://user-images.githubusercontent.com/92983658/201672608-9d36d763-73e9-4681-aa20-922247368ce1.png)
+
+  
+<br>
+  
+![wpress_temp_3a](https://user-images.githubusercontent.com/92983658/201672560-29d101f3-2453-4b1a-b12b-2b7136ce4961.png)
+
+![wpress_3b](https://user-images.githubusercontent.com/92983658/201672454-1369fc96-27e1-4be2-884c-10763e0b5afa.png)
+
+![wpress_temp_3c](https://user-images.githubusercontent.com/92983658/201672419-bebea8bd-651f-4ab0-b580-70605ad4c198.png)
+
+  
+<br>
+  
+![wpress_temp_4](https://user-images.githubusercontent.com/92983658/201672341-02b7ef36-bc68-4d83-a4ae-741c5b395e8c.png)
+
+<br>
+ 
+![wpress_5](https://user-images.githubusercontent.com/92983658/201672287-2c97d59f-69d2-449d-a900-a7a4559474f5.png)
+
+<br>
+
+![bast_temp_6a](https://user-images.githubusercontent.com/92983658/201652203-7eccb569-9f3e-4ef7-8e02-3574d42db679.png)
+
+![bast_temp_6b](https://user-images.githubusercontent.com/92983658/201652166-d33e70a2-236e-4447-b755-330aec7663e7.png)
+
+![bast_temp_6c](https://user-images.githubusercontent.com/92983658/201652134-4a4b8143-f11d-449b-988b-1322aa43be3c.png)
+
+![bast_temp_6d](https://user-images.githubusercontent.com/92983658/201652105-f3204850-5c8e-4d16-98fb-0373c569ed66.png)
+![wpress_temp_6](https://user-images.githubusercontent.com/92983658/201672035-a1c981a9-3ec1-48e0-a1a3-f79e1c693c58.png)
+
+<br>
 
 
 ## Configure Application Load Balancer
@@ -1009,6 +1086,20 @@ sudo yum install -y ansible
 ![listerner3](https://user-images.githubusercontent.com/92983658/201350432-bc0cd1ce-9083-421e-b0f5-03e96e551a53.png)
 
 <br>
+  
+- update `internal ALB ip`, `self-signed cert details` and `domain nam`e in `ACS-project-config/reverse.conf` file:
+  - in EC2 dashboard, click `load balancer`
+  - select `internal ALB` and copy `DNS name`
+  - update `reverse.conf` file with `DNS name`
+  - update `reverse.conf` with self signed certificate details
+  - update domain name details
+
+<br>
+  
+![reverse_conf](https://user-images.githubusercontent.com/92983658/201667306-3d259d86-6e1c-4c3a-8e24-da3920e43148.png)
+
+<br>
+ 
 
 
 ### Elastic File System
