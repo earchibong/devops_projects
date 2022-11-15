@@ -843,8 +843,50 @@ sudo yum install -y ansible
 ![bast_temp_7](https://user-images.githubusercontent.com/92983658/201652036-16d31697-45e0-452e-95a2-27d74e5da63a.png)
 
 <br>
+
+- **Configure Autoscaling For Bastion**
+ - on EC2 dashboard, select`Autoscaling groups` -> `create auto-scaling group`
+ - Select the right launch template
+ - Select the VPC
+ - Select both public subnets
+ - Enable Application Load Balancer for the AutoScalingGroup (ASG)
+ - Select the target group you created before
+ - Ensure that you have health checks for both EC2 and ALB
+ - The desired capacity is 2
+ - Minimum capacity is 2
+ - Maximum capacity is 4
+ 
+<br>
   
+![bast_asg_1a](https://user-images.githubusercontent.com/92983658/201917935-48984b99-4523-4888-9992-bc429810d309.png)
+![bast_asg_1b](https://user-images.githubusercontent.com/92983658/201917956-57c02169-3e1e-4cbb-89c4-b35484ae42b6.png)
+![bast_asg_1c](https://user-images.githubusercontent.com/92983658/201918010-3ecc6345-48b0-481b-a3b3-87d0fcce1f29.png)
+
+<br>
   
+![bast_asg_2a](https://user-images.githubusercontent.com/92983658/201918372-9be16afa-c39e-4d07-8e18-deb76752e9ad.png)
+![bast_asg_2b](https://user-images.githubusercontent.com/92983658/201918381-5792ac3b-5d1b-4dc1-90d0-8ecb5cd3168e.png)
+![bast_Asg_2c](https://user-images.githubusercontent.com/92983658/201918521-636bf474-a598-48d1-a764-0cda716fc1a3.png)
+
+<br>
+  
+ ![bast_asg_3a](https://user-images.githubusercontent.com/92983658/201919158-99d23bfb-7cf9-4f01-b609-3de48fb5f475.png)
+![bast_Asg_3b](https://user-images.githubusercontent.com/92983658/201919169-b65b600c-e370-4b2a-a036-02b9584eeb9f.png)
+![bast_Ash_3c](https://user-images.githubusercontent.com/92983658/201919174-efbaf927-a494-4473-816c-2c875c4d3f8f.png)
+
+<br>
+  
+![bast_Asg_4a](https://user-images.githubusercontent.com/92983658/201919657-5371baa7-cadc-438d-9d2a-0274b27939e8.png)
+![bast_asg_$b](https://user-images.githubusercontent.com/92983658/201919673-aef5ab2d-1289-497e-aa5e-03edbddf6c02.png)
+![bast_Ash_4c](https://user-images.githubusercontent.com/92983658/201919684-003b280e-57fc-4d3a-83dc-3d3ef387c363.png)
+
+<br>
+  
+ ![bast_asg_5](https://user-images.githubusercontent.com/92983658/201920206-0e6d999d-9abf-4b24-a50f-c82e53d7bd73.png)
+
+<br>
+
+
 
 ### Setup Compute Resources For Webservers
 - Create an EC2 Instance (Centos) to be used for the WordPress and Tooling websites in each Availability Zone (in the same Region).
