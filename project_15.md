@@ -730,7 +730,48 @@ rm -rf /ACS-project-config
   
 <br>
 
+- **Configure Autoscaling For Bastion**
+ - on EC2 dashboard, select`Autoscaling groups` -> `create auto-scaling group`
+ - Select the right launch template
+ - Select the VPC
+ - Select both public subnets
+ - Enable Application Load Balancer for the AutoScalingGroup (ASG)
+ - Select the target group you created before
+ - Ensure that you have health checks for both EC2 and ALB
+ - The desired capacity is 2
+ - Minimum capacity is 2
+ - Maximum capacity is 4
   
+<br>
+  
+![nginx_asg_1a](https://user-images.githubusercontent.com/92983658/201920966-148381a7-356b-489f-abc1-052f345ebc4f.png)
+![nginx_asg_1b](https://user-images.githubusercontent.com/92983658/201920973-2aa23616-2c7a-4271-9a7f-0562a2769f31.png)
+
+<br>
+  
+ ![nginx_asg_2a](https://user-images.githubusercontent.com/92983658/201921265-36a7e6cd-5276-4f98-9d74-3835d586da4a.png)
+![nginx_asg_2b](https://user-images.githubusercontent.com/92983658/201921275-7e82e91d-867d-4feb-a9fa-e4cc24dcbd77.png)
+
+<br>
+  
+![nginx_Asg_3a](https://user-images.githubusercontent.com/92983658/201921573-0d851698-ec54-4f4b-bab4-bf04cd39cf8c.png)
+![nginx_asg_3b](https://user-images.githubusercontent.com/92983658/201921581-3f615ecf-d76b-40fb-b763-2e0613d90d4b.png)
+![nginx_asg_3c](https://user-images.githubusercontent.com/92983658/201921949-7a286269-dfac-4bb7-be54-6e1b49918142.png)
+
+<br>
+  
+![nginx_asg_4a](https://user-images.githubusercontent.com/92983658/201922129-ad0c3132-62cc-4c2f-bb3a-7f4df5308048.png)
+![nginx_asg_4b](https://user-images.githubusercontent.com/92983658/201922137-72efc5c6-0fee-4d0c-ac6d-954d831a3b08.png)
+![nginx_asg_4c](https://user-images.githubusercontent.com/92983658/201922159-5d128cc0-0024-4772-aae0-6f81055b935f.png)
+
+<br>
+ 
+![nginx_asg_5](https://user-images.githubusercontent.com/92983658/201922482-6388c953-3adf-4c44-a87b-cc6968bda639.png)
+
+<br>
+  
+ 
+
 
 ### Set Up Compute Resources for Bastion
 - Create an EC2 Instance based on CentOS Amazon Machine Image (AMI) with the same Availability Zone and Region as the Nginx servers
@@ -986,7 +1027,7 @@ sudo yum install -y ansible
 - Make use of the AMI to set up a launch template
 - Ensure the Instances are launched into a private subnet
 - Assign appropriate security group
-- Configure Userdata:
+- Configure Userdata to update yum package repository and install wordpress
   - add wordpress mount details to userdata: `EFS` -> `access point` -> `wordpress` -> click `attach` and copy mount details
   - updte RDS database endpoint: `RDS` -> `project database` -> copy endpoint
   - update database username, password and database name
@@ -1103,7 +1144,88 @@ systemctl restart httpd
 ![tooling_temp_2](https://user-images.githubusercontent.com/92983658/201916372-cdcba20d-4ec1-4de0-9fbb-b18659b59530.png)
 
 <br>
+
+- **Configure Autoscaling For Wordpress**
+ - on EC2 dashboard, select`Autoscaling groups` -> `create auto-scaling group`
+ - Select the right launch template
+ - Select the VPC
+ - Select both private subnets
+ - Enable Application Load Balancer for the AutoScalingGroup (ASG)
+ - Select the target group you created before
+ - Ensure that you have health checks for both EC2 and ALB
+ - The desired capacity is 2
+ - Minimum capacity is 2
+ - Maximum capacity is 4
   
+<br>
+  
+![wp_asg_1a](https://user-images.githubusercontent.com/92983658/201930241-7a430e49-b0b1-442d-8269-d13b0ddf7166.png)
+![wp_asg_1b](https://user-images.githubusercontent.com/92983658/201930257-3cdc3989-90f7-47e8-829a-b84251405419.png)
+
+<br>
+  
+![wp_asg_2a](https://user-images.githubusercontent.com/92983658/201930723-d8b2814a-8944-4af3-bb1a-b7aaa2ea2ddb.png)
+![wp_asg_2b](https://user-images.githubusercontent.com/92983658/201930744-289d71b6-e318-42a9-b793-10d087170829.png)
+
+<br>
+  
+![wp_asg_3a](https://user-images.githubusercontent.com/92983658/201931159-9bf6be02-5464-49b3-91c9-27a73145e340.png)
+![wp_asg_3b](https://user-images.githubusercontent.com/92983658/201931167-25dff3b0-8e34-4df2-80eb-1fbe201c90bb.png)
+![wp_asg_3c](https://user-images.githubusercontent.com/92983658/201931181-34d0120c-5e2e-40fd-ab30-70e6fd01827f.png)
+
+<br>
+  
+ ![wp_asg_4a](https://user-images.githubusercontent.com/92983658/201931652-49ba7574-2b06-4429-a12f-ebbdd7e63ab0.png)
+![wp_asg_4b](https://user-images.githubusercontent.com/92983658/201931662-62c5f62b-6328-4e63-9897-587f05cc0307.png)
+![wp_asg_4c](https://user-images.githubusercontent.com/92983658/201931682-33ab2959-bb44-4cd4-a9d8-5143157a42a7.png)
+
+<br>
+
+![wp_asg_5](https://user-images.githubusercontent.com/92983658/201931983-fe0bfb61-53de-45c1-8c20-7e87d1e07f60.png)
+
+<br>
+  
+- **Configure Autoscaling For Tooling**
+ - on EC2 dashboard, select`Autoscaling groups` -> `create auto-scaling group`
+ - Select the right launch template
+ - Select the VPC
+ - Select both private subnets
+ - Enable Application Load Balancer for the AutoScalingGroup (ASG)
+ - Select the target group you created before
+ - Ensure that you have health checks for both EC2 and ALB
+ - The desired capacity is 2
+ - Minimum capacity is 2
+ - Maximum capacity is 4
+
+<br>
+  
+![tooling_asg_1a](https://user-images.githubusercontent.com/92983658/201932747-2ce7d2f7-a73e-400e-8a60-5a073a223782.png)
+![tooling_asg_1b](https://user-images.githubusercontent.com/92983658/201932765-7c1f2cce-c87d-404e-ba2a-22b788f28e60.png)
+
+<br>
+  
+![tooling_asg_2a](https://user-images.githubusercontent.com/92983658/201933187-c528e22f-fc76-4db3-a4fb-62c6edf7eacb.png)
+![tooling_asg_2b](https://user-images.githubusercontent.com/92983658/201933203-dd99bbea-e5a5-451c-960f-c687c58754eb.png)
+
+<br>
+  
+![tooling_asg_3a](https://user-images.githubusercontent.com/92983658/201933509-937f1c9c-002e-405b-8bce-2e80ed9b663d.png)
+![tooling_asg_3b](https://user-images.githubusercontent.com/92983658/201933529-4491a7fd-8704-4208-828d-28efa1e61fea.png)
+![tooling_asg_3c](https://user-images.githubusercontent.com/92983658/201933546-62975d2a-f160-475a-b861-fbbbf2907293.png)
+
+<br>
+  
+![tooling_Asg_4a](https://user-images.githubusercontent.com/92983658/201933902-990a02b5-6431-489f-9332-fd737c48e846.png)
+![tooling_asg_4b](https://user-images.githubusercontent.com/92983658/201933913-4742a269-402b-47cb-95f5-63fb9097ed57.png)
+![tooling_asg_4c](https://user-images.githubusercontent.com/92983658/201933927-9426cdbf-9e34-40f5-a470-2b4e3bcdeee7.png)
+
+<br>
+  
+![tooling_asg_5](https://user-images.githubusercontent.com/92983658/201934155-740eb9be-f962-41ef-9fb3-7650d54e2240.png)
+
+<br>
+  
+ 
 
 ## Configure Application Load Balancer
 
@@ -1334,3 +1456,18 @@ To configure RDS, follow steps below:
 ![database_m](https://user-images.githubusercontent.com/92983658/200832442-66da6c8a-042b-4b41-b198-870048ee7484.png)
 ![database_n](https://user-images.githubusercontent.com/92983658/200832468-227346bc-0b9e-47e3-97bf-35b1dd0b018f.png)
 
+<br>
+  
+- delete original nginx, bastion and webserver instances
+- ssh into `bastion ami`
+  - log into database: `mysql -h <database end point ip> -u admin -p` -> `mysql -h p15-database.cknfq53lxz20.eu-west-2.rds.amazonaws.com -u admin -p`
+  - `create database wordpressdb;`
+  - `create database toolingdb;`
+
+<br>
+  
+![create_db](https://user-images.githubusercontent.com/92983658/201927919-e5a3590c-4c42-4b1c-b4e2-f057afcb6b73.png)
+
+ <br>
+ 
+![show_databases](https://user-images.githubusercontent.com/92983658/201927938-fc316848-41f4-4725-8784-74c0e1b39b12.png)
