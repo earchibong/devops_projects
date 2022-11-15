@@ -944,12 +944,15 @@ sudo yum install -y ansible
 - Make use of the AMI to set up a launch template
 - Ensure the Instances are launched into a private subnet
 - Assign appropriate security group
-- Configure Userdata to update yum package repository and install Ansible and git:
+- Configure Userdata:
+  - add wordpress mount details to userdata: `EFS` -> `access point` -> `wordpress` -> click `attach` and copy mount details
+  - updte RDS database endpoint: `RDS` -> `project database` -> copy endpoint
+  - update database username, password and database name
 ```
  
 #!/bin/bash
 mkdir /var/www/
-sudo mount -t efs -o tls,accesspoint=fsap-0f9364679383ffbc0 fs-8b501d3f:/ /var/www/
+< add wordpress EFS accesspoint here> /var/www/
 yum install -y httpd 
 systemctl start httpd
 systemctl enable httpd
@@ -966,7 +969,7 @@ mkdir /var/www/html/
 cp -R /wordpress/* /var/www/html/
 cd /var/www/html/
 touch healthstatus
-sed -i "s/localhost/acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com/g" wp-config.php 
+sed -i "s/localhost/<add database endpoint ip here>/g" wp-config.php 
 sed -i "s/username_here/ACSadmin/g" wp-config.php 
 sed -i "s/password_here/admin12345/g" wp-config.php 
 sed -i "s/database_name_here/wordpressdb/g" wp-config.php 
@@ -1016,6 +1019,49 @@ systemctl restart httpd
 
 <br>
 
+- **Create a launch template for tooling:**
+- on EC2 dashboard, select `launch templates` then `create launch template`
+- Make use of the AMI to set up a launch template
+- Ensure the Instances are launched into a private subnet
+- Assign appropriate security group
+- configure userdata
+  - update mount with tooling access point: `efs` -> `access point` -> `tooling` -> click `attach` and copy mount details
+```
+  
+#!/bin/bash
+mkdir /var/www/
+<add tooling mount point here> /var/www/
+yum install -y httpd 
+systemctl start httpd
+systemctl enable httpd
+yum module reset php -y
+yum module enable php:remi-7.4 -y
+yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+systemctl start php-fpm
+systemctl enable php-fpm
+git clone https://github.com/Livingstone95/tooling-1.git
+mkdir /var/www/html
+cp -R /tooling-1/html/*  /var/www/html/
+cd /tooling-1
+mysql -h acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com -u ACSadmin -p toolingdb < tooling-db.sql
+cd /var/www/html/
+touch healthstatus
+sed -i "s/$db = mysqli_connect('mysql.tooling.svc.cluster.local', 'admin', 'admin', 'tooling');/$db = mysqli_connect('<add database endpoint here>', 'ACSadmin', 'admin12345', 'toolingdb');/g" functions.php
+chcon -t httpd_sys_rw_content_t /var/www/html/ -R
+systemctl restart httpd
+
+```
+
+<br>                                                                                                        
+                                                                                                      
+![tooling_temp_1](https://user-images.githubusercontent.com/92983658/201916345-13efd209-e6a5-479e-8d98-35679977e863.png)
+
+<br>
+
+![tooling_temp_2](https://user-images.githubusercontent.com/92983658/201916372-cdcba20d-4ec1-4de0-9fbb-b18659b59530.png)
+
+<br>
+  
 
 ## Configure Application Load Balancer
 
