@@ -1471,3 +1471,26 @@ To configure RDS, follow steps below:
  <br>
  
 ![show_databases](https://user-images.githubusercontent.com/92983658/201927938-fc316848-41f4-4725-8784-74c0e1b39b12.png)
+
+<br>
+ 
+### Configuring DNS with Route53
+  
+- Create an alias record for the root domain and direct its traffic to the ALB DNS name.
+  - select `domain` -> `create record`
+  - toggle `alias` and select `alias to application and classic load balancer`
+  - select your account region
+  - select `external load balancer` you created previously
+  
+<br>
+  
+![record_1](https://user-images.githubusercontent.com/92983658/201939164-69cf2f7e-f41d-427b-85d8-34b40828e2a3.png)
+
+![route_1b](https://user-images.githubusercontent.com/92983658/201939177-af5231cf-81a7-43a2-b0db-5c5996fe7072.png)
+
+![records_1c](https://user-images.githubusercontent.com/92983658/201939930-12eded0c-b43f-4804-94b7-606f84d78c94.png)
+
+![records_1d](https://user-images.githubusercontent.com/92983658/201939954-2e82732d-642f-467d-afdf-b42e81545b69.png)
+
+<br>
+         
