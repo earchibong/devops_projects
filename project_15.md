@@ -73,11 +73,15 @@ The following outlines the steps taken:
 
 <br>
 
-![hosted_zone](https://user-images.githubusercontent.com/92983658/199962765-0d0f5dd5-b203-4fbe-9e77-a63e91335a2c.png)
+![domain](https://user-images.githubusercontent.com/92983658/202169022-6340703a-d2f2-49aa-a2c3-8d5427e800ff.png)
 
 <br>
 
-![hosted_zone_2](https://user-images.githubusercontent.com/92983658/199963864-a9e9e5b4-74fc-4e2b-a1ba-86fcc75114d9.png)
+![hosted_zone_1a](https://user-images.githubusercontent.com/92983658/202169882-4095f065-4e80-41aa-a746-81fa0d484b7c.png)
+
+<br>
+
+![hosted_zone_1b](https://user-images.githubusercontent.com/92983658/202169952-c7e3ce8d-9fb7-43f9-a5ef-85b0a9488dac.png)
 
 <br>
 
@@ -503,13 +507,13 @@ TLS certificates handle secured connectivity to Application Load Balancers (ALB)
 - search for `certificate manager` in AWS search console
 - Request a public wildcard certificate for the domain name you registered in Freenom
   - in `certificate manager` console, click `request certificate`
-  - domain name: add `*` and domain name purchased from `*.freenom domain name`
+  - domain name: add `*` and domain name `*.domain name`
   - validation maethod: `DNS validation`
   - tags: key -> `Name`, value ->`p15_cert`
 
 <br>
 
-![cert1](https://user-images.githubusercontent.com/92983658/201343089-44a0066c-2108-44f1-b502-cfda38c64d3a.png)
+![cert_1b](https://user-images.githubusercontent.com/92983658/202172380-b0aa998e-85bd-4a96-9c3f-4cac3bb75798.png)
 ![cert2](https://user-images.githubusercontent.com/92983658/201343122-a0544eda-aab9-40a4-a1ce-085a3f24054a.png)
 
 <br>
@@ -730,7 +734,7 @@ rm -rf /ACS-project-config
   
 <br>
 
-- **Configure Autoscaling For Bastion**
+- **Configure Autoscaling For Nginx**
  - on EC2 dashboard, select`Autoscaling groups` -> `create auto-scaling group`
  - Select the right launch template
  - Select the VPC
