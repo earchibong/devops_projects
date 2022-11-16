@@ -1488,13 +1488,10 @@ To configure RDS, follow steps below:
   
 <br>
   
-![record_1](https://user-images.githubusercontent.com/92983658/201939164-69cf2f7e-f41d-427b-85d8-34b40828e2a3.png)
-
-![route_1b](https://user-images.githubusercontent.com/92983658/201939177-af5231cf-81a7-43a2-b0db-5c5996fe7072.png)
-
-![records_1c](https://user-images.githubusercontent.com/92983658/201939930-12eded0c-b43f-4804-94b7-606f84d78c94.png)
-
-![records_1d](https://user-images.githubusercontent.com/92983658/201939954-2e82732d-642f-467d-afdf-b42e81545b69.png)
+![record_1a](https://user-images.githubusercontent.com/92983658/202189277-28d3fa6d-46f8-4956-a432-1f225b2ff48d.png)
+![record_1b](https://user-images.githubusercontent.com/92983658/202189304-0fa7d86b-21c9-460c-a73b-754ae301d88f.png)
+![record_2a](https://user-images.githubusercontent.com/92983658/202189364-b7d250c7-9b68-492d-b027-a3cacc347e87.png)
+![record_2b](https://user-images.githubusercontent.com/92983658/202189457-a9ef2a4f-3827-487a-b103-1233be4b6a30.png)
 
 <br>
          
