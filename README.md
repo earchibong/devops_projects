@@ -1,5 +1,5 @@
 # devops_training
-devops project based learning from <a href="https://https://www.darey.io/">Darey.io</a>
+devops learning projects
 
 Projects include:
 <ul>
