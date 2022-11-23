@@ -84,9 +84,32 @@ SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 
 <br>
  
-- on terminal instal `boto3` and `AWS CRT`: `pip install boto3[crt]`
- 
+- To install AWS SDK boto3 , it is recommended to upgrade the Python to latest version : `brew install python`
+- install `pip`: `sudo easy_install pip`
+- install `boto3`: `pip3 install boto3`
+- install `AWS CLI`: `pip3 install awscli`
+- configure credentials with `aws configure` command
+
+<br>
+
+![boto3_install](https://user-images.githubusercontent.com/92983658/203551877-3cebfcb7-27c3-4f87-ba8c-bc5225cb2151.png)
+
 <br>
  
+- ensure you can programmatically access AWS account by running following commands in `>python`:
+```
+python
+
+import boto3
+s3 = boto3.resource('s3')
+for bucket in s3.buckets.all():
+    print(bucket.name)
+ 
+```
+
+- *You should see your previously created S3 bucket name*
+<br>
+
+
 
  
