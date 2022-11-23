@@ -55,6 +55,7 @@ The following outlines the steps taken:
 - **Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python 
 SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 
+*If you are on Windows, use gitbash, if you are on a Mac, you can simply open a terminal.*
 **For easier authentication configuration – `AWS CLI` with `aws configure` command will be used.**
 
 - Create an S3 bucket to store Terraform state file. You can name it something like <yourname>-dev-terraform-bucket 
@@ -75,12 +76,16 @@ SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 
 <br>
  
- ![bucket_1d](https://user-images.githubusercontent.com/92983658/203541100-db4f4a0e-da99-4c5c-934f-aa1f521180ce.png)
+![cbucket_1g](https://user-images.githubusercontent.com/92983658/203542731-8825e666-4ddb-4e73-b3ee-f5c0e3f173f3.png)
 
 <br>
  
 ![bucket_1e](https://user-images.githubusercontent.com/92983658/203541131-d116b60e-6b99-46bf-a5eb-8e9701686a8b.png)
 
+<br>
+ 
+- on terminal instal `boto3` and `AWS CRT`: `pip install boto3[crt]`
+ 
 <br>
  
 
