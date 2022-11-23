@@ -17,6 +17,6 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/ansible_refactor.md">PROJECT TWELVE: Ansible Refactoring & Static Assignments (Imports & Roles)</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/ansible_dynamic_assignments.md">PROJECT THIRTEEN: Ansible Dynamic Assignments (Include) & Community Roles</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md">PROJECT FOURTEEN: Continous Integration With Jenkins, Ansible, Artifactory, SonarQube and PHP</a></li>
-    <li><a href="https://github.com/earchibong/devops_training/blob/main/project_15.md">PROJECT FIFTEEN: AWS Cloud Solution for 2 Company Websites Using Reverse Proxy Technology</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/reverse_proxy.md">PROJECT FIFTEEN: AWS Cloud Solution for 2 Company Websites Using Reverse Proxy Technology</a></li>
 </ul>
 
