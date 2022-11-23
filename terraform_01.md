@@ -55,3 +55,33 @@ The following outlines the steps taken:
 - **Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python 
 SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 
+**For easier authentication configuration – `AWS CLI` with `aws configure` command will be used.**
+
+- Create an S3 bucket to store Terraform state file. You can name it something like <yourname>-dev-terraform-bucket 
+ (Note: S3 bucket names must be unique unique within a region partition)
+ - search for `S3` in AWS conslole -> `create bucket`
+
+<br>
+ 
+![bucket_1a](https://user-images.githubusercontent.com/92983658/203540854-411bd131-323e-4a03-ad73-8d74b0c2a18b.png)
+
+<br>
+ 
+![bucket_1b](https://user-images.githubusercontent.com/92983658/203540915-6dd84aec-a8f2-48de-ae4a-6102ea9121ef.png)
+
+ <br>
+ 
+ ![bucket_1c](https://user-images.githubusercontent.com/92983658/203541069-89122e34-f691-4e5c-a2ae-f817b9022e31.png)
+
+<br>
+ 
+ ![bucket_1d](https://user-images.githubusercontent.com/92983658/203541100-db4f4a0e-da99-4c5c-934f-aa1f521180ce.png)
+
+<br>
+ 
+![bucket_1e](https://user-images.githubusercontent.com/92983658/203541131-d116b60e-6b99-46bf-a5eb-8e9701686a8b.png)
+
+<br>
+ 
+
+ 
