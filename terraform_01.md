@@ -110,6 +110,10 @@ for bucket in s3.buckets.all():
 - *You should see your previously created S3 bucket name*
 <br>
 
+![import_boto](https://user-images.githubusercontent.com/92983658/203561094-043eb2fe-8d12-4492-b1b5-a7b43fc32571.png)
+
+<br>
+ 
 
 
  
