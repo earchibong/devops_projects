@@ -1,0 +1,57 @@
+<br>
+
+# AUTOMATE INFRASTRUCTURE WITH IAC USING TERRAFORM PART 1
+
+This project demonstrates how the AWS infrastructure for 2 websites that was built manually in project 15 is automated with the use of Terraform.
+
+The following outlines the steps taken:
+
+<br>
+
+![image](https://user-images.githubusercontent.com/92983658/203531844-0d082b08-87b1-4b95-ad5d-c921e0b61611.png)
+
+<br>
+
+## Pre-requisites:
+
+- **Create an IAM user, name it `terraform` (ensure that the user has only programatic access to your AWS account) and grant this user 
+ `Administrator` Access` permissions**
+- **Copy the secret access key and access key ID. Save them in a notepad temporarily.**
+ - search for `IAM` in AWS search console
+ - click `user` on `IAM` dashboard and then `add users`
+ - select `programmatic access` for AWS credential type
+ 
+<br>
+
+![create_user_1a](https://user-images.githubusercontent.com/92983658/203534121-91fdf847-6ff0-4d83-b25c-46a35521cb22.png)
+
+<br>
+
+- select `add user to group` -> `create group`
+- select `adminitrator access`
+
+<br>
+
+![create_user_1b](https://user-images.githubusercontent.com/92983658/203535472-e4dc8957-1dc2-4e06-80fb-1c5f1c81ab29.png)
+
+<br>
+
+![create_user_ic](https://user-images.githubusercontent.com/92983658/203535500-8d445772-a3e3-4e0c-a8f1-fe162936a290.png)
+
+<br>
+
+![create_user_1d](https://user-images.githubusercontent.com/92983658/203535541-8b51d69d-86b6-40a2-862b-0b225234bc5b.png)
+
+<br>
+
+![create_user_1e](https://user-images.githubusercontent.com/92983658/203535596-9d0bdd18-8bf1-4fca-b98c-3aa958effc34.png)
+
+<br>
+
+![create_user_1f](https://user-images.githubusercontent.com/92983658/203535617-d5b1abf3-4a86-4b48-9879-3c74add84264.png)
+
+<br>
+
+- **Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python 
+SDK (boto3). You must have Python 3.6 or higher on your workstation.**
+
