@@ -191,3 +191,63 @@ resource "aws_vpc" "main" {
  
  - *A new file terraform.tfstate is created as a result of the above command which Terraform uses to keeps itself up to date with the 
  exact state of the infrastructure and terraform.tfstate.lock.info file which Terraform uses to track who is running its code against the infrastructure at any point in time*
+ 
+<br>
+ 
+### Subnets resource section
+ 
+According to the architectural design, we require 6 subnets:
+
+- 2 public
+- 2 private for webservers
+- 2 private for data layer
+
+<br>
+ 
+- create the first 2 public subnets.
+ - Add below configuration to the `main.tf` file:
+ 
+```
+ 
+# Create public subnets1
+    resource "aws_subnet" "public1" {
+    vpc_id                     = aws_vpc.main.id
+    cidr_block                 = "172.16.0.0/24"
+    map_public_ip_on_launch    = true
+    availability_zone          = "eu-west-2a"
+
+}
+
+# Create public subnet2
+    resource "aws_subnet" "public2" {
+    vpc_id                     = aws_vpc.main.id
+    cidr_block                 = "172.16.1.0/24"
+    map_public_ip_on_launch    = true
+    availability_zone          = "eu-west-2b"
+}
+ 
+```
+ 
+<br>
+ 
+![subnets_2](https://user-images.githubusercontent.com/92983658/203783514-08232075-253e-4c3e-9a77-1963b69e7e72.png)
+
+<br>
+ 
+*We are creating 2 subnets, therefore declaring 2 resource blocks – one for each of the subnets.*
+*We are using the vpc_id argument to interpolate the value of the VPC id by setting it to aws_vpc.main.id. This way, Terraform knows inside which VPC to create the subnet.*
+ 
+ - Run `terraform plan` and `terraform apply`
+
+<br>
+ 
+![terraform_apply_2a](https://user-images.githubusercontent.com/92983658/203784819-108a95ba-7d21-49a0-8b25-155f53d3c9a7.png)
+![terraform_apply_2b](https://user-images.githubusercontent.com/92983658/203784824-f368395f-cd29-4f03-917b-8072913073f0.png)
+![terraform_aaply_2c](https://user-images.githubusercontent.com/92983658/203784838-e6d1e217-073f-4fa9-b966-bd6e7edc193f.png)
+
+<br>
+
+### REFACTOR CODES
+- **improve the code by refactoring it.**
+*- Hardcoded values: Both the `availability_zone` and `cidr_block arguments` are hard coded. We should always endeavour to make our work dynamic.*
+*-Multiple Resource Blocks: are declared for each subnet in the code. A single resource block that can dynamically create resources without specifying multiple blocks is needed instead*
