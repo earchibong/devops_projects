@@ -444,4 +444,47 @@ resource "aws_subnet" "public" {
 
 <br>
  
+## Step THREE: Introducing Variables.tf And terraform.tfvars
 
+ Instead of havng a long lisf of variables in main.tf file, we can actually make the code a lot more readable and better structured by moving out some parts of the configuration content to other files.
+
+- put all variable declarations in a separate file
+- And provide non default values to each of them
+
+<br>
+ 
+- Create a new file in `PBL` and name it `variables.tf` and copy all the variable declarations into the new file.
+- Create another file, name it `terraform.tfvars` and Set values for each of the variables.
+ 
+<br>
+ 
+![main](https://user-images.githubusercontent.com/92983658/203800341-199e9353-a4e2-4d12-b708-e7704d8e9275.png)
+
+<br>
+ 
+![variables](https://user-images.githubusercontent.com/92983658/203800398-478dcfc3-4bcb-4da0-a7e9-4aa2d2212250.png)
+
+<br>
+ 
+![tfvars](https://user-images.githubusercontent.com/92983658/203800445-024027f1-8493-4034-9d08-530a010e606b.png)
+
+<br>
+ 
+ - Run `terraform validate` and `terraform plan` and ensure everything works
+ 
+<br>
+ 
+ ![fmt_validate](https://user-images.githubusercontent.com/92983658/203801117-0449be6f-dce3-4fff-9a08-de1d66ff08f1.png)
+
+ <br>
+
+![plan_1a](https://user-images.githubusercontent.com/92983658/203801758-177230e7-c45c-4669-9d4e-30d592a3d2cb.png)
+![plan1b](https://user-images.githubusercontent.com/92983658/203801775-4eb5c6ea-5b4b-489a-ade7-dd5463107286.png)
+![plan1c](https://user-images.githubusercontent.com/92983658/203801793-5e61df31-e94d-40b1-ae86-491eeda8ba4d.png)
+![plan1d](https://user-images.githubusercontent.com/92983658/203801810-80a4b330-2d61-4eea-ab22-e14b0864704c.png)
+![plan1e](https://user-images.githubusercontent.com/92983658/203801827-bef1736c-0d43-40ed-8e02-d08773c70278.png)
+
+<br>
+ 
+ 
+ 
