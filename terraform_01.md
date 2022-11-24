@@ -114,6 +114,61 @@ for bucket in s3.buckets.all():
 
 <br>
  
+## Step ONE: VPC | SUBNETS | SECURITY GROUPS
+- **create a directory structure**
+ - on the desktop, create a new folder named `Terraform`
+ - Open Visual Studio Code and:
+  - Create a folder called `PBL` inside `Terraform`
+  - Create a file in the folder, name it `main.tf`
 
+<br>
+
+![pbl](https://user-images.githubusercontent.com/92983658/203767834-666a27bf-88b8-42c3-a666-70567b16cd19.png)
+
+<br>
+ 
+### Provider and VPC resource section
+
+- **Set up Terraform CLI**
+ - follow instructuions <a href="https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli">here</a>
+ - Add `AWS` as a provider, and a resource to create a VPC in the `main.tf` file.
+ *The Provider block informs Terraform that we intend to build infrastructure within AWS.*
+ *The Resource block is what creates a VPC.*
+
+```
+ 
+provider "aws" {
+  region = "<your AWS region: e.g: eu-central-1>"
+}
+
+# Create VPC
+resource "aws_vpc" "main" {
+  cidr_block                     = "172.16.0.0/16"
+  enable_dns_support             = "true"
+  enable_dns_hostnames           = "true"
+  enable_classiclink             = "false"
+  enable_classiclink_dns_support = "false"
+}
+ 
+```
+<br>
+ 
+*Note: You can change the configuration above to create your VPC in other region that is closer to you. The same applies to all configuration snippets that will follow.*
+
+ <br>
+ 
+![main_1a](https://user-images.githubusercontent.com/92983658/203774406-f9d0006a-6fe7-412b-9815-a7845b58b63e.png)
+
+<br>
+ 
+- download necessary plugins for Terraform to work.
+ - run `terraform init` command in `PBL` folder
+ 
+<br>
+ 
+![init](https://user-images.githubusercontent.com/92983658/203776453-f3452f8c-741c-485e-afe8-ba53d1935a5f.png)
+
+<br>
+ 
 
  
