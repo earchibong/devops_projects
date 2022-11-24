@@ -166,9 +166,28 @@ resource "aws_vpc" "main" {
  
 <br>
  
-![init](https://user-images.githubusercontent.com/92983658/203776453-f3452f8c-741c-485e-afe8-ba53d1935a5f.png)
+![terraform_init](https://user-images.githubusercontent.com/92983658/203777454-df803779-59a5-4796-8c8f-b3d7524f07f3.png)
 
 <br>
  
-
+*Note that a new directory has been created: .terraform\.... This is where Terraform keeps plugins. Generally, it is safe to delete this folder. It just means that you must execute terraform init again, to download them.*
  
+- check to see what terraform intends to create : in `PBL` run `terraform plan`
+
+<br>
+ 
+![plan](https://user-images.githubusercontent.com/92983658/203779799-a2b72e1e-ee52-4ae3-9255-951763623cd2.png)
+
+<br>
+ 
+- if happy with changes planned, execute `terraform apply`
+ 
+<br>
+ 
+![terraform_apply_1a](https://user-images.githubusercontent.com/92983658/203780754-070fac00-1c65-4af1-92c3-4512d18274d6.png)
+![terraform_apply_1b](https://user-images.githubusercontent.com/92983658/203780763-6e8f548e-fc51-4639-a763-38cf451833d5.png)
+
+<br>
+ 
+ - *A new file terraform.tfstate is created as a result of the above command which Terraform uses to keeps itself up to date with the 
+ exact state of the infrastructure and terraform.tfstate.lock.info file which Terraform uses to track who is running its code against the infrastructure at any point in time*
