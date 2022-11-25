@@ -54,6 +54,10 @@ a conflict with both private and public subnets sharing the same cidr_block*
 
 <br>
 
+![main_1a](https://user-images.githubusercontent.com/92983658/203994675-757ff84a-4fb6-43aa-8c50-6eeed13ef718.png)
+
+<br>
+
 - update `variables.tf`: add the following to the file...
 
 <br>
@@ -63,6 +67,10 @@ variable "preferred_number_of_private_subnets" {
   default = null
   type = number
   description = "number of private subnets"
+}
+
+variable "max_subnets" {
+  default = 4
 }
 
 variable "Name" {
@@ -77,6 +85,10 @@ variable "tags" {
 }
 
 ```
+
+<br>
+
+![variables_1a](https://user-images.githubusercontent.com/92983658/203994989-9242296f-de7b-4fed-bfc8-84af38689cbf.png)
 
 <br>
 
@@ -96,4 +108,11 @@ tags = {
 }
 
 ```
-                                                             
+
+<br>
+
+![tfvars](https://user-images.githubusercontent.com/92983658/203995247-b8d3a718-fe29-4e94-b819-a3649c5e63c9.png)
+
+<br>
+
+
