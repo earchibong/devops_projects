@@ -115,4 +115,32 @@ tags = {
 
 <br>
 
+### Create Internet Gateway
+- Create a file called `internet_gateway.tf` and entering the following codes:
+```
+
+resource "aws_internet_gateway" "ig" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-%s!", aws_vpc.main.id,"IG")
+    } 
+  )
+}
+
+```
+
+<br>
+
+*note: the use of format() function to dynamically generate a unique name for this resource. The first part of the %s takes the interpolated value of aws_vpc.main.id while the second %s appends a literal string IG and finally an exclamation mark is added in the end.*
+
+<br>
+
+![internet_gateway](https://user-images.githubusercontent.com/92983658/203996593-6024ae62-dbd7-4a89-8314-ab3b8a1b31db.png)
+
+<br>
+
+
 
