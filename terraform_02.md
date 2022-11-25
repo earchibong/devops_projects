@@ -142,5 +142,115 @@ resource "aws_internet_gateway" "ig" {
 
 <br>
 
+### Create A NAT Gateway
+- Create a file called `nat_gateway.tf` and entering the following codes to create a NAT gateway and assign an elastic IP to it:
+```
 
+resource "aws_eip" "nat_eip" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.ig]
 
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-EIP", var.name)
+    },
+  )
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = element(aws_subnet.public.*.id, 0)
+  depends_on    = [aws_internet_gateway.ig]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-Nat", var.name)
+    },
+  )
+}
+
+```
+
+<br>
+
+![nat_gateway](https://user-images.githubusercontent.com/92983658/203997774-e2de2a20-f7e4-42bb-bfbe-8d7103764a7c.png)
+
+<br>
+
+### AWS ROUTES
+- Create a file called `route_tables.tf` and use it to create routes for both public and private subnets, create the below resources. Ensure they are properly tagged.
+
+  - aws_route_table
+  - aws_route
+  - aws_route_table_association
+
+<br>
+
+```
+# create private route table
+resource "aws_route_table" "private-rtb" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-Private-Route-Table", var.name)
+    },
+  )
+}
+
+# associate all private subnets to the private route table
+resource "aws_route_table_association" "private-subnets-assoc" {
+  count          = length(aws_subnet.private[*].id)
+  subnet_id      = element(aws_subnet.private[*].id, count.index)
+  route_table_id = aws_route_table.private-rtb.id
+}
+
+# create route table for the public subnets
+resource "aws_route_table" "public-rtb" {
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags,
+    {
+      Name = format("%s-Public-Route-Table", var.name)
+    },
+  )
+}
+
+# create route for the public route table and attach the internet gateway
+resource "aws_route" "public-rtb-route" {
+  route_table_id         = aws_route_table.public-rtb.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.ig.id
+}
+
+# associate all public subnets to the public route table
+resource "aws_route_table_association" "public-subnets-assoc" {
+  count          = length(aws_subnet.public[*].id)
+  subnet_id      = element(aws_subnet.public[*].id, count.index)
+  route_table_id = aws_route_table.public-rtb.id
+}
+
+```
+<br>
+
+![route_tables](https://user-images.githubusercontent.com/92983658/203999319-cfe81fce-3225-48c2-9400-9e044946a21c.png)
+
+<br>
+
+- run `terraform plan` and `terraform apply` to add the following resources to `AWS` in multi-az set up:
+
+  – the main vpc
+  – 2 Public subnets
+  – 4 Private subnets
+  – 1 Internet Gateway
+  – 1 NAT Gateway
+  – 1 EIP
+  – 2 Route tables
+
+<br>
+
+## Compute and Access Control configuration
