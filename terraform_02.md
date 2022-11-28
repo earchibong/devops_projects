@@ -384,3 +384,427 @@ As per the architecture the following needs to be created:
 - an Auto Scaling Group (ASG) for Bastion, Tooling, Nginx and WordPress
 - Elastic Filesystem
 - Relational Database (RDS)
+
+<br>
+
+### Create Security Groups
+
+create all the security groups in a single file, then refrence this security group within each resources that needs it.
+
+- Create a file and name it `security.tf`, copy and paste the code below
+
+```
+
+# security group for alb, to allow acess from any where for HTTP and HTTPS traffic
+resource "aws_security_group" "ext-alb-sg" {
+  name        = "ext-alb-sg"
+  vpc_id      = aws_vpc.main.id
+  description = "Allow TLS inbound traffic"
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+ tags = merge(
+    var.tags,
+    {
+      Name = "ext-alb-sg"
+    },
+  )
+
+}
+
+# security group for bastion, to allow access into the bastion host from you IP
+resource "aws_security_group" "bastion_sg" {
+  name        = "vpc_web_sg"
+  vpc_id = aws_vpc.main.id
+  description = "Allow incoming HTTP connections."
+
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+   tags = merge(
+    var.tags,
+    {
+      Name = "Bastion-SG"
+    },
+  )
+}
+
+#security group for nginx reverse proxy, to allow access only from the extaernal load balancer and bastion instance
+resource "aws_security_group" "nginx-sg" {
+  name   = "nginx-sg"
+  vpc_id = aws_vpc.main.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+   tags = merge(
+    var.tags,
+    {
+      Name = "nginx-SG"
+    },
+  )
+}
+
+resource "aws_security_group_rule" "inbound-nginx-http" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.ext-alb-sg.id
+  security_group_id        = aws_security_group.nginx-sg.id
+}
+
+resource "aws_security_group_rule" "inbound-bastion-ssh" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg.id
+  security_group_id        = aws_security_group.nginx-sg.id
+}
+
+# security group for ialb, to have acces only from nginx reverser proxy server
+resource "aws_security_group" "int-alb-sg" {
+  name   = "my-alb-sg"
+  vpc_id = aws_vpc.main.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "int-alb-sg"
+    },
+  )
+
+}
+
+resource "aws_security_group_rule" "inbound-ialb-https" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.nginx-sg.id
+  security_group_id        = aws_security_group.int-alb-sg.id
+}
+
+# security group for webservers, to have access only from the internal load balancer and bastion instance
+resource "aws_security_group" "webserver-sg" {
+  name   = "my-asg-sg"
+  vpc_id = aws_vpc.main.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "webserver-sg"
+    },
+  )
+
+}
+
+resource "aws_security_group_rule" "inbound-web-https" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.int-alb-sg.id
+  security_group_id        = aws_security_group.webserver-sg.id
+}
+
+resource "aws_security_group_rule" "inbound-web-ssh" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg.id
+  security_group_id        = aws_security_group.webserver-sg.id
+}
+
+# security group for datalayer to alow traffic from websever on nfs and mysql port and bastiopn host on mysql port
+resource "aws_security_group" "datalayer-sg" {
+  name   = "datalayer-sg"
+  vpc_id = aws_vpc.main.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+ tags = merge(
+    var.tags,
+    {
+      Name = "datalayer-sg"
+    },
+  )
+}
+
+resource "aws_security_group_rule" "inbound-nfs-port" {
+  type                     = "ingress"
+  from_port                = 2049
+  to_port                  = 2049
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.webserver-sg.id
+  security_group_id        = aws_security_group.datalayer-sg.id
+}
+
+resource "aws_security_group_rule" "inbound-mysql-bastion" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg.id
+  security_group_id        = aws_security_group.datalayer-sg.id
+}
+
+resource "aws_security_group_rule" "inbound-mysql-webserver" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.webserver-sg.id
+  security_group_id        = aws_security_group.datalayer-sg.id
+}
+
+```
+
+*note: the `aws_security_group_rule` was used to refrence another security group in a security group.*
+
+<br>
+
+![security_1a](https://user-images.githubusercontent.com/92983658/204284696-df288d29-e5d7-4da0-a6ae-69d46038db1b.png)
+![security_1b](https://user-images.githubusercontent.com/92983658/204284721-1f2b77ad-ee5b-44a7-a4a7-a6c5e8e8c7ac.png)
+![security_1c](https://user-images.githubusercontent.com/92983658/204284737-bc2d8a3d-290a-49c8-8ac0-4ddd1a4f86ee.png)
+![security_1d](https://user-images.githubusercontent.com/92983658/204284752-d0cec85d-39d5-43b4-bef8-2b6822067ab2.png)
+![security_1f](https://user-images.githubusercontent.com/92983658/204284781-06a5b656-6ea3-41cf-923e-933934c50a10.png)
+![security_1g](https://user-images.githubusercontent.com/92983658/204285319-3e50f77f-c383-4662-9052-6614c6138ed7.png)
+![security_1h](https://user-images.githubusercontent.com/92983658/204285339-ff1205e6-34b3-406d-b534-51161e95fd4c.png)
+![security_1i](https://user-images.githubusercontent.com/92983658/204285352-f0a67cbb-fe4d-4e76-97f3-0ad1c5f79a2c.png)
+![security_1j](https://user-images.githubusercontent.com/92983658/204285380-864162bd-c0fa-478e-934a-4c949832855a.png)
+
+<br>
+
+### Create Certificate From Amazon Certificate Manager
+
+- Create `cert.tf` file and add the following code snippets to it.
+*NOTE: Be sure to change the domain name to your own domain name and every other name that needs to be changed.*
+
+```
+
+# The entire section creates a certificate, public zone, and validates the certificate using DNS method
+
+# Create the certificate using a wildcard for all the domains created in archibong.link
+resource "aws_acm_certificate" "archibong" {
+  domain_name       = "*.archibong.link"
+  validation_method = "DNS"
+}
+
+# calling the hosted zone
+data "aws_route53_zone" "archibong" {
+  name         = "archibong.link"
+  private_zone = false
+}
+
+# selecting validation method
+resource "aws_route53_record" "archibong" {
+  for_each = {
+    for dvo in aws_acm_certificate.archibong.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = data.aws_route53_zone.archibong.zone_id
+}
+
+# validate the certificate through DNS method
+resource "aws_acm_certificate_validation" "archibong" {
+  certificate_arn         = aws_acm_certificate.archibong.arn
+  validation_record_fqdns = [for record in aws_route53_record.archibong : record.fqdn]
+}
+
+# create records for tooling
+resource "aws_route53_record" "tooling" {
+  zone_id = data.aws_route53_zone.archibong.zone_id
+  name    = "tooling.archibong.link"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.ext-alb.dns_name
+    zone_id                = aws_lb.ext-alb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+# create records for wordpress
+resource "aws_route53_record" "wordpress" {
+  zone_id = data.aws_route53_zone.archibong.zone_id
+  name    = "wordpress.archibong.link"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.ext-alb.dns_name
+    zone_id                = aws_lb.ext-alb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+```
+
+<br>
+
+### Create an external (Internet facing) Application Load Balancer (ALB)
+create the ALB, then create the target group and lastly, create the lsitener rule.
+
+<br>
+
+- Create a file called `alb.tf`
+- create an ALB to balance the traffic between the Instances:
+
+```
+
+resource "aws_lb" "ext-alb" {
+  name     = "ext-alb"
+  internal = false
+  security_groups = [
+    aws_security_group.ext-alb-sg.id,
+  ]
+
+  subnets = [
+    aws_subnet.public[0].id,
+    aws_subnet.public[1].id
+  ]
+
+   tags = merge(
+    var.tags,
+    {
+      Name = "ACS-ext-alb"
+    },
+  )
+
+  ip_address_type    = "ipv4"
+  load_balancer_type = "application"
+}
+
+```
+
+<br>
+
+- To inform the ALB to where to route the traffic, create a Target Group to point to its targets:
+
+<br>
+
+```
+resource "aws_lb_target_group" "nginx-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+  name        = "nginx-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+```
+<br>
+
+- create a `Listner` for this target Group
+
+<br>
+
+```
+resource "aws_lb_listener" "nginx-listner" {
+  load_balancer_arn = aws_lb.ext-alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.archibong.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.nginx-tgt.arn
+  }
+}
+
+```
+
+<br>
+
+- Add the following outputs to `output.tf` to print them on screen
+
+<br>
+
+```
+
+output "alb_dns_name" {
+  value = aws_lb.ext-alb.dns_name
+}
+
+output "alb_target_group_arn" {
+  value = aws_lb_target_group.nginx-tgt.arn
+}
+
+```
+<br>
+
