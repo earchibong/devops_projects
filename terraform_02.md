@@ -791,6 +791,11 @@ resource "aws_lb_listener" "nginx-listner" {
 
 <br>
 
+![alb_1a](https://user-images.githubusercontent.com/92983658/204292778-44e45bae-dc6d-4f48-a4b3-56917f53752c.png)
+![alb_1b](https://user-images.githubusercontent.com/92983658/204292790-ad68c4d8-acf3-47a3-b882-7a4498c80519.png)
+
+<br>
+
 - Add the following outputs to `output.tf` to print them on screen
 
 <br>
@@ -806,5 +811,148 @@ output "alb_target_group_arn" {
 }
 
 ```
+<br>
+
+![output](https://user-images.githubusercontent.com/92983658/204292916-2808bb3b-fcb9-465a-b011-a6158396d865.png)
+
+<br>
+
+### Create an Internal (Internal) Application Load Balancer (ALB)
+
+For the Internal Load balancer, the concepts as with the external load balancer.
+
+<br>
+
+- Add the code snippets inside the `alb.tf` file
+
+<br>
+
+```
+# ----------------------------
+#Internal Load Balancers for webservers
+#---------------------------------
+
+resource "aws_lb" "ialb" {
+  name     = "ialb"
+  internal = true
+  security_groups = [
+    aws_security_group.int-alb-sg.id,
+  ]
+
+  subnets = [
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "ACS-int-alb"
+    },
+  )
+
+  ip_address_type    = "ipv4"
+  load_balancer_type = "application"
+}
+
+```
+
+<br>
+
+- To inform the ALB to where route the traffic, create a Target Group to point to its targets:
+
+<br>
+
+```
+
+# --- target group  for wordpress -------
+
+resource "aws_lb_target_group" "wordpress-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "wordpress-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+# --- target group for tooling -------
+
+resource "aws_lb_target_group" "tooling-tgt" {
+  health_check {
+    interval            = 10
+    path                = "/healthstatus"
+    protocol            = "HTTPS"
+    timeout             = 5
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+  }
+
+  name        = "tooling-tgt"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+```
+
+<br>
+
+- create a `Listner` for this target Group
+
+<br>
+
+```
+# For this aspect a single listener was created for the wordpress which is default,
+# A rule was created to route traffic to tooling when the host header changes
+
+resource "aws_lb_listener" "web-listener" {
+  load_balancer_arn = aws_lb.ialb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.oyindamola.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.wordpress-tgt.arn
+  }
+}
+
+# listener rule for tooling target
+
+resource "aws_lb_listener_rule" "tooling-listener" {
+  listener_arn = aws_lb_listener.web-listener.arn
+  priority     = 99
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tooling-tgt.arn
+  }
+
+  condition {
+    host_header {
+      values = ["tooling.oyindamola.gq"]
+    }
+  }
+}
+
+```
+
+<br>
+
+![internal_1a](https://user-images.githubusercontent.com/92983658/204294479-53646d2e-24bc-454b-a908-c6065991696d.png)
+![internal_1b](https://user-images.githubusercontent.com/92983658/204294487-3c476c36-1ac9-4446-a9ea-9300ed7203ce.png)
+![internal_1c](https://user-images.githubusercontent.com/92983658/204294501-47ba5f02-6172-4c00-9f17-edc31154cfc7.png)
+![internal_1e](https://user-images.githubusercontent.com/92983658/204294514-51b62a70-a554-4c06-a303-536a55f87f14.png)
+
 <br>
 
