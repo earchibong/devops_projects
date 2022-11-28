@@ -253,4 +253,134 @@ resource "aws_route_table_association" "public-subnets-assoc" {
 
 <br>
 
-## Compute and Access Control configuration
+## Compute and Access Control Configuration
+
+### AWS Identity and Access Management: IaM and Roles
+Pass an IAM role to EC2 instances to give them access to some specific resources.
+
+- **Create `AssumeRole`**
+Typically, `AssumeRole` is used within an `AWS` account or for cross-account access.
+It uses Security Token Service (STS) API that returns a set of temporary security credentials that you can use to access AWS resources that you might not normally have access to. These temporary credentials consist of an access key ID, a secret access key, and a security token.
+
+- Add the following code to a new file named `roles.tf` 
+This will create `AssumeRole` with `AssumeRole policy`. It grants to an entity, in our case it is an EC2, permissions to assume the role.
+
+<br>
+
+```
+resource "aws_iam_role" "ec2_instance_role" {
+name = "ec2_instance_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "aws assume role"
+    },
+  )
+}
+
+```
+
+<br>
+
+![assume_role](https://user-images.githubusercontent.com/92983658/204278531-c80e6cf2-0f40-4627-acac-fc21e073dbe6.png)
+
+<br>
+
+- Create `IAM` policy for this role
+
+<br>
+
+```
+resource "aws_iam_policy" "policy" {
+  name        = "ec2_instance_policy"
+  description = "A test policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:Describe*",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+
+  })
+
+  tags = merge(
+    var.tags,
+    {
+      Name =  "aws assume policy"
+    },
+  )
+
+}
+
+```
+
+<br>
+
+![iam_policy](https://user-images.githubusercontent.com/92983658/204279005-9124a8dd-0edd-4d64-97e1-49eaef2eabf4.png)
+
+<br>
+
+- Attach the Policy to the `IAM Role`
+
+<br>
+
+```
+
+resource "aws_iam_role_policy_attachment" "test-attach" {
+        role       = aws_iam_role.ec2_instance_role.name
+        policy_arn = aws_iam_policy.policy.arn
+    }
+    
+```
+
+<br>
+
+- Create an `Instance Profile` and interpolate the `IAM Role`
+
+<br>
+
+```
+
+ resource "aws_iam_instance_profile" "ip" {
+        name = "aws_instance_profile_test"
+        role =  aws_iam_role.ec2_instance_role.name
+    }
+    
+```
+
+<br>
+
+![IAM_1c](https://user-images.githubusercontent.com/92983658/204279536-a179a165-81bc-4b91-bdeb-6580a1497833.png)
+
+<br>
+
+## Create Compute Resources
+As per the architecture the following needs to be created:
+
+- Security Groups
+- Target Group for Nginx, WordPress and Tooling
+- Certificate from AWS certificate manager
+- an External Application Load Balancer and Internal Application Load Balancer.
+- launch template for Bastion, Tooling, Nginx and WordPress
+- an Auto Scaling Group (ASG) for Bastion, Tooling, Nginx and WordPress
+- Elastic Filesystem
+- Relational Database (RDS)
