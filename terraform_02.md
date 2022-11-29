@@ -919,7 +919,7 @@ resource "aws_lb_listener" "web-listener" {
   load_balancer_arn = aws_lb.ialb.arn
   port              = 443
   protocol          = "HTTPS"
-  certificate_arn   = aws_acm_certificate_validation.oyindamola.certificate_arn
+  certificate_arn   = aws_acm_certificate_validation.archibong.certificate_arn
 
   default_action {
     type             = "forward"
@@ -940,7 +940,7 @@ resource "aws_lb_listener_rule" "tooling-listener" {
 
   condition {
     host_header {
-      values = ["tooling.oyindamola.gq"]
+      values = ["tooling.archibong.link"]
     }
   }
 }
@@ -952,7 +952,437 @@ resource "aws_lb_listener_rule" "tooling-listener" {
 ![internal_1a](https://user-images.githubusercontent.com/92983658/204294479-53646d2e-24bc-454b-a908-c6065991696d.png)
 ![internal_1b](https://user-images.githubusercontent.com/92983658/204294487-3c476c36-1ac9-4446-a9ea-9300ed7203ce.png)
 ![internal_1c](https://user-images.githubusercontent.com/92983658/204294501-47ba5f02-6172-4c00-9f17-edc31154cfc7.png)
-![internal_1e](https://user-images.githubusercontent.com/92983658/204294514-51b62a70-a554-4c06-a303-536a55f87f14.png)
+![internal_alb](https://user-images.githubusercontent.com/92983658/204519871-a6dbc955-65e8-487d-8095-fcee7e697c0e.png)
 
 <br>
+
+### Create Auto Scaling Groups  
+Based on the Architetcture, Auto Scaling Groups for bastion, nginx, wordpress and tooling are needed. So, two files will be created; `asg-bastion-nginx.tf` will contain Launch Template and Austoscaling froup for Bastion and Nginx, then `asg-wordpress-tooling.tf` will contain Launch Template and Austoscaling group for wordpress and tooling.
+
+<br>
+
+- Create `asg-bastion-nginx.tf` and add the code snippet below:
+
+<br>
+
+```
+
+#### creating sns topic for all the auto scaling groups
+resource "aws_sns_topic" "david-sns" {
+name = "Default_CloudWatch_Alarms_Topic"
+}
+
+```
+
+<br>
+
+- create notification for all the auto scaling groups
+
+<br>
+
+```
+
+resource "aws_autoscaling_notification" "david_notifications" {
+  group_names = [
+    aws_autoscaling_group.bastion-asg.name,
+    aws_autoscaling_group.nginx-asg.name,
+    aws_autoscaling_group.wordpress-asg.name,
+    aws_autoscaling_group.tooling-asg.name,
+  ]
+  notifications = [
+    "autoscaling:EC2_INSTANCE_LAUNCH",
+    "autoscaling:EC2_INSTANCE_TERMINATE",
+    "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+    "autoscaling:EC2_INSTANCE_TERMINATE_ERROR",
+  ]
+
+  topic_arn = aws_sns_topic.david-sns.arn
+}
+
+```
+
+<br>
+
+![notification](https://user-images.githubusercontent.com/92983658/204522498-24805a41-f278-462e-bfe3-6a4a8aa2cf8c.png)
+
+<br>
+
+#### Create Launch Template For Bastion
+- add the following to `asg-bastion-nginx.tf`:
+
+<br>
+
+```
+
+resource "random_shuffle" "az_list" {
+  input        = data.aws_availability_zones.available.names
+}
+
+resource "aws_launch_template" "bastion-launch-template" {
+  image_id               = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ip.id
+  }
+
+  key_name = var.keypair
+
+  placement {
+    availability_zone = "random_shuffle.az_list.result"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+   tags = merge(
+    var.tags,
+    {
+      Name = "bastion-launch-template"
+    },
+  )
+  }
+
+  user_data = filebase64("${path.module}/bastion.sh")
+}
+
+# ---- Autoscaling for bastion  hosts
+
+resource "aws_autoscaling_group" "bastion-asg" {
+  name                      = "bastion-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+
+  vpc_zone_identifier = [
+    aws_subnet.public[0].id,
+    aws_subnet.public[1].id
+  ]
+
+  launch_template {
+    id      = aws_launch_template.bastion-launch-template.id
+    version = "$Latest"
+  }
+  tag {
+    key                 = "Name"
+    value               = "bastion-launch-template"
+    propagate_at_launch = true
+  }
+
+}
+
+# launch template for nginx
+
+resource "aws_launch_template" "nginx-launch-template" {
+  image_id               = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.nginx-sg.id]
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ip.id
+  }
+
+  key_name =  var.keypair
+
+  placement {
+    availability_zone = "random_shuffle.az_list.result"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(
+    var.tags,
+    {
+      Name = "nginx-launch-template"
+    },
+  )
+  }
+
+  user_data = filebase64("${path.module}/nginx.sh")
+}
+
+# ------ Autoscslaling group for reverse proxy nginx ---------
+
+resource "aws_autoscaling_group" "nginx-asg" {
+  name                      = "nginx-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+
+  vpc_zone_identifier = [
+    aws_subnet.public[0].id,
+    aws_subnet.public[1].id
+  ]
+
+  launch_template {
+    id      = aws_launch_template.nginx-launch-template.id
+    version = "$Latest"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "nginx-launch-template"
+    propagate_at_launch = true
+  }
+
+}
+
+# attaching autoscaling group of nginx to external load balancer
+resource "aws_autoscaling_attachment" "asg_attachment_nginx" {
+  autoscaling_group_name = aws_autoscaling_group.nginx-asg.id
+  alb_target_group_arn   = aws_lb_target_group.nginx-tgt.arn
+}
+
+```
+
+<br>
+
+#### Create Launch Template For Wordpress and Tooling 
+
+- Create `asg-wordpress-tooling.tf` and paste the following code:
+
+<br>
+
+```
+  
+# launch template for wordpress
+
+resource "aws_launch_template" "wordpress-launch-template" {
+  image_id               = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.webserver-sg.id]
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ip.id
+  }
+
+  key_name = var.keypair
+
+  placement {
+    availability_zone = "random_shuffle.az_list.result"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(
+    var.tags,
+    {
+      Name = "wordpress-launch-template"
+    },
+  )
+
+  }
+
+  user_data = filebase64("${path.module}/wordpress.sh")
+}
+
+# ---- Autoscaling for wordpress application
+
+resource "aws_autoscaling_group" "wordpress-asg" {
+  name                      = "wordpress-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+  vpc_zone_identifier = [
+
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+  launch_template {
+    id      = aws_launch_template.wordpress-launch-template.id
+    version = "$Latest"
+  }
+  tag {
+    key                 = "Name"
+    value               = "wordpress-asg"
+    propagate_at_launch = true
+  }
+}
+
+# attaching autoscaling group of  wordpress application to internal loadbalancer
+
+resource "aws_autoscaling_attachment" "asg_attachment_wordpress" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress-asg.id
+  alb_target_group_arn   = aws_lb_target_group.wordpress-tgt.arn
+}
+
+# launch template for toooling
+
+resource "aws_launch_template" "tooling-launch-template" {
+  image_id               = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.webserver-sg.id]
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ip.id
+  }
+
+  key_name = var.keypair
+
+  placement {
+    availability_zone = "random_shuffle.az_list.result"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "tooling-launch-template"
+    },
+  )
+
+  }
+
+  user_data = filebase64("${path.module}/tooling.sh")
+}
+
+# ---- Autoscaling for tooling -----
+
+resource "aws_autoscaling_group" "tooling-asg" {
+  name                      = "tooling-asg"
+  max_size                  = 2
+  min_size                  = 1
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+
+  vpc_zone_identifier = [
+
+    aws_subnet.private[0].id,
+    aws_subnet.private[1].id
+  ]
+
+  launch_template {
+    id      = aws_launch_template.tooling-launch-template.id
+    version = "$Latest"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "tooling-launch-template"
+    propagate_at_launch = true
+  }
+}
+
+# attaching autoscaling group of  tooling application to internal loadbalancer
+
+resource "aws_autoscaling_attachment" "asg_attachment_tooling" {
+  autoscaling_group_name = aws_autoscaling_group.tooling-asg.id
+  alb_target_group_arn   = aws_lb_target_group.tooling-tgt.arn
+}
+
+```
+
+<br>
+
+- Create four files that will be used as user data for launching the four different servers:
+
+<br>
+
+**For the bastion server `bastion.sh`**
+
+<br>
+
+```
+
+#!/bin/bash 
+yum install -y mysql 
+yum install -y 
+git tmux 
+yum install -y ansible
+
+```
+
+<br>
+
+![bastion_sh](https://user-images.githubusercontent.com/92983658/204525306-fa673b26-0244-429d-9e8f-cb8ea97bc0ce.png)
+
+<br>
+
+**Nginx server `nginx.sh`**:
+
+<br>
+
+```
+#!/bin/bash
+yum install -y nginx
+systemctl start nginx
+systemctl enable nginx
+git clone https://github.com/earchibong/ACS-project-config.git
+mv /ACS-project-config/reverse.conf /etc/nginx/
+mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf-distro
+cd /etc/nginx/
+touch nginx.conf
+sed -n 'w nginx.conf' reverse.conf
+systemctl restart nginx
+rm -rf reverse.conf
+rm -rf /ACS-project-config
+
+```
+
+<br>
+
+**For the Wordpress server `wordpress.sh`**:
+
+<br>
+
+```
+#!/bin/bash
+mkdir /var/www/
+sudo mount -t efs -o tls,accesspoint=fsap-0f9364679383ffbc0 fs-8b501d3f:/ /var/www/
+yum install -y httpd 
+systemctl start httpd
+systemctl enable httpd
+yum module reset php -y
+yum module enable php:remi-7.4 -y
+yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+systemctl start php-fpm
+systemctl enable php-fpm
+wget http://wordpress.org/latest.tar.gz
+tar xzvf latest.tar.gz
+rm -rf latest.tar.gz
+cp wordpress/wp-config-sample.php wordpress/wp-config.php
+mkdir /var/www/html/
+cp -R /wordpress/* /var/www/html/
+cd /var/www/html/
+touch healthstatus
+sed -i "s/localhost/acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com/g" wp-config.php 
+sed -i "s/username_here/ACSadmin/g" wp-config.php 
+sed -i "s/password_here/admin12345/g" wp-config.php 
+sed -i "s/database_name_here/wordpressdb/g" wp-config.php 
+chcon -t httpd_sys_rw_content_t /var/www/html/ -R
+systemctl restart httpd
+
+```
+
+<br>
+
 
