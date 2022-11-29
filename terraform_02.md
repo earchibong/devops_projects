@@ -1303,6 +1303,31 @@ resource "aws_autoscaling_attachment" "asg_attachment_tooling" {
 
 <br>
 
+- add new input variables to `variables.tf`:
+
+<br>
+
+```
+
+
+variable "ami" {
+  type        = string
+  description = "AMI ID for the launch template"
+}
+
+variable "keypair" {
+  type        = string
+  description = "key pair for the instances"
+}
+
+```
+
+<br>
+
+![var_ami](https://user-images.githubusercontent.com/92983658/204540800-3aae27a5-d5f2-44ec-87d3-a62b85d8e18d.png)
+
+<br>
+
 - Create four files that will be used as user data for launching the four different servers:
 
 <br>
@@ -1350,6 +1375,10 @@ rm -rf /ACS-project-config
 
 <br>
 
+![nginx_sh](https://user-images.githubusercontent.com/92983658/204531345-5535684d-e8df-48f1-ac6c-5756598725de.png)
+
+<br>
+
 **For the Wordpress server `wordpress.sh`**:
 
 <br>
@@ -1384,5 +1413,246 @@ systemctl restart httpd
 ```
 
 <br>
+
+![wordpress_sh](https://user-images.githubusercontent.com/92983658/204531823-b14ad4e0-d62e-4a9b-a44c-22c7870abd6e.png)
+
+<br>
+
+**for Tooling Webserver `tooling.sh`**:
+
+<br>
+
+```
+
+#!/bin/bash
+mkdir /var/www/
+sudo mount -t efs -o tls,accesspoint=fsap-01c13a4019ca59dbe fs-8b501d3f:/ /var/www/
+yum install -y httpd 
+systemctl start httpd
+systemctl enable httpd
+yum module reset php -y
+yum module enable php:remi-7.4 -y
+yum install -y php php-common php-mbstring php-opcache php-intl php-xml php-gd php-curl php-mysqlnd php-fpm php-json
+systemctl start php-fpm
+systemctl enable php-fpm
+git clone https://github.com/Livingstone95/tooling-1.git
+mkdir /var/www/html
+cp -R /tooling-1/html/*  /var/www/html/
+cd /tooling-1
+mysql -h acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com -u ACSadmin -p toolingdb < tooling-db.sql
+cd /var/www/html/
+touch healthstatus
+sed -i "s/$db = mysqli_connect('mysql.tooling.svc.cluster.local', 'admin', 'admin', 'tooling');/$db = mysqli_connect('acs-database.cdqpbjkethv0.us-east-1.rds.amazonaws.com', 'ACSadmin', 'admin12345', 'toolingdb');/g" functions.php
+chcon -t httpd_sys_rw_content_t /var/www/html/ -R
+systemctl restart httpd
+
+```
+
+<br>
+
+![tooling_sh](https://user-images.githubusercontent.com/92983658/204532939-37f24cc2-00eb-46bf-8073-2f628e913a61.png)
+
+<br>
+
+### Storage And Database
+
+<br>
+
+**Create KMS Key**
+- create a file `efs.tf` and add the following code:
+
+<br>
+
+```
+
+# create key from key management system
+resource "aws_kms_key" "ACS-kms" {
+  description = "KMS key "
+  policy      = <<EOF
+  {
+  "Version": "2012-10-17",
+  "Id": "kms-key-policy",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::${var.account_no}:user/<iam user created at the start of project>" },
+      "Action": "kms:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+# create key alias
+resource "aws_kms_alias" "alias" {
+  name          = "alias/kms"
+  target_key_id = aws_kms_key.ACS-kms.key_id
+}
+
+```
+
+<br>
+
+![kms](https://user-images.githubusercontent.com/92983658/204541406-71ad42d0-88af-4257-bee7-a634ea9b92d3.png)
+
+<br>
+
+**Create Elastic File System (EFS) and mount targets**
+
+- add the following code to `efs.tf`:
+
+<br>
+
+```
+
+ # create Elastic file system
+resource "aws_efs_file_system" "ACS-efs" {
+  encrypted  = true
+  kms_key_id = aws_kms_key.ACS-kms.arn
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "ACS-efs"
+    },
+  )
+}
+
+# set first mount target for the EFS 
+resource "aws_efs_mount_target" "subnet-1" {
+  file_system_id  = aws_efs_file_system.ACS-efs.id
+  subnet_id       = aws_subnet.private[2].id
+  security_groups = [aws_security_group.datalayer-sg.id]
+}
+
+# set second mount target for the EFS 
+resource "aws_efs_mount_target" "subnet-2" {
+  file_system_id  = aws_efs_file_system.ACS-efs.id
+  subnet_id       = aws_subnet.private[3].id
+  security_groups = [aws_security_group.datalayer-sg.id]
+}
+
+# create access point for wordpress
+resource "aws_efs_access_point" "wordpress" {
+  file_system_id = aws_efs_file_system.ACS-efs.id
+
+  posix_user {
+    gid = 0
+    uid = 0
+  }
+
+  root_directory {
+    path = "/wordpress"
+
+    creation_info {
+      owner_gid   = 0
+      owner_uid   = 0
+      permissions = 0755
+    }
+
+  }
+
+}
+
+# create access point for tooling
+resource "aws_efs_access_point" "tooling" {
+  file_system_id = aws_efs_file_system.ACS-efs.id
+  posix_user {
+    gid = 0
+    uid = 0
+  }
+
+  root_directory {
+
+    path = "/tooling"
+
+    creation_info {
+      owner_gid   = 0
+      owner_uid   = 0
+      permissions = 0755
+    }
+
+  }
+}
+
+```
+
+<br>
+
+**Create MySQL RDS**
+- create the `RDS` itself using this snippet of code in `rds.tf` file:
+
+<br>
+
+```
+
+# This section will create the subnet group for the RDS  instance using the private subnet
+resource "aws_db_subnet_group" "ACS-rds" {
+  name       = "acs-rds"
+  subnet_ids = [aws_subnet.private[2].id, aws_subnet.private[3].id]
+
+ tags = merge(
+    var.tags,
+    {
+      Name = "ACS-rds"
+    },
+  )
+}
+
+# create the RDS instance with the subnets group
+resource "aws_db_instance" "ACS-rds" {
+  allocated_storage      = 20
+  storage_type           = "gp2"
+  engine                 = "mysql"
+  engine_version         = "5.7"
+  instance_class         = "db.t2.micro"
+  name                   = "daviddb"
+  username               = var.master-username
+  password               = var.master-password
+  parameter_group_name   = "default.mysql5.7"
+  db_subnet_group_name   = aws_db_subnet_group.ACS-rds.name
+  skip_final_snapshot    = true
+  vpc_security_group_ids = [aws_security_group.datalayer-sg.id]
+  multi_az               = "true"
+}
+
+```
+
+<br>
+
+![rds_1b](https://user-images.githubusercontent.com/92983658/204543762-55aeec80-514a-4163-bc51-ff56402a5d1f.png)
+
+<br>
+
+- update `variables.tf` with new input variables:
+
+<br>
+
+```
+
+variable "account_no" {
+  type        = number
+  description = "the account number"
+}
+
+variable "master-username" {
+  type        = string
+  description = "RDS admin username"
+}
+
+variable "master-password" {
+  type        = string
+  description = "RDS master password"
+}
+
+```
+
+<br>
+
+![varialbes_2g](https://user-images.githubusercontent.com/92983658/204543365-5898df26-9368-4fe9-b891-6b52b4de9259.png)
+
+
 
 
