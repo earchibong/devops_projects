@@ -1608,7 +1608,7 @@ resource "aws_db_instance" "ACS-rds" {
   engine                 = "mysql"
   engine_version         = "5.7"
   instance_class         = "db.t2.micro"
-  name                   = "daviddb"
+  name                   = "libbydb"
   username               = var.master-username
   password               = var.master-password
   parameter_group_name   = "default.mysql5.7"
@@ -1622,7 +1622,7 @@ resource "aws_db_instance" "ACS-rds" {
 
 <br>
 
-![rds_1b](https://user-images.githubusercontent.com/92983658/204543762-55aeec80-514a-4163-bc51-ff56402a5d1f.png)
+![rds_2d](https://user-images.githubusercontent.com/92983658/204552306-c50eddb1-ed37-4b4c-a761-514b1369ca48.png)
 
 <br>
 
@@ -1637,12 +1637,12 @@ variable "account_no" {
   description = "the account number"
 }
 
-variable "master-username" {
+variable "db-username" {
   type        = string
   description = "RDS admin username"
 }
 
-variable "master-password" {
+variable "db-password" {
   type        = string
   description = "RDS master password"
 }
@@ -1651,8 +1651,33 @@ variable "master-password" {
 
 <br>
 
-![varialbes_2g](https://user-images.githubusercontent.com/92983658/204543365-5898df26-9368-4fe9-b891-6b52b4de9259.png)
+![variables_4a](https://user-images.githubusercontent.com/92983658/204552905-c669754d-4911-4779-ab61-3412a72020c6.png)
 
+<br>
 
+- update `terraform.tfvars`
+
+<br>
+
+```
+
+ami = "ami-0b0af3577fe5e3532"
+
+keypair = "devops"
+
+# Ensure to change this to your acccount number
+account_no = "1234567890"
+
+db-username = "libby"
+
+db-password = "devopspbl"
+
+```
+
+<br>
+
+![tfvars_3d](https://user-images.githubusercontent.com/92983658/204554558-5f18673f-66ac-43af-8388-15443788755b.png)
+
+<br>
 
 
