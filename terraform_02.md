@@ -1668,15 +1668,21 @@ keypair = "devops"
 # Ensure to change this to your acccount number
 account_no = "1234567890"
 
-db-username = "libby"
+master-username = "libby"
 
-db-password = "devopspbl"
+master-password = "devopspbl"
 
 ```
 
 <br>
 
 ![tfvars_3d](https://user-images.githubusercontent.com/92983658/204554558-5f18673f-66ac-43af-8388-15443788755b.png)
+
+<br>
+
+### Project 17 Additional tasks: 
+Access project 17 additional task file <a href="https://github.com/earchibong/terraform-pbl/blob/master/summary.md">here</a>
+Access project 17 repository files <a href="https://github.com/earchibong/terraform-pbl/tree/master">here</a>
 
 <br>
 
