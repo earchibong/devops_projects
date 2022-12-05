@@ -1682,6 +1682,9 @@ master-password = "devopspbl"
 
 ### Project 17 Additional tasks: 
 Access project 17 additional task file <a href="https://github.com/earchibong/terraform-pbl/blob/master/summary.md">here</a>
+
+<br>
+
 Access project 17 repository files <a href="https://github.com/earchibong/terraform-pbl/tree/master">here</a>
 
 <br>
