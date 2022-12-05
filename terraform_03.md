@@ -103,3 +103,12 @@ terraform {
 
 <br>
 
+- confirm `dynamo table` and `s3 backend`
+
+<br>
+
+![terraform_locks_dynamo](https://user-images.githubusercontent.com/92983658/205701130-1912fbba-3a11-4d3f-83fd-252f74504ffc.png)
+
+<br>
+
+
