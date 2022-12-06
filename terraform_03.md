@@ -51,7 +51,7 @@ the entire code is refactored inorder to simplify the code using a Terraform too
 
 <br>
 
-in `PBL` create the following files: `main.tf`, `providers.tf`
+- in `PBL` create the following files: `main.tf`, `providers.tf`
 
 
 
