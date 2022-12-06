@@ -1578,6 +1578,7 @@ resource "aws_efs_access_point" "tooling" {
 }
 
 ```
+*note: for webservers to show, private subnet 0 and 1 must be used according to the architecture*
 
 <br>
 
