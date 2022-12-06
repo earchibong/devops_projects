@@ -153,10 +153,115 @@ variable "name" {
 
 <br>
 
-![alb_variable](https://user-images.githubusercontent.com/92983658/205919443-b6181ae4-90c2-42f9-ae61-2dff33193c3a.png)
 ![ab_variable](https://user-images.githubusercontent.com/92983658/205919461-b92236c2-2c4f-4941-8332-a079fa2c2fcf.png)
 ![alb_variable_1c](https://user-images.githubusercontent.com/92983658/205919483-d4846e3d-65d6-441e-84ed-c3fd0e33705f.png)
 ![alb_variable_1d](https://user-images.githubusercontent.com/92983658/205919503-34a68434-f24f-49c5-b13f-1e4cda3869b0.png)
+
+<br>
+
+### Refactor for `Modules. AutoScaling`:
+
+**refactor `variables.tf`:**
+
+```
+
+variable "ami-web" {
+  type        = string
+  description = "ami for webservers"
+}
+
+variable "instance_profile" {
+  type        = string
+  description = "Instance profile for launch template"
+}
+
+
+variable "keypair" {
+  type        = string
+  description = "Keypair for instances"
+}
+
+variable "ami-bastion" {
+  type        = string
+  description = "ami for bastion"
+}
+
+variable "web-sg" {
+  type        = list(any)
+  description = "security group for webservers"
+}
+
+variable "bastion-sg" {
+  type        = list(any)
+  description = "security group for bastion"
+}
+
+variable "nginx-sg" {
+  type        = list(any)
+  description = "security group for nginx"
+}
+
+variable "private_subnets" {
+  type        = list(any)
+  description = "first private subnets for internal ALB"
+}
+
+
+variable "public_subnets" {
+  type        = list(any)
+  description = "Seconf subnet for ecternal ALB"
+}
+
+
+variable "ami-nginx" {
+  type        = string
+  description = "ami for nginx"
+}
+
+variable "nginx-alb-tgt" {
+  description = "nginx reverse proxy target group"
+}
+
+variable "wordpress-alb-tgt" {
+  description = "wordpress target group"
+}
+
+
+variable "tooling-alb-tgt" {
+  description = "tooling target group"
+}
+
+
+variable "max_size" {
+  type        = number
+  description = "maximum number for autoscaling"
+}
+
+variable "min_size" {
+  type        = number
+  description = "minimum number for autoscaling"
+}
+
+variable "desired_capacity" {
+  type        = number
+  description = "Desired number of instance in autoscaling group"
+
+}
+
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type        = map(string)
+  default     = {}
+}
+
+```
+
+<br>
+
+![auto_variable_1a](https://user-images.githubusercontent.com/92983658/205923155-429decfa-6e03-4962-bd8c-6c63aa154f22.png)
+![auto_variable_1b](https://user-images.githubusercontent.com/92983658/205923167-9c04a784-7339-4d08-8a0c-bf5fd7f026d2.png)
+![auto_variable_1c](https://user-images.githubusercontent.com/92983658/205923195-0d0a714d-de22-4ba0-ab5b-fedc35240261.png)
+![auto_variable_1d](https://user-images.githubusercontent.com/92983658/205923209-0c9fdc37-15d8-4f32-ab0d-caf7a1120862.png)
 
 <br>
 
