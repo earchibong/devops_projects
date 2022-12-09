@@ -159,7 +159,7 @@ variable "name" {
 
 <br>
 
-### Refactor for `Modules. AutoScaling`:
+### Refactor for `Modules/AutoScaling`:
 
 **refactor `variables.tf`:**
 
@@ -264,6 +264,406 @@ variable "tags" {
 ![auto_variable_1d](https://user-images.githubusercontent.com/92983658/205923209-0c9fdc37-15d8-4f32-ab0d-caf7a1120862.png)
 
 <br>
+
+### Refactor for `Modules/EFS`:
+
+**refactor `variables.tf`:**
+
+```
+
+variable "efs-subnet-2" {
+  description = "Second subnet for the mount target"
+}
+
+variable "efs-subnet-1" {
+  description = "First subnet for the mount target"
+}
+
+variable "efs-sg" {
+  type        = list
+  description = "security group for the file system"
+
+}
+
+variable "account_no" {
+  type        = string
+  description = "account number for the aws"
+} 
+
+
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type        = map(string)
+  default     = {}
+}
+
+```
+
+<br>
+
+![efs_variables](https://user-images.githubusercontent.com/92983658/206646492-24c5bf3a-13a4-4d36-b7d5-53ca22789cd9.png)
+
+<br>
+
+### Refactor for `Modules/RDS`:
+
+**refactor `variables.tf`:**
+
+```
+
+
+variable "db-username" {
+  type        = string
+  description = "The master user name"
+}
+
+
+variable "db-password" {
+  type        = string
+  description = "Master password"
+}
+
+variable "db-sg" {
+  type = list
+  description = "The DB security group"
+}
+
+variable "private_subnets" {
+  type        = list
+  description = "Private subnets fro DB subnets group"
+}
+
+
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type        = map(string)
+  default     = {}
+}
+
+```
+
+<br>
+
+![rds_variables](https://user-images.githubusercontent.com/92983658/206651757-3bca2e45-7e81-41b4-a9e1-f26fbe6d94fd.png)
+
+<br>
+
+### Refactor for `Modules/Security`:
+**refactor `main.tf`:**
+
+```
+
+# create all security groups dynamically
+resource "aws_security_group" "ACS" {
+  for_each    = local.security_groups
+  name        = each.value.name
+  description = each.value.description
+  vpc_id      = var.vpc_id
+
+ 
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(
+    var.tags,
+    {
+      Name = each.value.name
+    },
+  )
+}
+
+```
+
+<br>
+
+![security_main](https://user-images.githubusercontent.com/92983658/206652402-aa769abe-41d5-4e09-ad0e-cd427fea44d6.png)
+
+<br>
+
+**refactor `main.tf`:**
+
+```
+output "ALB-sg" {
+  value = aws_security_group.ACS["ext-alb-sg"].id
+}
+
+
+output "IALB-sg" {
+  value = aws_security_group.ACS["int-alb-sg"].id
+}
+
+
+output "bastion-sg" {
+  value = aws_security_group.ACS["bastion-sg"].id
+}
+
+
+output "nginx-sg" {
+  value = aws_security_group.ACS["nginx-sg"].id
+}
+
+
+output "web-sg" {
+  value = aws_security_group.ACS["webserver-sg"].id
+}
+
+
+output "datalayer-sg" {
+  value = aws_security_group.ACS["datalayer-sg"].id
+}
+
+```
+
+<br>
+
+![security_outputs](https://user-images.githubusercontent.com/92983658/206652660-eb18a91b-84a2-46dd-8534-70f955287e05.png)
+
+<br>
+
+### Refactor for `Modules/VPC`:
+
+**refactor `outputs.tf`:**
+
+```
+
+output "public_subnets-1" {
+  value       = aws_subnet.public[0].id
+  description = "The first public subnet in the subnets"
+}
+
+output "public_subnets-2" {
+  value       = aws_subnet.public[1].id
+  description = "The first public subnet"
+}
+
+
+output "private_subnets-1" {
+  value       = aws_subnet.private[0].id
+  description = "The first private subnet"
+}
+
+output "private_subnets-2" {
+  value       = aws_subnet.private[1].id
+  description = "The second private subnet"
+}
+
+
+output "private_subnets-3" {
+  value       = aws_subnet.private[2].id
+  description = "The third private subnet"
+}
+
+
+output "private_subnets-4" {
+  value       = aws_subnet.private[3].id
+  description = "The fourth private subnet"
+}
+
+
+output "vpc_id" {
+  value = aws_vpc.main.id
+}
+
+
+output "instance_profile" {
+  value = aws_iam_instance_profile.ip.id
+}
+
+```
+
+<br>
+
+![vpc_outputs](https://user-images.githubusercontent.com/92983658/206654574-18081904-203f-4b88-bf9a-d7ec422777bb.png)
+
+<br>
+
+**refactor `variables.tf`:**
+
+```
+
+
+variable "region" {
+}
+
+variable "vpc_cidr" {
+  type = string
+}
+
+variable "enable_dns_support" {
+  type = bool
+}
+
+variable "enable_dns_hostnames" {
+  type = bool
+}
+
+variable "enable_classiclink" {
+  type = bool
+}
+
+
+variable "preferred_number_of_public_subnets" {
+  type = number
+}
+
+variable "preferred_number_of_private_subnets" {
+  type = number
+}
+
+variable "private_subnets" {
+  type        = list(any)
+  description = "List of private subnets"
+}
+
+variable "public_subnets" {
+  type        = list(any)
+  description = "list of public subnets"
+
+}
+
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type        = map(string)
+  default     = {}
+}
+
+variable "name" {
+  type    = string
+  default = "ACS"
+
+}
+variable "environment" {
+  default = "true"
+}
+
+```
+
+<br>
+
+![vpc_variables](https://user-images.githubusercontent.com/92983658/206655223-30fcc2d7-947b-43b5-b07c-0a3704a65d9c.png)
+
+<br>
+
+### Refactor for `Modules/Compute`:
+
+**refactor `main.tf`:**
+
+```
+
+# create instance for jenkins
+resource "aws_instance" "Jenkins" {
+  ami                         = var.ami-jenkins
+  instance_type               = "t2.micro"
+  subnet_id                   = var.subnets-compute
+  vpc_security_group_ids      = var.sg-compute
+  associate_public_ip_address = true
+  key_name                    = var.keypair
+
+ tags = merge(
+    var.tags,
+    {
+      Name = "ACS-Jenkins"
+    },
+  )
+}
+
+
+#create instance for sonbarqube
+resource "aws_instance" "sonbarqube" {
+  ami                         = var.ami-sonar
+  instance_type               = "t2.medium"
+  subnet_id                   = var.subnets-compute
+  vpc_security_group_ids      = var.sg-compute
+  associate_public_ip_address = true
+  key_name                    = var.keypair
+
+
+   tags = merge(
+    var.tags,
+    {
+      Name = "ACS-sonbarqube"
+    },
+  )
+}
+
+# create instance for artifactory
+resource "aws_instance" "artifactory" {
+  ami                         = var.ami-jfrog
+  instance_type               = "t2.medium"
+  subnet_id                   = var.subnets-compute
+  vpc_security_group_ids      = var.sg-compute
+  associate_public_ip_address = true
+  key_name                    = var.keypair
+
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "ACS-artifactory"
+    },
+  )
+}
+
+```
+
+<br>
+
+![compute_main](https://user-images.githubusercontent.com/92983658/206655589-d6fff2fa-3218-4fc0-8faf-00e414e19380.png)
+
+<br>
+
+**refactor `variables.tf`:**
+
+```
+
+variable "subnets-compute" {
+    description = "public subnetes for compute instances"
+}
+variable "ami-jenkins" {
+    type = string
+    description = "ami for jenkins"
+}
+variable "ami-jfrog" {
+    type = string
+    description = "ami for jfrob"
+}
+variable "ami-sonar" {
+    type = string
+    description = "ami foir sonar"
+}
+variable "sg-compute" {
+    description = "security group for compute instances"
+}
+variable "keypair" {
+    type = string
+    description = "keypair for instances"
+}
+
+variable "tags" {
+  description = "A mapping of tags to assign to all resources."
+  type        = map(string)
+  default     = {}
+}
+
+```
+
+<br>
+
+![compute_variables](https://user-images.githubusercontent.com/92983658/206656067-c81f38fb-184e-47aa-88f6-e9f311723fcc.png)
+
+<br>
+
+*Notes: Access the complete code structure in this <a href="https://github.com/earchibong/terraform-refactor.git">Repository</a>
+
+<br>
+
+- configure `providers` and `backends` sections in separate files but place both in the root module
+
+
 
 
 
