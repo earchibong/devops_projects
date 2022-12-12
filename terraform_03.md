@@ -709,7 +709,7 @@ resource "aws_instance" "artifactory" {
   ami                         = var.ami-jfrog
   instance_type               = "t2.medium"
   subnet_id                   = var.subnets-compute
-  vpc_security_group_ids      = var.sg-compute
+  vpc_security_group_ids      = var.compute-sg
   associate_public_ip_address = true
   key_name                    = var.keypair
 
@@ -747,9 +747,9 @@ variable "ami-jfrog" {
 }
 variable "ami-sonar" {
     type = string
-    description = "ami foir sonar"
+    description = "ami for sonar"
 }
-variable "sg-compute" {
+variable "compute-sg" {
     description = "security group for compute instances"
 }
 variable "keypair" {
@@ -786,6 +786,21 @@ variable "tags" {
 ![backend_1a](https://user-images.githubusercontent.com/92983658/207008039-2a286757-fca4-4303-9a7d-67f638068f3b.png)
 ![backend_1b](https://user-images.githubusercontent.com/92983658/207008063-5b5a245d-46a5-4959-920f-20fa53f41c56.png)
 
+<br>
+
+- *note: referencing a module: there are 2 ways of doing this as seen in the repository:*
+  *1. Import module as a `source` and have access to its variables via `var` keyword:*
+   ```
+   module "VPC" {
+  source = "./modules/VPC"
+  region = var.region
+  ...
+  
+  ```
+  <br>
+  
+  *2.  Refer to a module’s output by specifying the full path to the output variable by using `module.%module_name%.%output_name%` construction: `subnets-compute = module.network.public_subnets-1`
+  
 <br>
 
 - run `terraform validate` to ensure configuration is valid
