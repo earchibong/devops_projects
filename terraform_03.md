@@ -663,6 +663,12 @@ variable "tags" {
 
 - configure `providers` and `backends` sections in separate files but place both in the root module
 
+<br>
+
+![providers](https://user-images.githubusercontent.com/92983658/206660092-13a4d293-9a3c-47ec-8358-5f6068ae7f86.png)
+
+<br>
+
 
 
 
