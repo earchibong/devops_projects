@@ -108,8 +108,14 @@ terraform {
 ```
 
 <br>
+- re-initialize the backend. Run `terraform init` and confirm you are happy to change the backend by typing `yes`
+- Verify the changes
 
-- confirm `dynamo table` and `s3 backend`
+*note: Before doing anything if you opened AWS now to see what happened you should be able to see the following:*
+*- tfstatefile is now inside the S3 bucket*
+*- DynamoDB table which we create has an entry which includes state file status*
+*-Run `terraform plan` and while that is running, refresh the browser and see how the lock is being handled:*
+*-After terraform plan completes, refresh DynamoDB table.*
 
 <br>
 
@@ -117,6 +123,24 @@ terraform {
 
 <br>
 
+-  add an output so that the `S3 bucket Amazon Resource Names ARN` and `DynamoDB table` name can be displayed.
+   - Create a new file and name it `output.tf` and add below code.
+```
+
+output "s3_bucket_arn" {
+  value       = aws_s3_bucket.terraform_state.arn
+  description = "The ARN of the S3 bucket"
+}
+output "dynamodb_table_name" {
+  value       = aws_dynamodb_table.terraform_locks.name
+  description = "The name of the DynamoDB table"
+}
+
+```
+
+<br>
+
+- run `terraform apply`
 
 
 ## PART 2: REFACTOR PROJECT USING MODULES
@@ -808,6 +832,14 @@ variable "tags" {
 <br>
 
 ![validate](https://user-images.githubusercontent.com/92983658/207009738-8a4526b9-2c7b-42ea-bcce-f4ec91d5d988.png)
+
+<br>
+
+- make your configuration files more readable and follow canonical format and style – use `terraform fmt` command
+
+<br>
+
+![terraform_fmt](https://user-images.githubusercontent.com/92983658/207023299-33667ea5-6fff-4634-8001-85c34e204a7a.png)
 
 <br>
 
