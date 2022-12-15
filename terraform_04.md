@@ -54,7 +54,8 @@ The following outlines the steps:
 - 4. Configure variables:
 
 Terraform Cloud supports two types of variables: environment variables and Terraform variables: 
-   - Set two environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, set the values that you used in <a href="https://github.com/earchibong/devops_training/blob/main/terraform_01.md">Project 16</a>
+   - Set two environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, set the values that you used in 
+   <a href="https://github.com/earchibong/devops_training/blob/main/terraform_01.md">Project 16</a>
  
 <br>
 
@@ -72,7 +73,8 @@ Terraform Cloud is all set to apply the codes from GitHub and create all necessa
 
 ## STEP TWO: Build AMI images with Packer
 
-- install `packer`: get instructions <a href="https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli"> here</a>
+- install `packer`: 
+get instructions <a href="https://developer.hashicorp.com/packer/tutorials/docker-get-started/get-started-install-cli"> here</a>
 - Add a new folder to workspace environment named `AMI`
 
 <br>
@@ -85,6 +87,7 @@ Terraform Cloud is all set to apply the codes from GitHub and create all necessa
 - create bastion packer file, name it `bastion.pkr.hcl` and add the following to it:
 
 <br>
+
 ```
 
 variable "region" {
@@ -128,6 +131,7 @@ build {
     script = "bastion.sh"
   }
 }
+
 
 ```
 
