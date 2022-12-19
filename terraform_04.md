@@ -29,7 +29,7 @@ The following outlines the steps:
   - *note: understand the difference between `version control workflow`, `CLI-driven workflow` and `API-driven workflow`. Learn more about it <a   href="https://www.youtube.com/watch?v=m3PlM4erixY&t=287s">here</a>* 
   - As the most common and recommended way to run Terraform commands triggered from our git repository, `version control workflow` will be used   for this project.
   
- <br>
+ <br> 
 
   - Create a new repository in GitHub and call it `terraform-cloud`.
   - push Terraform codes developed in the previous projects to the repository.: 
