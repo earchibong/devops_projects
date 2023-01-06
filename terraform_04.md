@@ -464,4 +464,4 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
-- Run the packer command to build AMI for Bastion server: `packer build bastion.pkr.hcl`
+- Run the packer command to build AMI for Bastion server: `packer build bastion.pkr.hcl` 
