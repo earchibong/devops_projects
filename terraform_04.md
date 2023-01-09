@@ -464,4 +464,5 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
+*note: learn how to build packer AMI images <a href:"https://gmusumeci.medium.com/how-to-build-an-aws-ec2-redhat-8-ami-using-packer-d81dd48e6ea7">here</a>
 - Run the packer command to build AMI for Bastion server: `packer build bastion.pkr.hcl` 
