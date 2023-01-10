@@ -465,4 +465,66 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 <br>
 
 *note: learn how to build packer AMI images <a href:"https://gmusumeci.medium.com/how-to-build-an-aws-ec2-redhat-8-ami-using-packer-d81dd48e6ea7">here</a>
+
+<br>
+
 - Run the packer command to build AMI for Bastion server: `packer build bastion.pkr.hcl` 
+
+<br>
+
+![packer_bastion](https://user-images.githubusercontent.com/92983658/211543049-c513e1b5-ce08-47f6-aa77-8abaf8dd9e9e.png)
+
+<br>
+
+- Run the packer command to build AMI for Nginx server: `packer build nginx.pkr.hcl`
+
+<br>
+
+![packer_nginx_1a](https://user-images.githubusercontent.com/92983658/211544456-b6766943-efc1-40eb-8f97-f238187fe602.png)
+![packer_nginx_1b](https://user-images.githubusercontent.com/92983658/211545666-c4cf7393-7ed9-4ba2-aeee-342d7bbc51a7.png)
+
+<br>
+
+- Run the packer command to build AMI for Jenkins, Artifactory and Sonarqube server: `packer build ubuntu.pkr.hcl` 
+
+<br>
+
+![packer_ubuntu_1a](https://user-images.githubusercontent.com/92983658/211547267-03648e17-8aa8-4a8e-a2b8-5a6564d80bbc.png)
+
+![packer_ubuntu_1b](https://user-images.githubusercontent.com/92983658/211547884-8262a067-b03e-4520-b35c-d6926c25830c.png)
+
+<br>
+
+- Run the packer command to build AMI for Tooling and Wordpress server: `packer build web.pkr.hcl` 
+
+<br>
+
+![packer_web_1a](https://user-images.githubusercontent.com/92983658/211548581-25d102d4-7c4c-42ee-b459-6d6cb78573c0.png)
+
+![packer_web_1b](https://user-images.githubusercontent.com/92983658/211550326-ee0be578-cdc2-4b26-bf26-8175ff76a839.png)
+
+<br>
+
+- Confirm AMIS in AWS console:
+
+<br>
+
+![consolw_AMI](https://user-images.githubusercontent.com/92983658/211551123-6a80c700-2ecc-44c9-a901-f5db1e531063.png)
+
+<br>
+
+- update terrafrom script `terraform.auto.tfvars` with new ami IDs generated from packer build
+
+<br>
+
+![ami_tfvars](https://user-images.githubusercontent.com/92983658/211552170-39cb6093-bb19-434d-a9a8-c351169e9ad2.png)
+
+<br>
+
+- Push the codes to repository
+- Run `terraform plan` from terraform cloud web console
+
+
+
+
+
