@@ -522,9 +522,20 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 <br>
 
 - Push the codes to repository
-- Run `terraform plan` from terraform cloud web console
+- Run `terraform plan` from terraform cloud web console:
+  - on terminal run `terraform login`
+  - add token 
+  - run `terraform init -upgrade`
+  - run `terraform plan` 
+
+<br>
 
 
+![terraform_login_1a](https://user-images.githubusercontent.com/92983658/211824609-5eb6680b-6484-4055-a4ab-466641fef6ef.png)
+
+![terraform_login_1b](https://user-images.githubusercontent.com/92983658/211824671-481ada7d-f9aa-4ff6-b052-d51ff68ffbb3.png)
+
+<br>
 
 
 
