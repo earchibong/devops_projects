@@ -521,12 +521,12 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
-- Push the codes to repository
-- Run `terraform plan` from terraform cloud web console:
-  - on terminal run `terraform login`
-  - add token 
-  - run `terraform init -upgrade`
-  - run `terraform plan` 
+## Step THREE: Run `terraform plan` remotely on terraform cloud web console:
+- on CLI terminal run `terraform login`
+- add token 
+- run `terraform init -upgrade`
+- run `terraform plan`
+- run `terraform apply`
 
 <br>
 
@@ -537,7 +537,7 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
-- confirm `plan` run on `terraform cloud` web console
+- confirm `terraform plan` run on `terraform cloud` web console
 
 <br>
 
@@ -555,6 +555,6 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
-
-
-
+### Automate With Remote Terraform Plan With Gitub
+Integration with GitHub can trigger the above process automatically in the terraform web console rather than using the CLI terminial to run `terraform plan`
+The idea here is that once codes are pushed into the repository, `plan` is launched automatically but to apply you still need to approve manually
