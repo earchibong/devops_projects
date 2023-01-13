@@ -22,12 +22,6 @@ The following outlines the steps:
 <br>
 
 ![organisation](https://user-images.githubusercontent.com/92983658/207548121-befda977-0466-4707-a40a-b09cd6b0e864.png)
-
-<br>
-
-- 3. Configure a workspace:
-  - *note: understand the difference between `version control workflow`, `CLI-driven workflow` and `API-driven workflow`. Learn more about it <a   href="https://www.youtube.com/watch?v=m3PlM4erixY&t=287s">here</a>* 
-  - As the most common and recommended way to run Terraform commands triggered from our git repository, `version control workflow` will be used   for this project.
   
  <br> 
 
@@ -38,20 +32,8 @@ The following outlines the steps:
      - `git push`
      
  <br>
-  
-  - in terraform cloud, choose `version control workflow` and you will be promped to connect the GitHub account to your workspace – follow the prompt and add your newly created repository to the workspace. 
-  
-<br>
 
-![workspace_1a](https://user-images.githubusercontent.com/92983658/207563508-32f25fb7-a91b-4eff-a9fe-61c2a4233a59.png)
-
-<br>
-
-![wordspace_1b](https://user-images.githubusercontent.com/92983658/207563539-30328ef2-de15-4e09-9ba1-0bcf6a31b85c.png)
-
-<br>
-
-- 4. Configure variables:
+- 3. Configure variables:
 
 Terraform Cloud supports two types of variables: environment variables and Terraform variables: 
    - Set two environment variables: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, set the values that you used in 
@@ -557,4 +539,32 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 ### Automate With Remote Terraform Plan With Gitub
 Integration with GitHub can trigger the above process automatically in the terraform web console rather than using the CLI terminial to run `terraform plan`
-The idea here is that once codes are pushed into the repository, `plan` is launched automatically but to apply you still need to approve manually
+The idea here is that once codes are pushed into the repository, `plan` is launched automatically but to apply you still need to approve manually.
+
+<br>
+
+- on `terraform-cloud` workspace select `version control` and `connect to version control`
+
+<br>
+
+![versoin_control](https://user-images.githubusercontent.com/92983658/212332946-773a58e5-8828-4261-8432-1e24eac4c523.png)
+
+<br>
+
+As the most common and recommended way to run Terraform commands triggered from a git repository, `version control workflow` will be used  for this project.
+
+- in terraform cloud, choose `version control workflow` and you will be promped to connect the GitHub account to your workspace – follow the prompt and add your newly created repository to the workspace. 
+  
+<br>
+
+![workspace_1a](https://user-images.githubusercontent.com/92983658/207563508-32f25fb7-a91b-4eff-a9fe-61c2a4233a59.png)
+
+<br>
+
+![wordspace_1b](https://user-images.githubusercontent.com/92983658/207563539-30328ef2-de15-4e09-9ba1-0bcf6a31b85c.png)
+
+<br>
+
+*note: understand the difference between `version control workflow`, `CLI-driven workflow` and `API-driven workflow`. Learn more about it <a href="https://www.youtube.com/watch?v=m3PlM4erixY&t=287s">here</a>* 
+
+
