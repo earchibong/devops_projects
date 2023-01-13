@@ -537,5 +537,24 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
+- confirm `plan` run on `terraform cloud` web console
+
+<br>
+
+![terraform_app_plan_fin_1a](https://user-images.githubusercontent.com/92983658/212325700-22249e19-fc4b-47c4-8577-b8daf125ec8a.png)
+
+![terraform_app_plan_fin_1b](https://user-images.githubusercontent.com/92983658/212325726-d5c7eb60-7469-4b99-90c4-39b636c4a952.png)
+
+<br>
+
+*Note that Terraform Cloud has generated a unique state version that you can open and see the codes applied and the changes made since the last run*
+
+<br>
+
+![terraform_states](https://user-images.githubusercontent.com/92983658/212326054-d34150aa-f0f4-40b3-bcee-65b627e55cb5.png)
+
+<br>
+
+
 
 
