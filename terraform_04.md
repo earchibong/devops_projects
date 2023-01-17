@@ -567,4 +567,14 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 *note: understand the difference between `version control workflow`, `CLI-driven workflow` and `API-driven workflow`. Learn more about it <a href="https://www.youtube.com/watch?v=m3PlM4erixY&t=287s">here</a>* 
 
+<br>
 
+- open `backend.tf` file and comment out the `cloud` configuration block. When using VCS-driven workflow for Terraform cloud, you do not need to define `cloud` in the configuration.
+
+<br>
+
+![cloud_block_comment_out](https://user-images.githubusercontent.com/92983658/212883010-03da5536-5514-440f-8a59-64aeacb89149.png)
+
+<br>
+
+- add commit and push changes to `terraform-cloud` repository
