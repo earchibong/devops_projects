@@ -537,7 +537,7 @@ sudo apt install -y  git mysql-client wget vim telnet htop python3 chrony net-to
 
 <br>
 
-### Automate With Remote Terraform Plan With Gitub
+### Automate Remote Terraform Plan With Gitub
 Integration with GitHub can trigger the above process automatically in the terraform web console rather than using the CLI terminial to run `terraform plan`
 The idea here is that once codes are pushed into the repository, `plan` is launched automatically but to apply you still need to approve manually.
 
@@ -577,4 +577,12 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-- add commit and push changes to `terraform-cloud` repository
+- add commit and push changes to `terraform-cloud` repository. This should automaticaly trigger a run in Terraform cloud.
+
+<br>
+
+![vcs_1a](https://user-images.githubusercontent.com/92983658/212895508-f18a9f84-487b-459e-8e46-cd7e2fac8ecf.png)
+![vcs_1b](https://user-images.githubusercontent.com/92983658/212895526-4085912b-27d5-423c-ba4d-b9692002884f.png)
+![vcs_1c](https://user-images.githubusercontent.com/92983658/212895555-81b85f12-03f3-46ae-a792-fc7589164fd3.png)
+
+<br>
