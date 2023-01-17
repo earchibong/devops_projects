@@ -587,5 +587,45 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-## Update Ansible Script With Values From Terraform Output
+## Step Four: Configure Infrastructure With Ansible
+
+- After a successful execution of terraform apply, connect to the bastion server through ssh-agent to run ansible against the infrastructure
+
+<br>
+
+![ssh-add_1a](https://user-images.githubusercontent.com/92983658/212905458-c0736503-6b4c-4eb9-baeb-7a8394d2224a.png)
+
+<br>
+
+![bastoin_config](https://user-images.githubusercontent.com/92983658/212906034-530fc50d-e0b6-412b-9ee7-0ac56470cfdc.png)
+
+<br>
+
+![bastion_connected](https://user-images.githubusercontent.com/92983658/212907445-c06482a9-8e92-4793-948f-081a63fdbf25.png)
+
+<br>
+
+- clone ansible files from this repository and open the ansible folder
+
+<br>
+
+![ansible_deploy](https://user-images.githubusercontent.com/92983658/212910406-003ba1a5-df8c-47ad-8f6a-b724d34bc1d5.png)
+
+<br>
+
+- configure `aws` in `ansible` folder: `aws configure`
+  - enter AWS access key ID
+  - enter AWS secret key
+  - enter default region
+  - enter out format
+
+- confirm bastion connection to AWS: `aws s3 ls`
+
+<br>
+
+![aws_s3_ls](https://user-images.githubusercontent.com/92983658/212913890-c5b0a052-2f9f-4877-b008-1eb60cd5fcd9.png)
+
+<br>
+
+- 
 
