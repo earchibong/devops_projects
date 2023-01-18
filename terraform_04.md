@@ -605,7 +605,7 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-- clone ansible files from this repository and open the ansible folder
+- clone ansible files from <a href="https://github.com/earchibong/ansible_deployment_PBL_19.git">this repository</a> and open the ansible folder
 
 <br>
 
@@ -627,5 +627,57 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-- 
+### update ansible script with values from teraform output
+
+**Internal load balancee DNS for nginx reverse proxy**
+- head to the load balancer console and copy the DNS name for the internal load balancer
+- add it to the `nginx.conf.j2` file in the ansible nginx folder
+
+<br>
+
+![ialb](https://user-images.githubusercontent.com/92983658/213153037-482e3b04-21c6-4512-a54c-b665420bce54.png)
+
+<br>
+
+![ngin_ialb](https://user-images.githubusercontent.com/92983658/213153064-3785c941-6857-4014-9f70-112b01c165cf.png)
+
+<br>
+
+**RDS endpoints for wordpress and tooling**
+- head to `database instance` on `AWS RDS` console, copy the RDS endpoints to update:
+  -  `ansible >tooling > tasks > setup-db.yml` file
+  -  `ansible > wordpress > tasks > setup-db.yml` file
+
+<br>
+
+![set_up_dbl](https://user-images.githubusercontent.com/92983658/213157173-e0be914c-698d-42a1-9472-a7ef2e81bdff.png)
+
+<br>
+
+![wordpress_dbl](https://user-images.githubusercontent.com/92983658/213158003-fa64ce85-0281-4544-818a-1163ec54fcdb.png)
+
+<br>
+
+*note: make sure that username and password are the same used on `terraform.auto.tfvars` file*
+
+<br>
+
+**Access point ID for wordpress and tooling**
+- head to `EFS` console and selct `access points` for `wordpress` and update `fasap` and `fs` on  `ansible > roles > wordpress > tasks > main.yml`
+
+<br>
+
+![fasap_1a](https://user-images.githubusercontent.com/92983658/213161388-a2a3b1cd-c1a9-433d-91e5-4111edc248d1.png)
+
+<br>
+
+![fsap_ib](https://user-images.githubusercontent.com/92983658/213161409-a08276df-6ffa-412c-ae8f-533c56066ac6.png)
+
+<br>
+
+- repeat for `tooling` and update `ansible > roles > tooling > tasks > main.yml`
+
+<br>
+
+
 
