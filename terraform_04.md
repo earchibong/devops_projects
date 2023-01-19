@@ -664,6 +664,7 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 **Access point ID for wordpress and tooling**
 - head to `EFS` console and selct `access points` for `wordpress` and update `fasap` and `fs` on  `ansible > roles > wordpress > tasks > main.yml`
+- repeat for `tooling` and update `ansible > roles > tooling > tasks > main.yml`
 
 <br>
 
@@ -675,9 +676,26 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-- repeat for `tooling` and update `ansible > roles > tooling > tasks > main.yml`
+- verify ansible inventory: `ansible-inventory -i inventory/aws_ec2.yml --graph`
 
 <br>
+
+![inventory_verify](https://user-images.githubusercontent.com/92983658/213430151-a5abcb31-7c15-41e0-9486-d94716cfe2e5.png)
+
+*note: If this error comes up, find out more about how to troubleshoot the Ansible “Failed to import the required Python library (botocore or boto3)” <a href="https://www.ansiblepilot.com/articles/ansible-troubleshooting-aws-failed-to-import-the-required-python-library-botocore-or-boto3/">here<a/>*
+ 
+<br>
+
+- Export the environment variable `ANSIBLE_CONFIG` to point to the `ansible.cfg` from the repo: `export ANSIBLE_CONFIG=<ansible config path>`
+
+<br>
+  
+![export_ansible_config](https://user-images.githubusercontent.com/92983658/213431367-1fa2e926-f206-41e4-8248-cb45fd37bd5b.png)
+
+<br>
+  
+- run ansible-playbook: `ansible-playbook -i inventory/aws_ec2.yml playbook/site.yml`
+  
 
 
 
