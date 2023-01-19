@@ -699,6 +699,27 @@ As the most common and recommended way to run Terraform commands triggered from 
 ![ansible_playbooks](https://user-images.githubusercontent.com/92983658/213447630-43cfed2f-0d9a-48aa-aea4-a1186a0384cd.png)
 
 <br>
-  
 
+## Practice Task No. 1
+- Configure 3 branches in your terraform-cloud repository for dev, test, prod environments
+  - `git push --set-upstream origin dev`
+  
+- Apply `destroy` from Terraform Cloud web console
+  - under workspace settings, select `destruction and delete`
+  - under manually destroy, select `queue destroy plan`
+  
+<br>
+  
+![destroy_1a](https://user-images.githubusercontent.com/92983658/213453024-003f10ca-8d3a-4c42-800f-990c438fcd18.png)
+
+<br>
+  
+![destroy_1b](https://user-images.githubusercontent.com/92983658/213453058-3eb2e701-aea1-41d7-8d94-d96e320337c8.png)
+
+<br>
+  
+![destroy_1c](https://user-images.githubusercontent.com/92983658/213453079-0a7351c9-25ef-43eb-b4c5-b2b09ca22c5a.png)
+![destroy_1d](https://user-images.githubusercontent.com/92983658/213453122-836a24d0-4c63-4465-8ac2-1d0911e22cb8.png)
+
+<br>
 
