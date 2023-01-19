@@ -680,7 +680,7 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-![inventory_verify](https://user-images.githubusercontent.com/92983658/213430151-a5abcb31-7c15-41e0-9486-d94716cfe2e5.png)
+![inventory](https://user-images.githubusercontent.com/92983658/213447583-1a4a3fd9-69c3-4fc0-a74e-e6de2452f448.png)
 
 *note: If this error comes up, find out more about how to troubleshoot the Ansible “Failed to import the required Python library (botocore or boto3)” <a href="https://www.ansiblepilot.com/articles/ansible-troubleshooting-aws-failed-to-import-the-required-python-library-botocore-or-boto3/">here<a/>*
  
@@ -696,6 +696,9 @@ As the most common and recommended way to run Terraform commands triggered from 
   
 - run ansible-playbook: `ansible-playbook -i inventory/aws_ec2.yml playbook/site.yml`
   
+![ansible_playbooks](https://user-images.githubusercontent.com/92983658/213447630-43cfed2f-0d9a-48aa-aea4-a1186a0384cd.png)
 
+<br>
+  
 
 
