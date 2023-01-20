@@ -701,10 +701,40 @@ As the most common and recommended way to run Terraform commands triggered from 
 <br>
 
 ## Practice Task No. 1
-- Configure 3 branches in your terraform-cloud repository for dev, test, prod environments
-  - `git push --set-upstream origin dev`
   
-- Apply `destroy` from Terraform Cloud web console
+- **Configure 3 branches in your terraform-cloud repository for dev, test, prod environments**
+  - `git checkout -b dev`
+  - `git push --set-upstream origin dev`
+  - repeat the above for `test` and `prod` environments
+  
+<br>
+  
+![dev](https://user-images.githubusercontent.com/92983658/213692380-79574228-92ce-42ed-a281-7e1b92575dfb.png)
+![test](https://user-images.githubusercontent.com/92983658/213692409-550357d2-52d7-4cdb-bf1b-5b8c8a863bb5.png)
+![prod](https://user-images.githubusercontent.com/92983658/213692425-5753b15e-d385-4257-a6ac-3e0f91a08acc.png)
+
+<br>
+  
+- **Make necessary configuration to trigger runs automatically only for dev environment**
+  
+- on the terraform web console, head to the `version control` in the `settings` tab, set the `VCS branch` to `dev`
+  
+<br>
+  
+![vcs_dev](https://user-images.githubusercontent.com/92983658/213695498-0d014704-d017-4a04-a23b-5bb980addff9.png)
+  
+<br>
+  
+- push a code to the dev branch to trigger a run in terraform.
+  
+<br>
+  
+![dev_test_1a](https://user-images.githubusercontent.com/92983658/213695722-6dd189a1-6dce-4078-94f8-37bf5f86f6b1.png)
+![dev_test_1b](https://user-images.githubusercontent.com/92983658/213696037-ec803f8b-689b-4caa-a11a-208fe6d035f9.png)
+
+<br>
+  
+- **Apply `destroy` from Terraform Cloud web console**
   - under workspace settings, select `destruction and delete`
   - under manually destroy, select `queue destroy plan`
   
@@ -722,4 +752,28 @@ As the most common and recommended way to run Terraform commands triggered from 
 ![destroy_1d](https://user-images.githubusercontent.com/92983658/213453122-836a24d0-4c63-4465-8ac2-1d0911e22cb8.png)
 
 <br>
+
+## Practice Task No.2: Working With A Private Repository.
+  
+- Create a simple Terraform repository that will be your module. (clone one from <a href="https://github.com/hashicorp/learn-private-module-aws-s3-webapp">here</a>)
+- next to the `branch` tag in the repository, click on `tag` to create tag. 
+  - click 'Create a new release' 
+  - `choose a tag` button and add v1.0.0 to the tag version field setting
+  - release title: "First module release"
+  - `publish release` to create the release
+
+<br>
+  
+![tag_1a](https://user-images.githubusercontent.com/92983658/213698812-7c5c2063-e6cc-4e87-97c8-0ac2843594f5.png)
+
+<br>
+  
+![tag_1b](https://user-images.githubusercontent.com/92983658/213698857-85349cbb-1721-4eb9-927c-b15d54a906a4.png)
+
+<br>
+  
+![release](https://user-images.githubusercontent.com/92983658/213699156-5a06c4c4-3357-4ab0-bcb1-76ba3809c65c.png)
+  
+<br>
+
 
