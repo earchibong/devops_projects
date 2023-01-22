@@ -764,16 +764,16 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
   
-![tag_1a](https://user-images.githubusercontent.com/92983658/213698812-7c5c2063-e6cc-4e87-97c8-0ac2843594f5.png)
+![module_1a](https://user-images.githubusercontent.com/92983658/213931966-b84616b4-0668-47a6-825a-871ada9b93ce.png)
+
+<br>
+
+![module_1b](https://user-images.githubusercontent.com/92983658/213931975-ceb01c74-4dd0-4bee-810f-e03c75d07f94.png)
 
 <br>
   
-![tag_1b](https://user-images.githubusercontent.com/92983658/213698857-85349cbb-1721-4eb9-927c-b15d54a906a4.png)
+![module_1c](https://user-images.githubusercontent.com/92983658/213931992-84561749-c564-4dbc-ad03-bd6b6316bd35.png)
 
-<br>
-  
-![release](https://user-images.githubusercontent.com/92983658/213699156-5a06c4c4-3357-4ab0-bcb1-76ba3809c65c.png)
-  
 <br>
 
 - **Create a Terraform module for the private module registry**
