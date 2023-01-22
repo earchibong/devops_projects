@@ -702,10 +702,10 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 ## Practice Task No. 1
   
-- **Configure 3 branches in your terraform-cloud repository for dev, test, prod environments**
-  - `git checkout -b dev`
-  - `git push --set-upstream origin dev`
-  - repeat the above for `test` and `prod` environments
+### Configure 3 branches in your terraform-cloud repository for dev, test, prod environments
+- `git checkout -b dev`
+- `git push --set-upstream origin dev`
+- repeat the above for `test` and `prod` environments
   
 <br>
   
@@ -715,7 +715,7 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
   
-- **Make necessary configuration to trigger runs automatically only for dev environment**
+### Make necessary configuration to trigger runs automatically only for dev environment
   
 - on the terraform web console, head to the `version control` in the `settings` tab, set the `VCS branch` to `dev`
   
@@ -734,9 +734,9 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
   
-- **Apply `destroy` from Terraform Cloud web console**
-  - under workspace settings, select `destruction and delete`
-  - under manually destroy, select `queue destroy plan`
+### Apply `destroy` from Terraform Cloud web console
+- under workspace settings, select `destruction and delete`
+- under manually destroy, select `queue destroy plan`
   
 <br>
   
@@ -755,7 +755,7 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 ## Practice Task No.2: Working With A Private Repository.
   
-- **Create a simple Terraform repository that will be your module. (clone one from <a href="https://github.com/hashicorp/learn-private-module-aws-s3-webapp">here</a>)**
+### Create a simple Terraform repository that will be your module. (clone one from <a href="https://github.com/hashicorp/learn-private-module-aws-s3-webapp">here</a>)
 - next to the `branch` tag in the repository, click on `tag` to create tag. 
   - click 'Create a new release' 
   - `choose a tag` button and add v1.0.0 to the tag version field setting
@@ -776,10 +776,10 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
 
-- **Create a Terraform module for the private module registry**
-  - on terraform cloud, head to the main dashboard and select `registry` and select `publish private module`
-  - select `github` as VCS and private module just created on github
-  - publish
+### Create a Terraform module for the private module registry
+- on terraform cloud, head to the main dashboard and select `registry` and select `publish private module`
+- select `github` as VCS and private module just created on github
+- publish
   
 <br>
 
@@ -795,9 +795,9 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
   
-- **Create a configuration that uses the module**
-  - clone the module: `git clone https://github.com/earchibong/terraform-private-module-aws-s3-webapp.git`...with this, terraform can access it to create the infrastructure.
-  - open the folder and configure files
+### Create a configuration that uses the module
+- clone the module: `git clone https://github.com/earchibong/terraform-private-module-aws-s3-webapp.git`...with this, terraform can access it to create the infrastructure.
+- open the folder and configure files
   
 <br>
   
@@ -854,7 +854,44 @@ variable "name" {
 
 <br>
   
-- **Create a workspace for the configuration**
+### Create a workspace for the configuration
+- on the `projects and workspaces` tab, select the `new` button
+  - `version control workflow`
+  - `<private module repository>`
+
+<br>
+  
+![workspace_1a](https://user-images.githubusercontent.com/92983658/213933944-4c4f9e3d-5f38-4cba-97a9-1ddb511f050a.png)
+
+<br>
+  
+![workspace_1b](https://user-images.githubusercontent.com/92983658/213933948-7acbb52f-3848-454b-8305-8963d515fb82.png)
+
+<br>
+  
+![workspace_1c](https://user-images.githubusercontent.com/92983658/213933984-2b65ddde-98d8-4a99-94c3-c4cb8e26441c.png)
+
+<br>
+  
+**Configure environment and terraform variables**
+
+<br>
+  
+![variables](https://user-images.githubusercontent.com/92983658/213934565-7d0b345c-a5f6-46d9-b890-955dc0385eeb.png)
+
+<br>
+  
+### Deploy The Infrastructure
+- commit code to repositry
+- deploy the infrastructure by clicking `start new run`
+
+<br>
+  
+![plan](https://user-images.githubusercontent.com/92983658/213935660-8ade28f5-f7ce-4726-9772-18498fb7b01d.png)
+
+<br>
+  
+  
 
 
 
