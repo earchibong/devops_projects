@@ -20,6 +20,7 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/reverse_proxy.md">PROJECT FIFTEEN: AWS Cloud Solution for 2 Company Websites Using Reverse Proxy Technology</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/terraform_01.md">PROJECT SIXTEEN: Automating Infrastructure With IAC Using Terraform. Part One</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/terraform_02.md">PROJECT SEVENTEEN: Automating Infrastructure With IAC Using Terraform. Part Two</a></li>
-    <li><a href="https://github.com/earchibong/devops_training/blob/main/terraform_03.md">PROJECT SEVENTEEN: Automating Infrastructure With IAC Using Terraform. Part Three</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/terraform_03.md">PROJECT EIGHTEEN: Automating Infrastructure With IAC Using Terraform. Part Three</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/terraform_04.md">PROJECT NINETEEN: Automating Infrastructure With IAC Using Terraform. Part Four</a></li>
 </ul>
 
