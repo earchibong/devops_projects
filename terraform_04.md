@@ -795,13 +795,66 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 <br>
   
-- **Create a configuration that usese the module**
+- **Create a configuration that uses the module**
   - clone the module: `git clone https://github.com/earchibong/terraform-private-module-aws-s3-webapp.git`...with this, terraform can access it to create the infrastructure.
   - open the folder and configure files
   
 <br>
   
+**main.tf**
+```
 
+provider "aws" {
+  region = var.region
+}
+
+module "s3-webapp" {
+  source  = "app.terraform.io/mintedtech/s3-webapp/aws"
+  version = "1.0.0"
+  # insert required variables below
+  name    = var.name
+  region  = var.region
+  prefix  = var.prefix
+
+}
+  
+```
+  
+<br>
+  
+![s3_main](https://user-images.githubusercontent.com/92983658/213933003-73aa78ca-8619-4392-b2a0-fc04d8070772.png)
+
+<br>
+  
+**variables.tf**
+```
+  
+variable "region" {
+    description = "enter coud hosting region where app will be deployed"
+    }
+
+variable "prefix" {
+    description = "environment webapp will be prefixed with: dev, prod, qa"
+    }
+
+variable "name" {
+    description = "the name to attach to webapp address"
+    }
+```
+  
+<br>
+  
+ ![s3_variables](https://user-images.githubusercontent.com/92983658/213933332-ca0f9535-a6fd-4468-8cb0-746edb1470ee.png)
+
+<br>
+  
+**outputs.tf**
+
+![s3_outputs](https://user-images.githubusercontent.com/92983658/213933476-b8fb606f-5721-47d4-856b-0bd3b08f8b94.png)
+
+<br>
+  
+- **Create a workspace for the configuration**
 
 
 
