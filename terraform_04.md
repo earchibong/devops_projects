@@ -783,15 +783,15 @@ As the most common and recommended way to run Terraform commands triggered from 
   
 <br>
 
-![registry](https://user-images.githubusercontent.com/92983658/213701194-9cc4be26-6d8e-4e09-98b7-15ecab70cee1.png)
+![module_2b](https://user-images.githubusercontent.com/92983658/213932291-d7f9b988-e990-4a88-9364-dcef7fd15e3b.png)
 
 <br>
   
-![module_1a](https://user-images.githubusercontent.com/92983658/213701225-4d001b15-70bf-478f-b1b2-04a012e842f0.png)
-  
+![module_2c](https://user-images.githubusercontent.com/92983658/213932312-81e5a068-303b-4caa-85c4-99d580dbd893.png)
+
 <br>
-  
-![module_1b](https://user-images.githubusercontent.com/92983658/213701270-078cd4c2-5a43-4a87-aa65-75f64e4b65d4.png)
+
+![module_2d](https://user-images.githubusercontent.com/92983658/213932342-22f18475-4e8e-4ac7-acb5-b58c1e1efc30.png)
 
 <br>
   
