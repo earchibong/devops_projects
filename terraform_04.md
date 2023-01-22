@@ -755,7 +755,7 @@ As the most common and recommended way to run Terraform commands triggered from 
 
 ## Practice Task No.2: Working With A Private Repository.
   
-- Create a simple Terraform repository that will be your module. (clone one from <a href="https://github.com/hashicorp/learn-private-module-aws-s3-webapp">here</a>)
+- **Create a simple Terraform repository that will be your module. (clone one from <a href="https://github.com/hashicorp/learn-private-module-aws-s3-webapp">here</a>)**
 - next to the `branch` tag in the repository, click on `tag` to create tag. 
   - click 'Create a new release' 
   - `choose a tag` button and add v1.0.0 to the tag version field setting
@@ -775,5 +775,33 @@ As the most common and recommended way to run Terraform commands triggered from 
 ![release](https://user-images.githubusercontent.com/92983658/213699156-5a06c4c4-3357-4ab0-bcb1-76ba3809c65c.png)
   
 <br>
+
+- **Create a Terraform module for the private module registry**
+  - on terraform cloud, head to the main dashboard and select `registry` and select `publish private module`
+  - select `github` as VCS and private module just created on github
+  - publish
+  
+<br>
+
+![registry](https://user-images.githubusercontent.com/92983658/213701194-9cc4be26-6d8e-4e09-98b7-15ecab70cee1.png)
+
+<br>
+  
+![module_1a](https://user-images.githubusercontent.com/92983658/213701225-4d001b15-70bf-478f-b1b2-04a012e842f0.png)
+  
+<br>
+  
+![module_1b](https://user-images.githubusercontent.com/92983658/213701270-078cd4c2-5a43-4a87-aa65-75f64e4b65d4.png)
+
+<br>
+  
+- **Create a configuration that usese the module**
+  - clone the module: `git clone https://github.com/earchibong/terraform-private-module-aws-s3-webapp.git`...with this, terraform can access it to create the infrastructure.
+  - open the folder and configure files
+  
+<br>
+  
+
+
 
 
