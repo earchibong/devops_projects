@@ -127,6 +127,23 @@ If the image is not found locally, it will be downloaded from the registry.
 
 <br>
   
+- create an SQL script that will create a user we can use to connect remotely.
+  - Create a file and name it `create_user.sql` : `touch create_user.sql`
+  - and add the following code in the file: `CREATE USER ''@'%' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO ''@'%'; `
+  
+  <br>
+  
+  <img width="1038" alt="nano_create_sql" src="https://user-images.githubusercontent.com/92983658/215428009-f5401076-cbc4-4a2b-a832-ae377425c158.png">
 
+  <br>
+  
+  - use the following script to `docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < create_user.sql`
 
+<br>
+  
+<img width="1037" alt="mysql_script" src="https://user-images.githubusercontent.com/92983658/215428375-78ef2219-c3e6-4680-9f67-283cc68b1828.png">
 
+<br>
+  
+
+                                                                                                        
