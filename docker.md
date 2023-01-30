@@ -42,3 +42,15 @@ In the command above, we used the latest version tag. This tag may differ accord
 
 <br>
 
+- check to see if the MySQL container is running: `docker ps -a`
+
+*You should see the newly created container listed in the output. It includes container details, one being the status of this virtual environment. The status changes from health: starting to healthy, once the setup is complete.*
+
+
+<br>
+  
+<img width="1303" alt="mysql_confirm" src="https://user-images.githubusercontent.com/92983658/215413358-b96681a8-4cbf-4a11-b6e9-e03c5f4cb78f.png">
+
+<br>
+  
+## Step Three: Connect To Mysql Docker Container
