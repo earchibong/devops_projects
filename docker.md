@@ -171,4 +171,46 @@ Flags used:
 A database schema needs to be created so that the Tooling application can connect to it.
 
 - Clone the Tooling-app repository: `git clone https://github.com/darey-devops/tooling.git`
+  
+<br>
+  
+<img width="1266" alt="git_clone" src="https://user-images.githubusercontent.com/92983658/215440923-3af19232-00ee-4556-a84a-5790e401bb41.png">
+
+<br>
+  
+- On the terminal in `tooling` directory, export the location of the SQL file: `export tooling_db_schema=*/tooling_db_schema.sql`
+- Verify that the path is exported: `echo $tooling_db_schema`  
+*You can find the tooling_db_schema.sql in the tooling/html/tooling_db_schema.sql folder of cloned repo*
+ 
+<br>
+  
+<img width="1004" alt="schema_1b" src="https://user-images.githubusercontent.com/92983658/215449638-30ce8044-64ad-42e5-9339-b633d799ea63.png">
+
+<br>
+  
+- Use the SQL script to create the database and prepare the schema. With the docker exec command, you can execute a command in a running container.: `docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < $tooling_db_schema`
+
+<br>
+  
+<img width="1001" alt="schema_1c" src="https://user-images.githubusercontent.com/92983658/215449948-2b1f9f2d-2586-4f4c-a5b8-e376ede2caab.png">
+
+<br>
+  
+- Update the `.env` file with connection details to the database: `nano */html/.env`
+*The .env file is located in the html tooling/html/.env folder but not visible in terminal. you can use vi or nano*
+  
+```
+
+MYSQL_IP=mysqlserverhost
+MYSQL_USER=username
+MYSQL_PASS=client-secrete-password
+MYSQL_DBNAME=toolingdb
+  
+```
+
+<br>
+  
+<img width="995" alt="env" src="https://user-images.githubusercontent.com/92983658/215451390-bd5f9b87-536a-45c3-851f-52f5c0f16e09.png">
+
+<br>
  
