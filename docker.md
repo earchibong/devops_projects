@@ -4,7 +4,7 @@ In this project, the frontend and the backend(MySQL) of tooling application is b
 is pushed to Docker registry. And further in the project, the php-todo application is also built into a container and pushed into the 
 AWS Elastic Container Registry using a CI/CD tool known as Jenkins and Docker Compose is also implemented.
 
-## Step One: Install Docker and prepare for migration to the Cloud
+## Part One: Install Docker and prepare for migration to the Cloud
 
 Docker allocates not the whole guest OS for an application, but only isolates a minimal part of it – this isolated container has all that the application needs and at the same time is lighter, faster, and can be shipped as a Docker image to multiple physical or virtual environments, as long as this environment can run Docker engine. This approach also solves the environment incompatibility issue. If the application is shipped as a container, it has its own environment isolated from the rest of the world, and it will always work the same way on any server that has Docker engine.
 
@@ -12,7 +12,7 @@ Docker allocates not the whole guest OS for an application, but only isolates a 
 
 <br>
 
-## Step Two: Migrate the Tooling Web Application from a VM-based solution into a containerized one.
+## Part Two: Migrate the Tooling Web Application from a VM-based solution into a containerized one.
 ### Create MySQL Container For Tooling App Backend
 Assembly of the application will start from the Database layer – a pre-built MySQL database container will be used. It will be configured and made sure to receive requests from the PHP application.
 
@@ -53,4 +53,80 @@ In the command above, we used the latest version tag. This tag may differ accord
 
 <br>
   
-## Step Three: Connect To Mysql Docker Container
+## Part Three: Connect To Mysql Docker Container
+You can either connect directly to the container running the MySQL server or use a second container as a MySQL client.
+
+### Approach one: 
+Connecting directly to the container running the MySQL server:
+```
+
+docker exec -it mysql bash
+
+or
+
+docker exec -it mysql mysql -uroot -p
+  
+```
+  
+<br>
+  
+### Approach two:
+- remove the previous mysql docker container and verify it is deleted
+```
+  
+docker ps -a
+docker stop <container name>
+docker rm <container name> or <container ID> 04a34f46fb98
+docker ps -a
+
+```
+  
+<br>
+  
+<img width="1336" alt="remove_msql_docker" src="https://user-images.githubusercontent.com/92983658/215417795-d5a0c8bf-cbc7-4f95-83b4-05b88852e9c1.png">
+
+<br>
+
+#### Step one: create a network
+creating a custom network is not neccessary in most cases because docker will create a default network. But there are use cases where this is nevessary...For example, if there is a requirement to control the `cidr range` of the containers running the entire application stack. This will be an ideal situation to create a network and specify the `--subnet`
+
+For clarity’s sake, we will create a network with a subnet dedicated for our project and use it for both MySQL and the application so that they can connect.
+  
+
+- `docker network create --subnet=172.18.0.0/24 tooling_app_network`
+
+<br>
+  
+<img width="831" alt="network" src="https://user-images.githubusercontent.com/92983658/215420865-5ce2e284-52a5-4ff8-aae2-901883db449b.png">
+
+<br>
+
+#### Run the MySQL Server container using the created network.
+- create an environment variable to store the root password: `export MYSQL_PW=<your password>`
+- verify the environment variable is created: `echo $MYSQL_PW`
+- pull the image and run the container: `docker run --network tooling_app_network -h mysqlserverhost --name=mysql-server -e MYSQL_ROOT_PASSWORD=$MYSQL_PW  -d mysql/mysql-server:latest`
+  
+Flags used
+
+-d runs the container in detached mode
+--network connects a container to a network
+-h specifies a hostname
+If the image is not found locally, it will be downloaded from the registry.
+  
+<br>
+  
+<img width="837" alt="mysql_run" src="https://user-images.githubusercontent.com/92983658/215422639-ce733718-7360-49f6-9117-c7bf8c7d8ba2.png">
+
+<br>
+  
+- Verify the container is running: `docker ps -a`
+
+<br>
+  
+<img width="1357" alt="server_verify" src="https://user-images.githubusercontent.com/92983658/215423020-a385c73d-814d-4ca8-8287-5096605d7b79.png">
+
+<br>
+  
+
+
+
