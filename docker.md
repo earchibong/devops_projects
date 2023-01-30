@@ -56,8 +56,8 @@ In the command above, we used the latest version tag. This tag may differ accord
 ## Part Three: Connect To Mysql Docker Container
 You can either connect directly to the container running the MySQL server or use a second container as a MySQL client.
 
-### Approach one: 
-Connecting directly to the container running the MySQL server:
+### Connecting directly to the container running the MySQL server: - Approach one: 
+
 ```
 
 docker exec -it mysql bash
@@ -70,7 +70,7 @@ docker exec -it mysql mysql -uroot -p
   
 <br>
   
-### Approach two:
+### Connecting directly to container running Mysql server - Approach two:
 - remove the previous mysql docker container and verify it is deleted
 ```
   
@@ -139,11 +139,36 @@ If the image is not found locally, it will be downloaded from the registry.
   
   - use the following script to `docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < create_user.sql`
 
+ *note: If you see a warning like below, it is acceptable to ignore:`mysql: [Warning] Using a password on the command line interface can be insecure.`
+                                                                                                        
 <br>
   
 <img width="1037" alt="mysql_script" src="https://user-images.githubusercontent.com/92983658/215428375-78ef2219-c3e6-4680-9f67-283cc68b1828.png">
 
 <br>
   
+### Connecting to the MySQL server from a second container running the MySQL client utility
+- Run the MySQL Client Container: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u  -p `
+  
+Flags used:
 
+- `--name` gives the container a name
+- `-it` runs in interactive mode and Allocate a pseudo-TTY
+- `--rm` automatically removes the container when it exits
+- `--network` connects a container to a network
+- `-h a MySQL` flag specifying the MySQL server Container hostname
+- `-u user` created from the SQL script
+- admin username-for-user-created-from-the-SQL-script-create_user.sql
+- `-p` password specified for the user created from the SQL script
+  
+<br>  
                                                                                                         
+<img width="1340" alt="2nd_container_mysql_docker" src="https://user-images.githubusercontent.com/92983658/215430580-20ea7eb8-cb6b-4c9d-a7cb-e12ac7943930.png">
+
+<br>
+
+## Part Four: Prepare database schema
+A database schema needs to be created so that the Tooling application can connect to it.
+
+- Clone the Tooling-app repository: `git clone https://github.com/darey-devops/tooling.git`
+ 
