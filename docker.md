@@ -148,6 +148,9 @@ If the image is not found locally, it will be downloaded from the registry.
 <br>
   
 ### Connecting to the MySQL server from a second container running the MySQL client utility
+  
+The good thing about this approach is that you do not have to install any client tool on your laptop, and you do not need to connect directly to the container running the MySQL server.
+  
 - Run the MySQL Client Container: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u  -p `
   
 Flags used:
