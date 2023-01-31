@@ -151,7 +151,7 @@ Flags used
   
 The good thing about this approach is that you do not have to install any client tool on your laptop, and you do not need to connect directly to the container running the MySQL server.
   
-- Run the MySQL Client Container: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u  -p `
+- Run the MySQL Client Container: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u <enter username>  -p `
   
 Flags used:
 
@@ -161,12 +161,12 @@ Flags used:
 - `--network` connects a container to a network
 - `-h a MySQL` flag specifying the MySQL server Container hostname
 - `-u user` created from the SQL script
-- admin username-for-user-created-from-the-SQL-script-create_user.sql
+- `username` admin username-for-user-created-from-the-SQL-script-create_user.sql
 - `-p` password specified for the user created from the SQL script
   
 <br>  
                                                                                                         
-<img width="1340" alt="2nd_container_mysql_docker" src="https://user-images.githubusercontent.com/92983658/215430580-20ea7eb8-cb6b-4c9d-a7cb-e12ac7943930.png">
+<img width="1203" alt="client_server" src="https://user-images.githubusercontent.com/92983658/215768560-e4f0006f-0745-4887-9872-40d8f303a66f.png">
 
 <br>
 
