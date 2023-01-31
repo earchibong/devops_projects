@@ -108,10 +108,10 @@ For clarity’s sake, we will create a network with a subnet dedicated for our p
   
 Flags used
 
--d runs the container in detached mode
---network connects a container to a network
--h specifies a hostname
-If the image is not found locally, it will be downloaded from the registry.
+- `-d` runs the container in detached mode
+- `--network` connects a container to a network
+- `-h` specifies a hostname
+- If the image is not found locally, it will be downloaded from the registry.
   
 <br>
   
