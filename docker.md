@@ -152,6 +152,7 @@ Flags used
 The good thing about this approach is that you do not have to install any client tool on your laptop, and you do not need to connect directly to the container running the MySQL server.
   
 - Run the MySQL Client Container: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u <enter username>  -p `
+*note: to stay connected to the server, do not exit the terminal*
   
 Flags used:
 
@@ -173,7 +174,7 @@ Flags used:
 ## Part Four: Prepare database schema
 A database schema needs to be created so that the Tooling application can connect to it.
 
-- Clone the Tooling-app repository: `git clone https://github.com/darey-devops/tooling.git`
+- on a new terminal, clone the Tooling-app repository: `git clone https://github.com/darey-devops/tooling.git`
   
 <br>
   
@@ -219,7 +220,7 @@ MYSQL_DBNAME=toolingdb
  
 ## Run The Tooling App
   
-- Ensure you are inside the directory `tooling` that has the file Dockerfile, update docker file: `nano Dockerfile`
+- on a new terminal, ensure you are inside the directory `tooling` that has the file Dockerfile, update docker file: `nano Dockerfile`
 
 <br>
   
@@ -237,7 +238,8 @@ MYSQL_DBNAME=toolingdb
 
 <br> 
 
-- Run the container: `docker run --network tooling_app_network -p 8085:80 -it tooling:0.0.1 `
+- Run the container: `docker run --network tooling_app_network -p 8085:80 -it tooling:0.0.1 ` 
+  *note: do not exit the terminal whilst the container is running*
 
 <br>
   
@@ -252,6 +254,15 @@ flags in the command:
 
 <br>
 
+- Test the tooling app in the browser: `http://localhost:8085`
+  
+<br>
+  
+<img width="1195" alt="tooling" src="https://user-images.githubusercontent.com/92983658/215772820-9b1b8a58-290a-4ed9-b2b7-35c5469e33d1.png">
+
+<br>
+  
+## Practice Task
 
 
  
