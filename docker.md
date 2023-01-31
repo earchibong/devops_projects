@@ -219,7 +219,7 @@ MYSQL_DBNAME=toolingdb
  
 ## Run The Tooling App
   
-- update docker file: `nano Dockerfile`
+- Ensure you are inside the directory `tooling` that has the file Dockerfile, update docker file: `nano Dockerfile`
 
 <br>
   
