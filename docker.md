@@ -127,17 +127,17 @@ If the image is not found locally, it will be downloaded from the registry.
 
 <br>
   
-- create an SQL script that will create a user we can use to connect remotely.
+- Because it's not a good practice to connect to MySQL server remotely using the root user, create an SQL script that will create a user we can use to connect remotely.
   - Create a file and name it `create_user.sql` : `touch create_user.sql`
-  - and add the following code in the file: `CREATE USER ''@'%' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO ''@'%'; `
+  - and add the following code in the file: `CREATE USER 'libby'@'%' IDENTIFIED BY 'devopspbl'; GRANT ALL PRIVILEGES ON * . * TO 'libby'@'%'; `
   
   <br>
   
-  <img width="1038" alt="nano_create_sql" src="https://user-images.githubusercontent.com/92983658/215428009-f5401076-cbc4-4a2b-a832-ae377425c158.png">
+  <img width="1378" alt="create_user" src="https://user-images.githubusercontent.com/92983658/215765520-b68cfc44-dea2-4103-aca8-a06bbdddfae4.png">
 
   <br>
   
-  - use the following script to `docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < create_user.sql`
+  - use the following script to create new user: `docker exec -i mysql-server mysql -uroot -p$MYSQL_PW < create_user.sql`
 
  *note: If you see a warning like below, it is acceptable to ignore:`mysql: [Warning] Using a password on the command line interface can be insecure.`
                                                                                                         
