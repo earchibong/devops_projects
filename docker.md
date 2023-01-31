@@ -248,7 +248,7 @@ flags in the command:
   
 <br>
   
-<img width="1397" alt="docker_run_1a" src="https://user-images.githubusercontent.com/92983658/215457175-9bc0f026-edaf-4ebe-b888-1e915edaa938.png">
+<img width="1315" alt="docker_run" src="https://user-images.githubusercontent.com/92983658/215755842-c1759d1e-5ea3-4d9b-a4b0-5bd21739749c.png">
 
 <br>
 
