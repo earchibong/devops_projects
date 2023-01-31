@@ -218,22 +218,22 @@ MYSQL_DBNAME=toolingdb
 <br>
  
 ## Run The Tooling App
+  
+- update docker file: `nano Dockerfile`
 
+<br>
+  
+<img width="1317" alt="dockerfile" src="https://user-images.githubusercontent.com/92983658/215749655-1939e53b-ea71-456d-a0fe-4d7de7e5c762.png">
+
+<br>
+  
 - Ensure you are inside the directory `tooling` that has the file Dockerfile and build your container :`docker build -t tooling:0.0.1 .`
 
 *In the above command, we specify a parameter `-t`, so that the image can be tagged tooling"0.0.1. Also, notice the `.` at the end. This is important as that tells Docker to locate the Dockerfile in the current directory you are running the command. Otherwise, you would need to specify the absolute path to the Dockerfile.*
-  
+
 <br>
   
 <img width="997" alt="build" src="https://user-images.githubusercontent.com/92983658/215452676-c3b9e7d7-08ef-4ea1-8e80-a0922019c56a.png">
-
-<br>
-  
- - update docker file: `nano Dockerfile`
-
-<br>
-  
-<img width="992" alt="dockerfile" src="https://user-images.githubusercontent.com/92983658/215454543-45ce9d1e-1b14-441b-a9d8-27ff38d19ca1.png">
 
 <br> 
 
