@@ -218,7 +218,7 @@ MYSQL_DBNAME=toolingdb
 
 <br>
  
-## Run The Tooling App
+## Part Five: Run The Tooling App
   
 - on a new terminal, ensure you are inside the directory `tooling` that has the file Dockerfile, update docker file: `nano Dockerfile`
 
@@ -262,7 +262,50 @@ flags in the command:
 
 <br>
   
-## Practice Task
+## Practice Task No 1: Implement a POC to migrate the PHP-Todo app into a containerized application.
 
+- Download `php-todo` repository: `git clone https://github.com/earchibong/php-todo.git`
+  
+### Part One
+**Write a `Dockerfile` for the TODO app**
+
+<br>
+  
+- in `phptodo` directory, create a new file named: `Dockerfile` and add the following:
+
+```
+  
+FROM php:7-apache
+LABEL MAINTAINER Libby
+
+RUN apt update
+RUN apt install zip git nginx -y
+RUN docker-php-ext-install pdo_mysql mysqli
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+WORKDIR /var/www/html
+
+COPY . .
+RUN mv /var/www/html/.env.sample /var/www/html/.env 
+RUN chmod +x artisan
+
+RUN composer install
+RUN php artisan db:seed
+RUN php artisan key:generate
+
+CMD php artisan migrate
+ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
+  
+```
+
+<br>
+  
+<img width="858" alt="dockerfile" src="https://user-images.githubusercontent.com/92983658/215782816-7e42f52b-1f54-4c2a-9d7a-b4c9a95581d8.png">
+
+<br>
+  
+**Run both database and app on laptop Docker Engine**
+  
+- Create a `MySQL` container for the `php-todo` frontend
 
  
