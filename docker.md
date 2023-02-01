@@ -351,5 +351,22 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 <br>
   
 - ensure you are in the `php-todo` difrectory and then build docker image of the app: `docker build -t php-todo:0.0.1 .`
+  
+<br>
+  
+<img width="823" alt="php-build" src="https://user-images.githubusercontent.com/92983658/216044829-5df6357e-dc4f-40ba-9c68-8ef4e7d705fa.png">
 
- 
+<br>
+  
+- Run the container: `docker run --network tooling_app_network -p 8085:80 -it php-todo:0.0.1 ` 
+  *note: do not exit the terminal whilst the container is running*  
+
+<br>
+  
+<img width="813" alt="php-run" src="https://user-images.githubusercontent.com/92983658/216047865-b951ae87-4d6f-4c5a-b3a8-c6b4d8d5a5e7.png">
+
+<br>
+
+- in a new terminal, run `artisan migrate` command: `docker exec -it <your_container_ID> bash`
+
+<br>
