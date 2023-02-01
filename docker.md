@@ -275,21 +275,50 @@ flags in the command:
 
 ```
   
-FROM php:7-apache
+# Tells the image to use the latest version of PHP
+FROM php:latest-apache
 LABEL MAINTAINER Libby
 
-RUN apt update
-RUN apt install zip git nginx -y
-RUN docker-php-ext-install pdo_mysql mysqli
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+#install all the dependencies
+RUN apt-get update && apt-get install -y \
+      libicu-dev \
+      libpq-dev \
+      libmcrypt-dev \
+      git \
+      zip \
+      unzip \
+    && rm -r /var/lib/apt/lists/* \
+    && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
+    && docker-php-ext-install \
+      intl \
+      mbstring \
+      mcrypt \
+      pcntl \
+      pdo_mysql \
+      pdo_pgsql \
+      pgsql \
+      zip \
+      opcache
 
+#install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+
+#define project folder
 WORKDIR /var/www/html
 
+#change uid and gid of apache to docker user uid/gid
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
+
+#change apache setting
+RUN sed -i -e "s/var\/www/app/g" /etc/apache2/apache2.conf && sed -i -e "s/html/public/g" /etc/apache2/apache2.conf
+RUN a2enmod rewrite
+
+#copy source files, run composer and set permissions
 COPY . .
 RUN mv /var/www/html/.env.sample /var/www/html/.env 
 RUN chmod +x artisan
 
-RUN composer install
+RUN composer install --no-interaction
 RUN php artisan db:seed
 RUN php artisan key:generate
 
@@ -300,12 +329,27 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-<img width="858" alt="dockerfile" src="https://user-images.githubusercontent.com/92983658/215782816-7e42f52b-1f54-4c2a-9d7a-b4c9a95581d8.png">
+<img width="829" alt="dockerfile_1a" src="https://user-images.githubusercontent.com/92983658/216032943-e38b56f7-b886-462d-b169-defb468126c2.png">
+<img width="830" alt="dockerfile_1b" src="https://user-images.githubusercontent.com/92983658/216032967-ce8bac44-4a2c-41cb-91e4-6fa302952a9d.png">
 
 <br>
   
 **Run both database and app on laptop Docker Engine**
   
-- Create a `MySQL` container for the `php-todo` frontend
+- Connect to the exisiting MySQL server (from the first project) using a second container running the MySQL client utility: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h mysqlserverhost -u <enter username>  -p`
+  
+*note: if the Mysql server didn't exist, we would have had to build one first before connecting...as done above in the `tooling` project*
+  
+<br>
+  
+<img width="977" alt="mysql_client" src="https://user-images.githubusercontent.com/92983658/216038764-38875185-608e-4b56-9094-23e54f49e62a.png">
+
+<br>
+  
+<img width="1261" alt="mysql_client_2" src="https://user-images.githubusercontent.com/92983658/216038813-9a021efb-ba1f-4333-bb5d-983da82ab3b9.png">
+
+<br>
+  
+
 
  
