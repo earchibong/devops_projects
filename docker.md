@@ -70,7 +70,7 @@ docker exec -it mysql mysql -uroot -p
   
 <br>
   
-### Connecting directly to container running Mysql server - Approach two:
+### Approach two: Connecting to the MySQL server from a second container running the MySQL client utility
 - remove the previous mysql docker container and verify it is deleted
 ```
   
@@ -87,7 +87,7 @@ docker ps -a
 
 <br>
 
-#### Step one: create a network
+#### create a network
 creating a custom network is not neccessary in most cases because docker will create a default network. But there are use cases where this is nevessary...For example, if there is a requirement to control the `cidr range` of the containers running the entire application stack. This will be an ideal situation to create a network and specify the `--subnet`
 
 For clarity’s sake, we will create a network with a subnet dedicated for our project and use it for both MySQL and the application so that they can connect.
@@ -147,7 +147,7 @@ Flags used
 
 <br>
   
-### Connecting to the MySQL server from a second container running the MySQL client utility
+### Connect to the MySQL server from a second container running the MySQL client utility
   
 The good thing about this approach is that you do not have to install any client tool on your laptop, and you do not need to connect directly to the container running the MySQL server.
   
