@@ -329,8 +329,8 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-<img width="829" alt="dockerfile_1a" src="https://user-images.githubusercontent.com/92983658/216032943-e38b56f7-b886-462d-b169-defb468126c2.png">
-<img width="830" alt="dockerfile_1b" src="https://user-images.githubusercontent.com/92983658/216032967-ce8bac44-4a2c-41cb-91e4-6fa302952a9d.png">
+<img width="857" alt="dockerfile_2a" src="https://user-images.githubusercontent.com/92983658/216051918-54d42b99-8e6c-47ba-ad91-0511478758ba.png">
+<img width="851" alt="dockerfile_2b" src="https://user-images.githubusercontent.com/92983658/216051965-e18a00c1-0e5f-4e17-9537-8838d626b5c4.png">
 
 <br>
   
@@ -350,7 +350,30 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-- ensure you are in the `php-todo` difrectory and then build docker image of the app: `docker build -t php-todo:0.0.1 .`
+- Update the `.env.sample` file with connection details to the database:
+
+```
+  
+...
+
+DB_HOST=mysqlserverhost
+DB_DATABASE=toolingdb
+DB_USERNAME=<username used to create mysql database>
+DB_PASSWORD=<your password used to create the mysql server>
+DB_CONNECTION=mysql
+DB_PORT=3306
+  
+...
+  
+```
+
+<br>
+  
+<img width="848" alt="env_file_1a" src="https://user-images.githubusercontent.com/92983658/216052052-4c893069-45b9-4d6d-9ea9-81b1c70ff9d2.png">
+
+<br>
+
+- ensure you are in the `php-todo` directory and then build docker image of the app: `docker build -t php-todo:0.0.1 .`
   
 <br>
   
@@ -367,6 +390,6 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
 
-- in a new terminal, run `artisan migrate` command: `docker exec -it <your_container_ID> bash`
+- in a new terminal, run `artisan migrate` command: `docker exec your_container_name php artisan migrate`
 
 <br>
