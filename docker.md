@@ -378,6 +378,14 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
 
-- in a new terminal, run `artisan migrate` command: `docker exec your_container_name php artisan migrate`
+- in a new terminal, run `artisan migrate` command: `docker exec <your_container_name> php artisan migrate`
 
 <br>
+  
+<img width="813" alt="artisan_migrate" src="https://user-images.githubusercontent.com/92983658/216058059-2b6a6afc-ba27-4808-b727-532b915f0367.png">
+
+<br>
+  
+**Access the application from the browser**
+  
+- 
