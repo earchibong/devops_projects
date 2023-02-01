@@ -350,6 +350,6 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-
+- ensure you are in the `php-todo` difrectory and then build docker image of the app: `docker build -t php-todo:0.0.1 .`
 
  
