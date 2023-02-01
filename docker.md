@@ -269,6 +269,27 @@ flags in the command:
 ### Part One
 **Write a `Dockerfile` for the TODO app**
 
+- Update the `.env.sample` file with connection details to the database:
+
+```
+  
+...
+
+DB_HOST=mysqlserverhost
+DB_DATABASE=toolingdb
+DB_USERNAME=<username used to create mysql database>
+DB_PASSWORD=<your password used to create the mysql server>
+DB_CONNECTION=mysql
+DB_PORT=3306
+  
+...
+  
+```
+
+<br>
+  
+<img width="848" alt="env_file_1a" src="https://user-images.githubusercontent.com/92983658/216052052-4c893069-45b9-4d6d-9ea9-81b1c70ff9d2.png">
+
 <br>
   
 - in `phptodo` directory, create a new file named: `Dockerfile` and add the following:
@@ -276,29 +297,20 @@ flags in the command:
 ```
   
 # Tells the image to use the latest version of PHP
-FROM php:latest-apache
+FROM php:7-apache
 LABEL MAINTAINER Libby
 
+ENV DB_HOST=mysqlserverhost
+ENV DB_DATABASE=toolingdb
+ENV DB_USERNAME=<username used to create mysql database>
+ENV ENV DB_PASSWORD=<your password used to create the mysql server>
+ENV DB_CONNECTION=mysql
+ENV DB_PORT=3306
+
 #install all the dependencies
-RUN apt-get update && apt-get install -y \
-      libicu-dev \
-      libpq-dev \
-      libmcrypt-dev \
-      git \
-      zip \
-      unzip \
-    && rm -r /var/lib/apt/lists/* \
-    && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
-    && docker-php-ext-install \
-      intl \
-      mbstring \
-      mcrypt \
-      pcntl \
-      pdo_mysql \
-      pdo_pgsql \
-      pgsql \
-      zip \
-      opcache
+RUN apt update
+RUN apt install zip git nginx -y
+RUN docker-php-ext-install pdo_mysql mysqli
 
 #install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
@@ -322,15 +334,14 @@ RUN composer install --no-interaction
 RUN php artisan db:seed
 RUN php artisan key:generate
 
-CMD php artisan migrate
 ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
   
 ```
 
 <br>
   
-<img width="857" alt="dockerfile_2a" src="https://user-images.githubusercontent.com/92983658/216051918-54d42b99-8e6c-47ba-ad91-0511478758ba.png">
-<img width="851" alt="dockerfile_2b" src="https://user-images.githubusercontent.com/92983658/216051965-e18a00c1-0e5f-4e17-9537-8838d626b5c4.png">
+<img width="860" alt="docker_file_2a" src="https://user-images.githubusercontent.com/92983658/216055929-f4bb4dd5-27a9-476b-8365-650923e7922d.png">
+<img width="856" alt="docker_file_2b" src="https://user-images.githubusercontent.com/92983658/216055945-eb74fa65-4000-4f01-a1de-556c2704814f.png">
 
 <br>
   
@@ -347,29 +358,6 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 <br>
   
 <img width="1261" alt="mysql_client_2" src="https://user-images.githubusercontent.com/92983658/216038813-9a021efb-ba1f-4333-bb5d-983da82ab3b9.png">
-
-<br>
-  
-- Update the `.env.sample` file with connection details to the database:
-
-```
-  
-...
-
-DB_HOST=mysqlserverhost
-DB_DATABASE=toolingdb
-DB_USERNAME=<username used to create mysql database>
-DB_PASSWORD=<your password used to create the mysql server>
-DB_CONNECTION=mysql
-DB_PORT=3306
-  
-...
-  
-```
-
-<br>
-  
-<img width="848" alt="env_file_1a" src="https://user-images.githubusercontent.com/92983658/216052052-4c893069-45b9-4d6d-9ea9-81b1c70ff9d2.png">
 
 <br>
 
