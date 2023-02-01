@@ -1,79 +1,66 @@
-## SHELL SCRIPTING - ONBOARD NEW LINUX USERS TO SERVER
+# Shell Scripting.
+# This script will read a CSV file that contains 20 new Linux users.
+# This script will create each user on the server and add to an existing group called 'Developers'.
+# This script will first check for the existence of the user on the system, before it will attempt to create that it.
+# The user that is being created also must also have a default home folder
+# Each user should have a .ssh folder within its HOME folder. If it does not exist, then it will be created.
+# For each user’s SSH configuration, We will create an authorized_keys file and add the below public key.
 
-## Step One: Create CSV File
-- make a directory named `shell` create a file `names.csv`:
-  - `mkdir shell`
-  - `cd shell`
-  - `touch names.csv`
-- Add some names (one per line) into `names.csv`
+#!/bin/bash
+userfile=$(cat names.csv)
+PASSWORD=password
 
-![names](https://user-images.githubusercontent.com/92983658/179495557-c3a98657-77a9-4c67-ac76-97c34b2cb334.png)
+# To ensure the user running this script has sudo privilege
+    if [ $(id -u) -eq 0 ]; then
 
-- create a new group `developers` in `shell` directory : 
-  - `sudo groupadd developers`
+# Reading the CSV file
+	for user in $userfile;
+	do
+            echo $user
+        if id "$user" &>/dev/null
+        then
+            echo "User Exist"
+        else
 
-## Step Two: Create Bash Script
-- create a new file in `shell` directory: `touch onboarding_users.sh`
-- specify shell path:  `which bash`
-- open `onboarding users` : `vim onboarding users`
-- add shebang and shell path at top: `#!/usr/bin/bash`
-- create variable `filein` and store `names.csv` in variable: `filein="names.csv"`
-- create an input field separator using a new line: `IFS=$'\n'`
-- create an if statement to check if the file we're trying to run exists:
-  - if it doesn't exist, print out : `cannot find file`
-  - if it does exist...
-   - create an array of names and groups
-   - create groups from the groups array
-    - check if the group exists, if not create it
-   
- 
-```
+# This will create a new user
+        useradd -m -d /home/$user -s /bin/bash -g developers $user
+        echo "New User Created"
+        echo
 
-if [ ! -f "$filein" ]
-then
-  echo "Cannot find file $filein"
-else
 
-  #create arrays of groups, names
-  groups=(`cut -d: -f 2 "$filein" | sed 's/ //'`)
-  names=(`cut -d: -f 1 "$filein"`)
+# This will create a ssh folder in the user home folder
+        su - -c "mkdir ~/.ssh" $user
+        echo ".ssh directory created for new user"
+        echo
 
-  #checks if the group exists, if not then creates it
-  for group in ${groups[*]}
-  do
-    grep -q "^$group" /etc/group ; let x=$?
-    if [ $x -eq 1 ]
-    then
-      groupadd "$group"
+# We need to set the user permission for the ssh dir
+         su - -c "chmod 700 ~/.ssh" $user
+         echo "user permission for .ssh directory set"
+         echo
+
+# This will create an authorized-key file
+        su - -c "touch ~/.ssh/authorized_keys" $user
+        echo "Authorized Key File Created"
+        echo
+
+# We need to set permission for the key file
+        su - -c "chmod 600 ~/.ssh/authorized_keys" $user
+        echo "user permission for the Authorized Key File set"
+        echo
+
+# We need to create and set public key for users in the server
+        cp -R "/root/onboard/id_rsa.pub" "/home/$user/.ssh/authorized_keys"
+        echo "Copyied the Public Key to New User Account on the server"
+        echo
+        echo
+
+        echo "USER CREATED"
+
+# Generate a password.
+sudo echo -e "$PASSWORD\n$PASSWORD" | sudo passwd "$user" 
+sudo passwd -x 5 $user
+            fi
+        done
+    else
+    echo "Only Admin Can Onboard A User"
     fi
-  done
-  
-  ```
-  
-  ![groups](https://user-images.githubusercontent.com/92983658/179508957-33f89ba3-3df4-4eb5-bc9a-313feedfd337.png)
-
-  
-  - then create user accounts and add them to groups in the same `onboarding_users` file
-  
-  ```
-  
-  x=0
-  created=0
-  for name in ${names[*]}
-  do
-    useradd -n -c ${names[$x]} -g "${groups[$x]}" $name 2> /dev/null
-    if [ $? -eq 0 ]
-    then
-      let created=$created+1
-    fi
-#  echo "Name: ${names[$x]},  pw: ${names[$x]}"
-    #This creates the password for the user suppresses output of passwd
-    #The -p in the useradd function doesn't set it properly
-    echo "${names[$x]}" | passwd --stdin "$name" > /dev/null
-fi
-
-```
-
-![users](https://user-images.githubusercontent.com/92983658/179509003-d63e236c-3b4f-4160-a220-c7bec346a658.png)
-
-
