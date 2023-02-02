@@ -436,6 +436,73 @@ docker push <repository>:<tagname>
   
 <br>
 
+<img width="1194" alt="ecr_1a" src="https://user-images.githubusercontent.com/92983658/216297822-05b4e6e4-0e66-4d17-b4a3-6692a2aa1f3f.png">
+
+<br>
+
+<img width="1195" alt="ecr_1b" src="https://user-images.githubusercontent.com/92983658/216297879-b84f377e-b53f-49c2-a7d7-a0c2a99f5299.png">
+
+<br>
+  
+**set up a jenkins server** 
+- launch EC2 instance, ensure `port 8080` is enabled and install Jenkins server. (learn how to do that <a href="https://github.com/earchibong/devops_training/blob/main/CI.md>here</a>)
+
+<br>
+  
+<img width="1223" alt="jenkins" src="https://user-images.githubusercontent.com/92983658/216305857-c7eef134-57aa-4772-899c-3d5ea6ac8654.png">
+
+<br>
+
+- install docker : find out more <a href="https://docs.docker.com/engine/install/ubuntu/">here</a>
+
+<br>
+  
+<img width="1224" alt="docker_ubuntu" src="https://user-images.githubusercontent.com/92983658/216352152-ea512284-14be-498b-bec1-18fc5189699e.png">
+
+<br>
+  
+
+**configure Jenkins**
+- install docker plugins to run docker jobs: `docker`, `docker commons` and `docker pipelines`
+
+<br>
+  
+<img width="1195" alt="docker_plugins" src="https://user-images.githubusercontent.com/92983658/216308789-fba245d8-645f-486d-b759-d5975523397d.png">
+  
+<br>
+  
+<img width="1225" alt="docker_ubuntu_1b" src="https://user-images.githubusercontent.com/92983658/216353385-64364980-7c3f-428b-a51f-1f27c420f2e6.png">
+
+<br>
+  
+- Give Jenkins permission on `.aws configuration file`: Move the `.aws folder` to `/var/lib/jenkins directory` and run the following command:`$ sudo chown jenkins:jenkins .aws`
+
+```
+  
+cd /var/lib/jenkins
+sudo chown jenkins:jenkins .aws
+  
+```
+  
+<br>
+  
+- give docker permissions: `sudo chmod 666 /var/run/docker.sock`
+- log in from the command line: `aws ecr get-login-password --region <aws region> | docker login --username AWS --password-stdin <aws ecr repository url>
+  
+<br>
+
+<img width="1224" alt="login" src="https://user-images.githubusercontent.com/92983658/216358735-43c5ecc9-b644-42af-9ec4-e935d6125355.png">
+
+<br>
+  
+- Create two branches in `php-todo` github repo - `develop` and `feature`: `git checkout -b develop` and `git checkout -b feature`
+  
+<br>
+  
+<img width="937" alt="branches" src="https://user-images.githubusercontent.com/92983658/216359764-df62212a-796a-455e-bb02-b218ec33582e.png">
+
+<br>
+  
 
 
 - Write a `Jenkinsfile` that will simulate a Docker Build and a Docker Push to the registry
