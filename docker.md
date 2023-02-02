@@ -265,8 +265,9 @@ flags in the command:
 ## Practice Task No 1: Implement a POC to migrate the PHP-Todo app into a containerized application.
 
 - Download `php-todo` repository: `git clone https://github.com/earchibong/php-todo.git`
+
+### Part One:
   
-### Part One
 **Write a `Dockerfile` for the TODO app**
 
 - Update the `.env.sample` file with connection details to the database:
@@ -387,5 +388,51 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 <br>
   
 **Access the application from the browser**
+
+- `http://localhost:8085`
+
+<br>
+
+<img width="1057" alt="php_app" src="https://user-images.githubusercontent.com/92983658/216281444-0f6c1744-42c8-4560-99ed-c929bc97ff08.png">
+
+<br>
   
-- 
+### Part 2
+
+- Create an account in <a href="https://hub.docker.com/">Docker Hub</a>
+- Create a new Docker Hub repository
+  
+<br>
+  
+<img width="1195" alt="repo_docker_hub" src="https://user-images.githubusercontent.com/92983658/216286069-10b28490-e3aa-445c-96b7-4eb54eea245d.png">
+
+<br>
+  
+- Push the docker images from your PC to the repository
+
+<br>
+  
+```
+  
+docker login
+docker tag <image id> <repository>:<tagname>
+docker push <repository>:<tagname>
+  
+```
+  
+<br>
+  
+<img width="813" alt="docker_push" src="https://user-images.githubusercontent.com/92983658/216294554-28640306-73ff-4c41-aea2-c3ea5ee2eab7.png">
+
+<br>
+  
+<img width="1195" alt="docker_push_1b" src="https://user-images.githubusercontent.com/92983658/216295062-7cd1ffba-7cd0-41fd-ad18-b425de52bc43.png">
+
+<br>
+  
+### Part Three:
+  
+- Write a `Jenkinsfile` that will simulate a Docker Build and a Docker Push to the registry
+  
+```
+  
