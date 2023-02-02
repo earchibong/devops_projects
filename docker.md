@@ -397,7 +397,7 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-### Part 2
+### Part 2 : Pushing The Docker Image To Docker Registry
 
 - Create an account in <a href="https://hub.docker.com/">Docker Hub</a>
 - Create a new Docker Hub repository
@@ -430,8 +430,14 @@ docker push <repository>:<tagname>
 
 <br>
   
-### Part Three:
+### Part Three: Running Docker Build And Docker Push on Jenkins
+
+- Create a private repository in `AWS Elastic Container Registry`
   
+<br>
+
+
+
 - Write a `Jenkinsfile` that will simulate a Docker Build and a Docker Push to the registry
   
 ```
