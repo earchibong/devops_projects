@@ -487,7 +487,7 @@ sudo chown jenkins:jenkins .aws
 <br>
   
 - give docker permissions: `sudo chmod 666 /var/run/docker.sock`
-- log in from the command line: `aws ecr get-login-password --region <aws region> | docker login --username AWS --password-stdin <aws ecr repository url>
+- log in from the command line: `aws ecr get-login-password --region <aws region> | docker login --username AWS --password-stdin <aws ecr repository url>`
   
 <br>
 
