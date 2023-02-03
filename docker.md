@@ -532,19 +532,8 @@ Fill out the following fields for the pipeline, leaving everything else as defau
 
 <br>
   
-
-  - Give Jenkins permission on `.aws configuration file`: Move the `.aws folder` to `/var/lib/jenkins directory` and run the following command:`$ sudo chown jenkins:jenkins .aws`
-
-```
-  
-cd /var/lib/jenkins
-sudo chown jenkins:jenkins .aws
-  
-```
-  
-<br>
-  
-- give docker permissions: `sudo chmod 666 /var/run/docker.sock`
+ 
+- on terminal, give docker permissions: `sudo chmod 666 /var/run/docker.sock`
 - log in from the command line: `aws ecr get-login-password --region <aws region> | docker login --username AWS --password-stdin <aws ecr repository url>`
   
 <br>
@@ -677,6 +666,10 @@ pipeline {
   
 ```
   
+<br>
+  
+- push changes to github repository
+- Create a multibranch pipeline job and linking it to the `php-todo` repository
 
 
 - Write a `Jenkinsfile` that will simulate a Docker Build and a Docker Push to the registry
