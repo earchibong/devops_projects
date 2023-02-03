@@ -266,7 +266,7 @@ flags in the command:
 
 - Download `php-todo` repository: `git clone https://github.com/earchibong/php-todo.git`
 
-### Part One:
+## Part One:
   
 **Write a `Dockerfile` for the TODO app**
 
@@ -397,7 +397,7 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-### Part 2 : Pushing The Docker Image To Docker Registry
+## Part 2 : Pushing The Docker Image To Docker Registry
 
 - Create an account in <a href="https://hub.docker.com/">Docker Hub</a>
 - Create a new Docker Hub repository
@@ -430,9 +430,18 @@ docker push <repository>:<tagname>
 
 <br>
   
-### Part Three: Running Docker Build And Docker Push on Jenkins
+## Part Three: Running Docker Build And Docker Push on Jenkins
 
+### Amazon Web Services setup
+  
+- Get an access key: To create an access key, go to `Amazon Console`, then `IAM`, then `Users`, [your user], `Security credentials`, and `Create Access Key`.
+
+Your browser will download a file containing the `Access Key ID` and the `Secret Access Key`. These values will be used in Jenkins to authenticate to Amazon.
+  
 - Create a private repository in `AWS Elastic Container Registry`
+You need to set up an image repository for each image that you publish. Give the repository the same name you want the image to have.
+
+You will see your repository under `Amazon ECR`, then `Repositories`. Make a note of the zone it's in, in the `URI field`.
   
 <br>
 
@@ -443,8 +452,11 @@ docker push <repository>:<tagname>
 <img width="1195" alt="ecr_1b" src="https://user-images.githubusercontent.com/92983658/216297879-b84f377e-b53f-49c2-a7d7-a0c2a99f5299.png">
 
 <br>
+
+### Jenkins Setup
   
-**set up a jenkins server** 
+#### set up a jenkins server
+  
 - launch EC2 instance, ensure `port 8080` is enabled and install Jenkins server. (learn how to do that <a href="https://github.com/earchibong/devops_training/blob/main/CI.md>here</a>)
 
 <br>
