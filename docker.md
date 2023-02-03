@@ -457,7 +457,7 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
   
 #### set up a jenkins server
   
-- launch EC2 instance, ensure `port 8080` is enabled and install Jenkins server. (learn how to do that <a href="https://github.com/earchibong/devops_training/blob/main/CI.md>here</a>)
+- launch EC2 instance, ensure `port 8080` is enabled and install Jenkins server. (learn how to do that <a href="https://github.com/earchibong/devops_training/blob/main/CI.md">here</a>)
 
 <br>
   
@@ -473,9 +473,7 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 
 <br>
   
-
-**configure Jenkins**
-- install docker plugins to run docker jobs: `docker`, `docker commons` and `docker pipelines`
+- install docker plugins to run docker jobs: `CloudBees AWS credentials`, `Amazon ECR` and `Docker pipeline`
 
 <br>
   
@@ -487,7 +485,55 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 
 <br>
   
-- Give Jenkins permission on `.aws configuration file`: Move the `.aws folder` to `/var/lib/jenkins directory` and run the following command:`$ sudo chown jenkins:jenkins .aws`
+- Add credentials in Jenkins: In Jenkins instance, go to `Manage Jenkins`, then `Manage Credentials`, then `Jenkins Store`, then `Global Credentials` (unrestricted), and finally `Add Credentials`.
+  
+Fill in the following fields, leaving everything else as default:
+
+- `Kind` - AWS credentials
+- `ID` - aws-credentials, for example
+- `Access Key ID` - Access Key ID from earlier
+- `Secret Access Key` - Secret Access Key from earlier
+
+Click OK to save.
+
+<br>
+  
+<img width="1183" alt="credentials" src="https://user-images.githubusercontent.com/92983658/216551232-0135ac04-4684-436c-9937-2a3fb913c4c3.png">
+
+<br>
+  
+- Configure Jenkins Pipeline: Go to the `Jenkins Dashboard`, then `New Item`.
+  Give your pipeline a name and select the Pipeline item, then OK.
+
+Fill out the following fields for the pipeline, leaving everything else as default:
+
+- `GitHub hook trigger for GITScm polling` : check the box
+- `Definition` : pipeline script from SCM
+- `SCM`: Git
+- `Repository URL`: the URL of your forked repo and the jenkins-ecr branch
+- `Credentials`:  zone of the repository
+- `Branch Specifier` : */develop
+
+  Click SAVE.
+ 
+<br>
+  
+<img width="1191" alt="pipeline" src="https://user-images.githubusercontent.com/92983658/216552253-893e8b77-cf71-43cb-985e-1999a422cac2.png">
+
+<br>
+
+### Github Setup
+
+- Set up a webhook so that Jenkins knows when the repository is updated: go to `Settings`, then `Webhooks`.
+
+<br>
+  
+<img width="1188" alt="webhook" src="https://user-images.githubusercontent.com/92983658/216560870-95c21c6a-4c45-4370-893f-b48b3df4e1a0.png">
+
+<br>
+  
+
+  - Give Jenkins permission on `.aws configuration file`: Move the `.aws folder` to `/var/lib/jenkins directory` and run the following command:`$ sudo chown jenkins:jenkins .aws`
 
 ```
   
