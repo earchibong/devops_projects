@@ -511,9 +511,57 @@ Click OK to save.
  
 <br>
   
-<img width="1191" alt="pipeline" src="https://user-images.githubusercontent.com/92983658/216552253-893e8b77-cf71-43cb-985e-1999a422cac2.png">
+![image](https://user-images.githubusercontent.com/92983658/216757815-a3accef7-5fa6-4f73-b229-02f100c20c7f.png)
+ 
+<br>
+  
+![image](https://user-images.githubusercontent.com/92983658/216757858-0ba1f380-48ee-4c5d-8b67-bfb54d2fd4a6.png)
+
+<br>
+  
+![image](https://user-images.githubusercontent.com/92983658/216757869-3a03debc-4cf7-40e9-927b-4bf24290269e.png)
+
+<br>
+  
+<img width="1197" alt="jenkins_php" src="https://user-images.githubusercontent.com/92983658/216758011-18195806-9da9-4506-8e4d-35b4cdfaece2.png">
+
+<br>
+  
+- Configure Jenkins pipeline: Enter the name of the job and select the type of job you wish to run on Jenkins. We select the `Pipeline` option since we wish to create a Jenkins pipeline to execute a series of steps.
   
 <br>
+  
+<img width="1191" alt="pipelie_1a" src="https://user-images.githubusercontent.com/92983658/216758456-b43d57e1-90f0-49ac-9c52-0fae2a5a65f7.png">
+
+<br>
+  
+- There are multiple options as triggers for Jenkins, however, we use the `Polling` method and set a schedule as `* * * * * ` which will poll the SCM repository every minute.
+  
+<br>
+  
+<img width="1191" alt="pipeline_1b" src="https://user-images.githubusercontent.com/92983658/216758553-968812e1-9468-4aed-98e2-10485b880735.png">
+
+<br>
+  
+- in the `Pipeline` section, select the `Pipeline script from SCM` option, select `SCM`, and insert the URL of the SCM repository.
+  
+You can add credentials for authentication however, credentials are not required for repositories with public access.
+
+<br>
+  
+<img width="1195" alt="pipeline_1c" src="https://user-images.githubusercontent.com/92983658/216758781-0fa546a3-0a3e-457c-81bb-ad1069221492.png">
+
+<br>
+  
+- select a specific branch that you wish to build by adding the branch name in the Branch to build section.: `*/develop` and `*/feature`
+  
+<br>
+  
+<img width="1194" alt="pipeline_1d" src="https://user-images.githubusercontent.com/92983658/216758850-535f2357-51ea-4d57-854e-b9721f010a94.png">
+
+<br>
+  
+
 
 ### Github Setup
 
@@ -535,7 +583,16 @@ Click OK to save.
 
 <br>
   
-- Create two branches in `php-todo` github repo - `develop` and `feature`: `git checkout -b develop` and `git checkout -b feature`
+- Create two branches in `php-todo` github repo - `develop` and `feature`:
+
+```
+  
+git checkout -b develop
+git checkout -b feature
+git push --set-upstream origin develop
+git push --set-upstream origin feature
+  
+```
   
 <br>
   
