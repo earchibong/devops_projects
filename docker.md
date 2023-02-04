@@ -473,7 +473,7 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 
 <br>
   
-- install docker plugins to run docker jobs: `CloudBees AWS credentials`, `Amazon ECR` and `Docker pipeline`
+- install docker plugins to build and push the Docker image to  Docker Hub` and `ECR  : `CloudBees Docker Build and Publish`, `Amazon ECR`, `Docker pipeline` and `blue ocean`
 
 <br>
   
@@ -502,24 +502,17 @@ Click OK to save.
 
 <br>
   
-- Configure Jenkins Pipeline: Go to the `Jenkins Dashboard`, then `New Item`.
-  Give your pipeline a name and select the Pipeline item, then OK.
+- Configure Jenkins Pipeline: Go to the `Jenkins Dashboard`, then `Blue Ocean`.
+  - select `github` to store code
+  - connect jenkins to github with an access token
+  - choose repository and create pipeline
+  - click admistration to exit blue ocean
 
-Fill out the following fields for the pipeline, leaving everything else as default:
-
-- `GitHub hook trigger for GITScm polling` : check the box
-- `Definition` : pipeline script from SCM
-- `SCM`: Git
-- `Repository URL`: the URL of your forked repo and the jenkins-ecr branch
-- `Credentials`:  zone of the repository
-- `Branch Specifier` : */develop
-
-  Click SAVE.
  
 <br>
   
 <img width="1191" alt="pipeline" src="https://user-images.githubusercontent.com/92983658/216552253-893e8b77-cf71-43cb-985e-1999a422cac2.png">
-
+  
 <br>
 
 ### Github Setup
