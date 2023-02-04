@@ -527,7 +527,9 @@ Click OK to save.
 
 <br>
   
-- Configure Jenkins pipeline: Enter the name of the job and select the type of job you wish to run on Jenkins. We select the `Pipeline` option since we wish to create a Jenkins pipeline to execute a series of steps.
+- Configure Jenkins pipeline: Go to the `Jenkins Dashboard` and `create new job`
+  - Enter the name of the job and select the type of job you wish to run on Jenkins. 
+  - Select the `Pipeline` option since to create a Jenkins pipeline that executes a series of steps.
   
 <br>
   
