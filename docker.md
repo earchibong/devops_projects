@@ -452,6 +452,20 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 <img width="1195" alt="ecr_1b" src="https://user-images.githubusercontent.com/92983658/216297879-b84f377e-b53f-49c2-a7d7-a0c2a99f5299.png">
 
 <br>
+  
+- Create an IAM role with `AmazonEC2ContainerRegistryFullAccess` policy and attach it with `ec2 instance`
+  
+<br>
+  
+<img width="1190" alt="iam_1a" src="https://user-images.githubusercontent.com/92983658/216974469-6d093897-322d-440b-94ba-638867367c37.png">
+
+<br>
+  
+<img width="1194" alt="iam_1b" src="https://user-images.githubusercontent.com/92983658/216974503-13a8cfc6-39d7-478f-b03a-35fd030fbcb8.png">
+
+<br>
+  
+  
 
 ### Jenkins Setup
   
@@ -562,17 +576,11 @@ You can add credentials for authentication however, credentials are not required
 <img width="1195" alt="pipeline_1d" src="https://user-images.githubusercontent.com/92983658/216960819-c1f6f0a9-e5d0-4087-b005-ebaafe24668c.png">
   
 <br>
-  
- 
-- on terminal, give docker permissions: `sudo chmod 666 /var/run/docker.sock`
-- log in from the command line: `aws ecr get-login-password --region <aws region> | docker login --username AWS --password-stdin <aws ecr repository url>`
-  
-<br>
 
 <img width="1224" alt="login" src="https://user-images.githubusercontent.com/92983658/216358735-43c5ecc9-b644-42af-9ec4-e935d6125355.png">
 
 <br>
-  
+
 - Create a branches in `php-todo` github repo - `jenkins-ecr`:
 
 ```
@@ -588,7 +596,7 @@ git push --set-upstream origin jenkins-ecr
 
 <br>
   
-- Create a Jenkinsfile for the two branches which will run `docker build` and push the image to AWS ECR repository
+- Create a Jenkinsfile which will run `docker build` and push the image to AWS ECR repository
   
 ```
   
@@ -597,9 +605,11 @@ pipeline {
 
       environment 
     {
-        PROJECT     = 'php-todo'
-        ECRURL      = '350100602815.dkr.ecr.eu-west-2.amazonaws.com/php-todo'
-        DEPLOY_TO = 'develop'
+        AWS_ACCOUNT_ID = 'your IAM role account ID'
+        AWS_DEFAULT_REGION = 'your region for ECR container'
+        IMAGE_REPO_NAME = 'your ECR repo name'
+        IMAGE_TAG = 'latest'
+        REPOSITORY_URI = '${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}'
     }
 
   stages {
@@ -612,105 +622,64 @@ pipeline {
         }
     }
 
-    stage('Checkout')
-    {
+    stage('Logging into AWS ECR'){
       steps {
-      checkout([
+        script {
+            sh "aws ecr get-login-password — region ${AWS_DEFAULT_REGION} | docker login — username AWS — password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        }
+      }
+    }
+    
+    stage('Checkout SCM'){
+      steps {
+        checkout([
         $class: 'GitSCM', 
         doGenerateSubmoduleConfigurations: false, 
         extensions: [],
         submoduleCfg: [], 
-        branches: [[name: 'develop']],
-        userRemoteConfigs: [[url: "https://github.com/earchibong/php-todo.git ",credentialsId:'410c5088-f780-4c70-a3e2-4f17174af72e']] 	
-        ])
-        
+        branches: [[name: 'jenkins-ecr']],
+        userRemoteConfigs: [[url: "https://github.com/earchibong/php-todo.git ",credentialsId:'']] 	
+        ])  
       }
-        }
+    }
 
-    stage('Build preparations')
-      {
-        steps
-          {
-              script 
-                {
-                    // calculate GIT lastest commit short-hash
-                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    shortCommitHash = gitCommitHash.take(7)
-                    // calculate a sample version tag
-                    VERSION = shortCommitHash
-                    // set the build display name
-                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
-                    IMAGE = "$PROJECT:$VERSION"
-                }
-            }
-      }   
-
-    stage('Build For Dev Environment') {
-               when { branch pattern: "^feature.*|^bug.*|^dev", comparator: "REGEXP"}
-            
+    stage('Build Image') {
         steps {
-            echo 'Build Dockerfile....'
             script {
-                sh("eval \$(aws ecr get-login --no-include-email --region eu-west-2 | sed 's|https://||')") 
-                sh "docker build --network=host -t $IMAGE ."
-                docker.withRegistry("https://$ECRURL"){
-                docker.image("$IMAGE").push("dev-$BUILD_NUMBER")
-            }
-            }
-        }
-      }
-
-    stage('Build For Staging Environment') {
-            when {
-                expression { BRANCH_NAME ==~ /(staging|develop)/ }
-            }
-        steps {
-            echo 'Build Dockerfile....'
-            script {
-                sh("eval \$(aws ecr get-login --no-include-email --region eu-west-2 | sed 's|https://||')") 
-                sh "docker build --network=host -t $IMAGE ."
-                docker.withRegistry("https://$ECRURL"){
-                docker.image("$IMAGE").push("dev-staging-$BUILD_NUMBER")
-                }
+                dockerImage = docker.build '${IMAGE_REPO_NAME}:${IMAGE_TAG}'
             }
         }
     }
 
-
-    stage('Build For Production Environment') {
-        when { tag "release-*" }
+    stage('Deploy Image') {
         steps {
-            echo 'Build Dockerfile....'
             script {
-                sh("eval \$(aws ecr get-login --no-include-email --region eu-west-2 | sed 's|https://||')") 
-                // sh "docker build --network=host -t $IMAGE -f deploy/docker/Dockerfile ."
-                sh "docker build --network=host -t $IMAGE ."
-                docker.withRegistry("https://$ECRURL"){
-                docker.image("$IMAGE").push("prod-$BUILD_NUMBER")
-                }
+                sh 'docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG'
+                sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}'
             }
         }
     }
-  }
 
-        post
-    {
-        always
-        {
-            sh "docker rmi -f $IMAGE "
+    stage('Remove Unused Image') {
+        steps {
+            sh 'docker rmi ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}'
         }
     }
-} 
+
+   }
+}
+
   
 ```
   
 <br>
+
+<img width="855" alt="jenkinsfile_1a" src="https://user-images.githubusercontent.com/92983658/216982580-e0301721-545e-41b6-99c6-5b51d1956366.png">
+<img width="855" alt="jenkinsfile_1b" src="https://user-images.githubusercontent.com/92983658/216982603-4b762339-f2b4-4ec5-8062-44454ea8505b.png">
+
+<br>
   
+
 - push changes to github repository
-- Create a multibranch pipeline job and linking it to the `php-todo` repository
 
-
-- Write a `Jenkinsfile` that will simulate a Docker Build and a Docker Push to the registry
-  
-```
   
