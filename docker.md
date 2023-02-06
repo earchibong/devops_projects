@@ -537,11 +537,11 @@ Click OK to save.
 
 <br>
   
-- There are multiple options as triggers for Jenkins, however, we use the `Polling` method and set a schedule as `* * * * * ` which will poll the SCM repository every minute.
+- There are multiple options as triggers for Jenkins, however, we use the `Polling` method and set a schedule as `H/5 * * * * ` which will poll the SCM repository every 5 minutes.
   
-<br>
-  
-<img width="1191" alt="pipeline_1b" src="https://user-images.githubusercontent.com/92983658/216758553-968812e1-9468-4aed-98e2-10485b880735.png">
+<br>  
+
+<img width="1195" alt="pipieline_1b" src="https://user-images.githubusercontent.com/92983658/216958794-5e4c160a-b2b3-4324-8f52-8ca7ad09371d.png"
 
 <br>
   
@@ -555,24 +555,12 @@ You can add credentials for authentication however, credentials are not required
 
 <br>
   
-- select a specific branch that you wish to build by adding the branch name in the Branch to build section.: `*/develop` and `*/feature`
-  
-<br>
-  
-<img width="1194" alt="pipeline_1d" src="https://user-images.githubusercontent.com/92983658/216758850-535f2357-51ea-4d57-854e-b9721f010a94.png">
+- select a specific branch that you wish to build by adding the branch name in the Branch to build section.: `*/jenkins-ecr` 
 
 <br>
   
-
-
-### Github Setup
-
-- Set up a webhook so that Jenkins knows when the repository is updated: go to `Settings`, then `Webhooks`.
-
-<br>
+<img width="1195" alt="pipeline_1d" src="https://user-images.githubusercontent.com/92983658/216960819-c1f6f0a9-e5d0-4087-b005-ebaafe24668c.png">
   
-<img width="1188" alt="webhook" src="https://user-images.githubusercontent.com/92983658/216560870-95c21c6a-4c45-4370-893f-b48b3df4e1a0.png">
-
 <br>
   
  
@@ -585,20 +573,18 @@ You can add credentials for authentication however, credentials are not required
 
 <br>
   
-- Create two branches in `php-todo` github repo - `develop` and `feature`:
+- Create a branches in `php-todo` github repo - `jenkins-ecr`:
 
 ```
   
-git checkout -b develop
-git checkout -b feature
-git push --set-upstream origin develop
-git push --set-upstream origin feature
+git checkout -b jenkins-ecr
+git push --set-upstream origin jenkins-ecr
   
 ```
   
 <br>
   
-<img width="937" alt="branches" src="https://user-images.githubusercontent.com/92983658/216359764-df62212a-796a-455e-bb02-b218ec33582e.png">
+<img width="980" alt="jenkins-ecr" src="https://user-images.githubusercontent.com/92983658/216961987-8bf7d9c0-8ce2-4350-8075-8f109a015750.png">
 
 <br>
   
