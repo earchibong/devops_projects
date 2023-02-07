@@ -465,7 +465,19 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 
 <br>
   
+- go back to the Jenkins instance created earlier and modify the IAM role for the instance: select `Actions > Security > Modify IAM Role` 
   
+<br>
+  
+<img width="1195" alt="iam_1d" src="https://user-images.githubusercontent.com/92983658/217239247-9182aa4b-0f6e-4d9a-a46c-c3331c4af7c9.png">
+
+<br>
+  
+<img width="1198" alt="iam_1e" src="https://user-images.githubusercontent.com/92983658/217239384-70c54070-95ac-4020-a2f4-64d5c2b09a32.png">
+
+<br>
+  
+ 
 
 ### Jenkins Setup
   
