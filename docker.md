@@ -593,12 +593,14 @@ You can add credentials for authentication however, credentials are not required
 
 <br>
 
-- Create a branches in `php-todo` github repo - `jenkins-ecr`:
+- Create a branches in `php-todo` github repo - `develop` and `feature`:
 
 ```
   
-git checkout -b jenkins-ecr
-git push --set-upstream origin jenkins-ecr
+git checkout -b develop
+git push --set-upstream origin develop
+git checkout -b feature
+git push --set-upstream origin feature
   
 ```
   
@@ -608,7 +610,8 @@ git push --set-upstream origin jenkins-ecr
 
 <br>
   
-- Create a Jenkinsfile which will run `docker build` and push the image to AWS ECR repository
+- Creating the Jenkinsfile for the two branches which will run docker build and push the image to AWS ECR repository
+
   
 ```
   
