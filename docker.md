@@ -434,10 +434,6 @@ docker push <repository>:<tagname>
 
 ### Amazon Web Services setup
   
-- Get an access key: To create an access key, go to `Amazon Console`, then `IAM`, then `Users`, [your user], `Security credentials`, and `Create Access Key`.
-
-Your browser will download a file containing the `Access Key ID` and the `Secret Access Key`. These values will be used in Jenkins to authenticate to Amazon.
-  
 - Create a private repository in `AWS Elastic Container Registry`
 You need to set up an image repository for each image that you publish. Give the repository the same name you want the image to have.
 
@@ -465,18 +461,6 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 
 <br>
   
-- go back to the Jenkins instance created earlier and modify the IAM role for the instance: select `Actions > Security > Modify IAM Role` 
-  
-<br>
-  
-<img width="1195" alt="iam_1d" src="https://user-images.githubusercontent.com/92983658/217239247-9182aa4b-0f6e-4d9a-a46c-c3331c4af7c9.png">
-
-<br>
-  
-<img width="1198" alt="iam_1e" src="https://user-images.githubusercontent.com/92983658/217239384-70c54070-95ac-4020-a2f4-64d5c2b09a32.png">
-
-<br>
-  
  
 
 ### Jenkins Setup
@@ -488,6 +472,18 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 <br>
   
 <img width="1223" alt="jenkins" src="https://user-images.githubusercontent.com/92983658/216305857-c7eef134-57aa-4772-899c-3d5ea6ac8654.png">
+
+<br>
+  
+- in the Jenkins instance, modify the IAM role for the instance: select `Actions > Security > Modify IAM Role` 
+  
+<br>
+  
+<img width="1195" alt="iam_1d" src="https://user-images.githubusercontent.com/92983658/217239247-9182aa4b-0f6e-4d9a-a46c-c3331c4af7c9.png">
+
+<br>
+  
+<img width="1198" alt="iam_1e" src="https://user-images.githubusercontent.com/92983658/217239384-70c54070-95ac-4020-a2f4-64d5c2b09a32.png">
 
 <br>
 
@@ -508,48 +504,6 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 <br>
   
 <img width="1225" alt="docker_ubuntu_1b" src="https://user-images.githubusercontent.com/92983658/216353385-64364980-7c3f-428b-a51f-1f27c420f2e6.png">
-
-<br>
-  
-- Add credentials in Jenkins: In Jenkins instance, go to `Manage Jenkins`, then `Manage Credentials`, then `Jenkins Store`, then `Global Credentials` (unrestricted), and finally `Add Credentials`.
-  
-Fill in the following fields, leaving everything else as default:
-
-- `Kind` - AWS credentials
-- `ID` - aws-credentials, for example
-- `Access Key ID` - Access Key ID from earlier
-- `Secret Access Key` - Secret Access Key from earlier
-
-Click OK to save.
-
-<br>
-  
-<img width="1183" alt="credentials" src="https://user-images.githubusercontent.com/92983658/216551232-0135ac04-4684-436c-9937-2a3fb913c4c3.png">
-
-<br>
-  
-- Configure Jenkins Pipeline: Go to the `Jenkins Dashboard`, then `Blue Ocean`.
-  - select `github` to store code
-  - connect jenkins to github with an access token
-  - choose repository and create pipeline
-  - click admistration to exit blue ocean
-
- 
-<br>
-  
-![image](https://user-images.githubusercontent.com/92983658/216757815-a3accef7-5fa6-4f73-b229-02f100c20c7f.png)
- 
-<br>
-  
-![image](https://user-images.githubusercontent.com/92983658/216757858-0ba1f380-48ee-4c5d-8b67-bfb54d2fd4a6.png)
-
-<br>
-  
-![image](https://user-images.githubusercontent.com/92983658/216757869-3a03debc-4cf7-40e9-927b-4bf24290269e.png)
-
-<br>
-  
-<img width="1197" alt="jenkins_php" src="https://user-images.githubusercontent.com/92983658/216758011-18195806-9da9-4506-8e4d-35b4cdfaece2.png">
 
 <br>
   
@@ -593,14 +547,12 @@ You can add credentials for authentication however, credentials are not required
 
 <br>
 
-- Create a branches in `php-todo` github repo - `develop` and `feature`:
+- Create a branches in `php-todo` github repo - `jenkins-ecr`:
 
 ```
   
-git checkout -b develop
-git push --set-upstream origin develop
-git checkout -b feature
-git push --set-upstream origin feature
+git checkout -b jenkins-ecr
+git push --set-upstream origin jenkins-ecr
   
 ```
   
@@ -610,7 +562,7 @@ git push --set-upstream origin feature
 
 <br>
   
-- Creating the Jenkinsfile for the two branches which will run docker build and push the image to AWS ECR repository
+- Creating the Jenkinsfile `jenkins-ecr` branch which will run docker build and push the image to AWS ECR repository
 
   
 ```
