@@ -543,10 +543,6 @@ You can add credentials for authentication however, credentials are not required
   
 <br>
 
-<img width="1224" alt="login" src="https://user-images.githubusercontent.com/92983658/216358735-43c5ecc9-b644-42af-9ec4-e935d6125355.png">
-
-<br>
-
 - Create a branches in `php-todo` github repo - `jenkins-ecr`:
 
 ```
@@ -645,8 +641,8 @@ pipeline {
 <img width="855" alt="jenkinsfile_1b" src="https://user-images.githubusercontent.com/92983658/216982603-4b762339-f2b4-4ec5-8062-44454ea8505b.png">
 
 <br>
-  
 
 - push changes to github repository
-
+- on terminal, log onto Jenkins instance and run the following `docker` permission: `sudo chmod 666 /var/run/docker.sock`
+- on Jenkins
   
