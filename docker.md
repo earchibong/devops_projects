@@ -521,7 +521,7 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
   
 <br>  
 
-<img width="1195" alt="pipieline_1b" src="https://user-images.githubusercontent.com/92983658/216958794-5e4c160a-b2b3-4324-8f52-8ca7ad09371d.png"
+<img width="1195" alt="pipieline_1b" src="https://user-images.githubusercontent.com/92983658/216958794-5e4c160a-b2b3-4324-8f52-8ca7ad09371d.png">
 
 <br>
   
