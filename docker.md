@@ -720,6 +720,7 @@ services:
 
   db:
     image: mysql:5.7
+    platform: linux/amd64 #(add this line if you have Apple Silicon M1 chip)
     restart: always
     environment:
       MYSQL_DATABASE: toolingdb
@@ -740,7 +741,8 @@ volumes:
   db:
   
 ```
-  
+
+** note: most of the Docker images are not compatible with the newest Apple Silicon M1 chip throwing no matching manifest for `linux/arm64/v8`
 <br>
   
 <img width="978" alt="tooling_yml" src="https://user-images.githubusercontent.com/92983658/217549660-c99e2cf5-e160-42ac-ac41-2ee85f687c3b.png">
