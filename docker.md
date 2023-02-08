@@ -430,8 +430,8 @@ docker push <repository>:<tagname>
 
 <br>
   
-## Part Three: Running Docker Build And Docker Push on Jenkins
-
+## Part Three: Build ANd Push Docker Image Using Jenkins
+  
 ### Amazon Web Services setup
   
 - Create a private repository in `AWS Elastic Container Registry`
@@ -698,6 +698,56 @@ pipeline {
 <img width="1196" alt="ecr_verify" src="https://user-images.githubusercontent.com/92983658/217542015-2b870221-3f2a-4564-b067-8895552e8c9a.png">
 
 <br>
+  
+## Part Four: Deploy With Docker Compose
+  
+- Install Docker Compose from <a href="https://docs.docker.com/compose/install/"><here</a>
+- Create a file, name it `tooling.yaml`
+- write the Docker Compose definitions with YAML syntax. The YAML file is used for defining services, networks, and volumes:
+```
+  
+version: "3"
+services:
+  tooling_frontend:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "5000:80"
+    volumes:
+      - tooling_frontend:/var/www/html
+    
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: toolingdb
+      MYSQL_USER: libby
+      MYSQL_PASSWORD: devopspbl
+      MYSQL_ROOT_PASSWORD: devopspbl   
+    volumes:
+      - db:/var/lib/mysql
+      - .datadump.sql/:/docker-entrypoint-initdb.d/datadump.sql
+
+networks:
+  default:
+    name: tooling_app_network
+    external: true
+  
+volumes:
+  tooling_frontend:
+  db:
+  
+```
+  
+<br>
+  
+<img width="978" alt="tooling_yml" src="https://user-images.githubusercontent.com/92983658/217549660-c99e2cf5-e160-42ac-ac41-2ee85f687c3b.png">
+
+<br>
+  
+- Run the command to start the containers: `docker-compose -f tooling.yaml  up -d`
   
   
   
