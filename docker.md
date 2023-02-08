@@ -585,14 +585,11 @@ pipeline {
     stage('Checkout')
     {
       steps {
-      checkout([
-        $class: 'GitSCM', 
-        doGenerateSubmoduleConfigurations: false, 
-        extensions: [],
-        submoduleCfg: [], 
-        branches: [[name: '*/main'], [name: '*/develop'], [name: '*/feature']]
-        userRemoteConfigs: [[url: "https://github.com/earchibong/php-todo.git ",credentialsId:'23ef1a81-ff88-4724-9462-8134b6d8ad86']] 	
-        ])
+      checkout scmGit(
+        branches: [[name: '*/develop'], [name: '*/feature']], 
+        extensions: [], 
+        userRemoteConfigs: [[credentialsId: '23ef1a81-ff88-4724-9462-8134b6d8ad86', url: 'https://github.com/earchibong/php-todo.git']]
+        )
         
       }
         }
@@ -615,11 +612,8 @@ pipeline {
             }
       }   
 
-    stage('Build For Dev Environment') {
-               when { 
-            //expression { BRANCH_NAME ==~ /develop\/[0-9]+\.[0-9]+\.[0-9]+/ }
-            expression { BRANCH_NAME ==~ /feature\/\d+\.\d+\.\d+/ }
-        }
+    stage('Build & Deploy For Dev Environment') {
+               when { branch pattern: "^feature.*|^bug.*|^dev", comparator: "REGEXP"}
             
         steps {
             echo 'Build Dockerfile....'
@@ -633,9 +627,9 @@ pipeline {
         }
       }
 
-    stage('Build For Staging Environment') {
-            when {
-                expression { BRANCH_NAME ==~ /feature\/[0-9]+\.[0-9]+\.[0-9]+/ }
+    stage('Build & Deploy For Feature Environment') {
+            when { 
+            expression { BRANCH_NAME ==~ /feature\/[0-9]+\.[0-9]+\.[0-9]+/ }
             }
         steps {
             echo 'Build Dockerfile....'
@@ -681,7 +675,7 @@ pipeline {
 
 <br>
 
-<img width="859" alt="jenkinsfile_1c" src="https://user-images.githubusercontent.com/92983658/217529633-cfec4754-c48b-4e75-9b44-ceb359cd3d02.png">
+<img width="857" alt="jenkinsfile" src="https://user-images.githubusercontent.com/92983658/217538770-a5d03f26-684f-46ed-8fe5-ba5732fdef78.png">
 
 <br>
 
