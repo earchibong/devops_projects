@@ -509,56 +509,55 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
   
 - Configure Jenkins pipeline: Go to the `Jenkins Dashboard` and `create new job`
   - Enter the name of the job and select the type of job you wish to run on Jenkins. 
-  - Select the `Pipeline` option since to create a Jenkins pipeline that executes a series of steps.
+  - Select the `Multi-branch Pipeline` option to create a Jenkins pipeline that executes a series of steps from multiple branches.
   
 <br>
   
-<img width="1191" alt="pipelie_1a" src="https://user-images.githubusercontent.com/92983658/216758456-b43d57e1-90f0-49ac-9c52-0fae2a5a65f7.png">
+<img width="1191" alt="multi-branch" src="https://user-images.githubusercontent.com/92983658/217520433-62202b94-93c5-4977-b65e-a5bc5f4d9704.png">
 
 <br>
   
-- There are multiple options as triggers for Jenkins, however, we use the `Polling` method and set a schedule as `H/5 * * * * ` which will poll the SCM repository every 5 minutes.
+- For branch sources, enter your `git credentials` (you can use username and password) and `git repository`...then validate
   
-<br>  
-
-<img width="1195" alt="pipieline_1b" src="https://user-images.githubusercontent.com/92983658/216958794-5e4c160a-b2b3-4324-8f52-8ca7ad09371d.png">
+<br>
+  
+<img width="1196" alt="multi-branch-sources" src="https://user-images.githubusercontent.com/92983658/217522087-49183420-1f8b-43f9-8afc-511254a8f1f0.png">
 
 <br>
   
-- in the `Pipeline` section, select the `Pipeline script from SCM` option, select `SCM`, and insert the URL of the SCM repository.
+- build configuration: `Jenkinsfile`
   
-You can add credentials for authentication however, credentials are not required for repositories with public access.
+<br>
+  
+- under properties, `Docker Registry URL` is: `< your AWS ECR URI >` then select yuotr `ECR region`
+  
+<br>
+  
+<img width="1190" alt="multi-properties" src="https://user-images.githubusercontent.com/92983658/217523311-dc920ed4-c835-411c-8706-39cd6ede7781.png">
 
 <br>
   
-<img width="1195" alt="pipeline_1c" src="https://user-images.githubusercontent.com/92983658/216758781-0fa546a3-0a3e-457c-81bb-ad1069221492.png">
 
-<br>
-  
-- select a specific branch that you wish to build by adding the branch name in the Branch to build section.: `*/jenkins-ecr` 
 
-<br>
-  
-<img width="1195" alt="pipeline_1d" src="https://user-images.githubusercontent.com/92983658/216960819-c1f6f0a9-e5d0-4087-b005-ebaafe24668c.png">
-  
-<br>
-
-- Create a branches in `php-todo` github repo - `jenkins-ecr`:
+- Create multiple branches  `php-todo` github repo - `develop` and `feature`:
 
 ```
   
-git checkout -b jenkins-ecr
-git push --set-upstream origin jenkins-ecr
+git checkout -b develop
+git push --set-upstream origin develop
+git checkout -b feature
+git push --set-upstream origin feature
+
   
 ```
   
 <br>
   
-<img width="980" alt="jenkins-ecr" src="https://user-images.githubusercontent.com/92983658/216961987-8bf7d9c0-8ce2-4350-8075-8f109a015750.png">
+<img width="983" alt="feature" src="https://user-images.githubusercontent.com/92983658/217525686-1ce4571a-b2c0-4614-aea6-58de9d40d132.png">
 
 <br>
   
-- Creating the Jenkinsfile `jenkins-ecr` branch which will run docker build and push the image to AWS ECR repository
+- Creating the Jenkinsfile for the two branches which will run docker build and push the image to AWS ECR repository
 
   
 ```
@@ -568,11 +567,9 @@ pipeline {
 
       environment 
     {
-        AWS_ACCOUNT_ID = 'your IAM role account ID'
-        AWS_DEFAULT_REGION = 'your region for ECR container'
-        IMAGE_REPO_NAME = 'your ECR repo name'
-        IMAGE_TAG = 'latest'
-        REPOSITORY_URI = '${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}'
+        PROJECT     = 'php-todo'
+        ECRURL      = '350100602815.dkr.ecr.eu-west-2.amazonaws.com/php-todo'
+        DEPLOY_TO = 'develop'
     }
 
   stages {
@@ -585,60 +582,106 @@ pipeline {
         }
     }
 
-    stage('Logging into AWS ECR'){
+    stage('Checkout')
+    {
       steps {
-        script {
-            sh "aws ecr get-login-password — region ${AWS_DEFAULT_REGION} | docker login — username AWS — password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-        }
-      }
-    }
-    
-    stage('Checkout SCM'){
-      steps {
-        checkout([
+      checkout([
         $class: 'GitSCM', 
         doGenerateSubmoduleConfigurations: false, 
         extensions: [],
         submoduleCfg: [], 
-        branches: [[name: 'jenkins-ecr']],
-        userRemoteConfigs: [[url: "https://github.com/earchibong/php-todo.git ",credentialsId:'']] 	
-        ])  
+        branches: [[name: '*/main'], [name: '*/develop'], [name: '*/feature']]
+        userRemoteConfigs: [[url: "https://github.com/earchibong/php-todo.git ",credentialsId:'23ef1a81-ff88-4724-9462-8134b6d8ad86']] 	
+        ])
+        
       }
-    }
+        }
 
-    stage('Build Image') {
+    stage('Build preparations')
+      {
+        steps
+          {
+              script 
+                {
+                    // calculate GIT lastest commit short-hash
+                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                    shortCommitHash = gitCommitHash.take(7)
+                    // calculate a sample version tag
+                    VERSION = shortCommitHash
+                    // set the build display name
+                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
+                    IMAGE = "$PROJECT:$VERSION"
+                }
+            }
+      }   
+
+    stage('Build For Dev Environment') {
+               when { 
+            //expression { BRANCH_NAME ==~ /develop\/[0-9]+\.[0-9]+\.[0-9]+/ }
+            expression { BRANCH_NAME ==~ /feature\/\d+\.\d+\.\d+/ }
+        }
+            
         steps {
+            echo 'Build Dockerfile....'
             script {
-                dockerImage = docker.build '${IMAGE_REPO_NAME}:${IMAGE_TAG}'
+                sh("eval \$(aws ecr get-login --no-include-email --region eu-west-2 | sed 's|https://||')") 
+                sh "docker build --network=host -t $IMAGE ."
+                docker.withRegistry("https://$ECRURL"){
+                docker.image("$IMAGE").push("dev-$BUILD_NUMBER")
+            }
+            }
+        }
+      }
+
+    stage('Build For Staging Environment') {
+            when {
+                expression { BRANCH_NAME ==~ /feature\/[0-9]+\.[0-9]+\.[0-9]+/ }
+            }
+        steps {
+            echo 'Build Dockerfile....'
+            script {
+                sh("eval \$(aws ecr get-login --no-include-email --region eu-west-2 | sed 's|https://||')") 
+                sh "docker build --network=host -t $IMAGE ."
+                docker.withRegistry("https://$ECRURL"){
+                docker.image("$IMAGE").push("dev-staging-$BUILD_NUMBER")
+                }
             }
         }
     }
 
-    stage('Deploy Image') {
+
+    stage('Build For Production Environment') {
+        when { tag "release-*" }
         steps {
+            echo 'Build Dockerfile....'
             script {
-                sh 'docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG'
-                sh 'docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}'
+                sh("eval \$(aws ecr get-login --no-include-email --region eu-west-2 | sed 's|https://||')") 
+                // sh "docker build --network=host -t $IMAGE -f deploy/docker/Dockerfile ."
+                sh "docker build --network=host -t $IMAGE ."
+                docker.withRegistry("https://$ECRURL"){
+                docker.image("$IMAGE").push("prod-$BUILD_NUMBER")
+                }
             }
         }
     }
+  }
 
-    stage('Remove Unused Image') {
-        steps {
-            sh 'docker rmi ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}'
+        post
+    {
+        always
+        {
+            sh "docker rmi -f $IMAGE "
         }
     }
-
-   }
-}
-
+} 
   
 ```
-  
+
+*note: for `checkout stage` information...head to Jenkins, and select `pipeline syntax`: **sample step** - `checkout from version control`, **SCM** - `git`, **enter repository and git credentials**, **enter branches to build** - `develop, main and feature`...then generate the pipeline script*
+
 <br>
 
-<img width="855" alt="jenkinsfile_1a" src="https://user-images.githubusercontent.com/92983658/216982580-e0301721-545e-41b6-99c6-5b51d1956366.png">
-<img width="855" alt="jenkinsfile_1b" src="https://user-images.githubusercontent.com/92983658/216982603-4b762339-f2b4-4ec5-8062-44454ea8505b.png">
+<img width="859" alt="jenkinsfile_1c" src="https://user-images.githubusercontent.com/92983658/217529633-cfec4754-c48b-4e75-9b44-ceb359cd3d02.png">
 
 <br>
 
