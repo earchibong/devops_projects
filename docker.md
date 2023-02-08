@@ -525,11 +525,9 @@ You will see your repository under `Amazon ECR`, then `Repositories`. Make a not
 
 <br>
   
-- build configuration: `Jenkinsfile`
-  
-<br>
-  
-- under properties, `Docker Registry URL` is: `< your AWS ECR URI >` then select yuotr `ECR region`
+- **build configuration**: `Jenkinsfile`  
+- **properties**: `Docker Registry URL` is `< your AWS ECR URI >` 
+- then select your `ECR region`
   
 <br>
   
@@ -681,5 +679,25 @@ pipeline {
 
 - push changes to github repository
 - on terminal, log onto Jenkins instance and run the following `docker` permission: `sudo chmod 666 /var/run/docker.sock`
-- on Jenkins
+- on Jenkins, select your branch and build
+  
+<br>
+  
+<img width="1194" alt="feature_blue_develop" src="https://user-images.githubusercontent.com/92983658/217541124-292156c5-a6d7-4e88-b073-a9d498471d8e.png">
+
+<br>
+  
+<img width="1192" alt="ocean_blue_develop" src="https://user-images.githubusercontent.com/92983658/217541202-ba1b25c7-0977-4860-b1d4-9d2a28f8bc27.png">
+
+<br>
+  
+- Verify that the images pushed from the CI can be found at the registry.
+
+<br>
+  
+<img width="1196" alt="ecr_verify" src="https://user-images.githubusercontent.com/92983658/217542015-2b870221-3f2a-4564-b067-8895552e8c9a.png">
+
+<br>
+  
+  
   
