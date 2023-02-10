@@ -748,8 +748,17 @@ volumes:
 <img width="978" alt="tooling_yml" src="https://user-images.githubusercontent.com/92983658/217549660-c99e2cf5-e160-42ac-ac41-2ee85f687c3b.png">
 
 <br>
-  
+
 - Run the command to start the containers: `docker-compose -f tooling.yaml  up -d`
+- Verify that the compose is in the running status: `docker compose ls`
+  
+<br>
+  
+<img width="1443" alt="docker_compose_2" src="https://user-images.githubusercontent.com/92983658/218091091-3c107953-359c-49e5-aa91-ca5e19df2bef.png">
+  
+<br>
+  
+
   
   
   
