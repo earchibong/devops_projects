@@ -758,7 +758,77 @@ volumes:
   
 <br>
   
+- connect to Mysql server from MYsql client utility: `docker run --network tooling_app_network --name mysql-client -it --rm mysql mysql -h <mysql server> -u <username in tooling.yaml> -p`
+  
+<br>
+  
+<img width="1397" alt="server-client" src="https://user-images.githubusercontent.com/92983658/218097967-561256cf-d803-432b-a3da-c9fe42121c12.png">
 
+<br>
+  
+## Practice Task No 2: Complete Continous Integration With A Test Stage
+  
+### Docker Compose Yaml File Structure
+
+Docker Compose files work by applying multiple commands that are declared within a single `tooling.yml` configuration file.
+  
+```
+  
+version: "3"
+  
+services:
+   tooling_frontend:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "5000:80"  
+    volumes:
+      - tooling_frontend:/var/www/html
+    
+
+  db:
+    image: mysql:5.7
+    platform: linux/amd64
+    restart: always
+    environment:
+      MYSQL_DATABASE: toolingdb
+      MYSQL_USER: libby
+      MYSQL_PASSWORD: devopspbl
+      MYSQL_ROOT_PASSWORD: devopspbl   
+    volumes:
+      - db:/var/lib/mysql
+      - .datadump.sql/:/docker-entrypoint-initdb.d/datadump.sql
+
+networks:
+  default:
+    name: tooling_app_network
+    external: true
+  
+volumes:
+  tooling_frontend:
+  db:
+
+```
+  
+<br>
+  
+- `version 3`: This denotes that we are using version 3 of Docker Compose, and Docker will provide the appropriate features.
+- `services:` This section defines all the different containers we will create. In our example, we have two services, web and database.
+- `tooling_frontend`: This is the name of our app service. Docker Compose will create containers with the name we provide.
+- `build`: This specifies the location of our Dockerfile, and `.` represents the directory where the `tooling.yml` file is located.
+- `depends_on`: specifies the services related to the app we're building. Docker compose will start the related services first before building the app
+- `ports:` This is used to map the container’s ports to the host machine. In this case, container post `5000` is mapped to host post `80`
+- `volumes:` This is just like the `-v` option for mounting disks in Docker. In this example, we attach our `var/www/html` directory to the containers. This way, we won’t have to rebuild the images if changes are made.
+- `image:` If we don’t have a Dockerfile and want to run a service using a pre-built image, we specify the image location using the image clause. Compose will fork a container from that image.
+- `platform`: specifies the platform on which the image will be built
+- `restart`: restarts all stopped services. In this case will always restart the database service
+- `environment:` The clause allows us to set up an environment variable in the container. This is the same as the -e argument in Docker when running a container.
+- `networks`: allows us to specify custom networks instead of just using the default netowrk. It also connects services to externally-created networks which aren’t managed by Compose... such as this instance with the `tooling_app_network`
+  
+### Updating Jenkinsfile With Test Stage
+  
+- update the jenkinsfile above with the following
   
   
   
