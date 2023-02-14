@@ -301,13 +301,6 @@ DB_PORT=3306
 FROM php:7-apache
 LABEL MAINTAINER Libby
 
-ENV DB_HOST=mysqlserverhost
-ENV DB_DATABASE=toolingdb
-ENV DB_USERNAME=<username used to create mysql database>
-ENV ENV DB_PASSWORD=<your password used to create the mysql server>
-ENV DB_CONNECTION=mysql
-ENV DB_PORT=3306
-
 #install all the dependencies
 RUN apt update
 RUN apt install zip git nginx -y
@@ -370,12 +363,11 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-- Run the container: `docker run --network tooling_app_network -p 8085:80 -it php-todo:0.0.1 ` 
+- Run the container: `docker run --network tooling_app_network -p 8080:8080 -e"PORT=8085" -it php-todo:0.0.1 ` 
   *note: do not exit the terminal whilst the container is running*  
 
 <br>
   
-<img width="813" alt="php-run" src="https://user-images.githubusercontent.com/92983658/216047865-b951ae87-4d6f-4c5a-b3a8-c6b4d8d5a5e7.png">
 
 <br>
 
