@@ -828,7 +828,11 @@ volumes:
   
 ### Updating Jenkinsfile With Test Stage
   
-- update the jenkinsfile above with the following
+- update the `php-todo` jenkinsfile above with the following test stage:
+  
+```
+  
+
   
   
   
