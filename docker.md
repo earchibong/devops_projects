@@ -367,7 +367,8 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
   *note: do not exit the terminal whilst the container is running*  
 
 <br>
-  
+
+
 
 <br>
 
