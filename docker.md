@@ -664,7 +664,12 @@ pipeline {
   
 ```
 
-*note: for `checkout stage` information...head to Jenkins, and select `pipeline syntax`: **sample step** - `checkout from version control`, **SCM** - `git`, **enter repository and git credentials**, **enter branches to build** - `develop, main and feature`...then generate the pipeline script*
+*note: for `checkout stage` information...head to Jenkins, and select `pipeline syntax`: 
+  - **sample step** - `checkout from version control`, 
+  - **SCM** - `git`, 
+  - **enter repository and git credentials**, 
+  - **enter branches to build** - `develop, main and feature`
+  ...then generate the pipeline script*
 
 <br>
 
@@ -827,20 +832,12 @@ volumes:
   
 ```
  ...
-  stage('Test For Staging Environment') {
-        when {
-            expression { BRANCH_NAME ==~ /(staging|develop)/}
-        }
 
         steps {
             script{
 
-                code = sh(script:'curl https://localhost', returnStdout: true).trim()
+                code = sh(script:'curl --location --silent --output /dev/null --write-out "%{http_code}\n" http://localhost:8080', returnStdout: true).trim()
                 echo "HTTP response status code: $code"
-
-                        if (code == 200) {
-                            echo response
-                        }
             }           
         }
     }
@@ -851,7 +848,11 @@ volumes:
   
 <br>
   
-![stage_test_1b](https://user-images.githubusercontent.com/92983658/218748412-e590d7a2-ee6f-4f46-9952-40b415ac3a75.jpg)
+![test_1c](https://user-images.githubusercontent.com/92983658/218763884-8cf97b7e-a88d-4376-99e9-5bb6f68f7198.jpg)
+
+<br>
+  
+![jenkins_test](https://user-images.githubusercontent.com/92983658/218765699-eb74bbdc-3180-41de-b61a-3388fa1b57e1.jpg)
 
 <br>
   
