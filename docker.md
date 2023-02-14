@@ -334,8 +334,8 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
 
 <br>
   
-<img width="860" alt="docker_file_2a" src="https://user-images.githubusercontent.com/92983658/216055929-f4bb4dd5-27a9-476b-8365-650923e7922d.png">
-<img width="856" alt="docker_file_2b" src="https://user-images.githubusercontent.com/92983658/216055945-eb74fa65-4000-4f01-a1de-556c2704814f.png">
+![dockerfile_1s](https://user-images.githubusercontent.com/92983658/218745649-f443f4d6-b279-4433-93b3-ea970288063a.jpg)
+
 
 <br>
   
@@ -367,8 +367,8 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
   *note: do not exit the terminal whilst the container is running*  
 
 <br>
-
-
+  
+![php_2v](https://user-images.githubusercontent.com/92983658/218744783-7054bcee-16c0-4600-b204-2b44ede6cd44.jpg)
 
 <br>
 
@@ -382,11 +382,13 @@ ENTRYPOINT php artisan serve --host 0.0.0.0 --port 5001
   
 **Access the application from the browser**
 
-- `http://localhost:8085`
+- `http://localhost`
+*note: `.env` file states that app is accessed through `http://localhost` which is why no port was added at the end*
 
 <br>
 
-<img width="1057" alt="php_app" src="https://user-images.githubusercontent.com/92983658/216281444-0f6c1744-42c8-4560-99ed-c929bc97ff08.png">
+![itworks](https://user-images.githubusercontent.com/92983658/218744969-28710db8-0ffa-4bea-b9ea-96a04801dc89.jpg)
+
 
 <br>
   
