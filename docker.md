@@ -425,7 +425,7 @@ docker push <repository>:<tagname>
 
 <br>
   
-## Part Three: Build ANd Push Docker Image Using Jenkins
+## Part Three: Build And Push Docker Image Using Jenkins
   
 ### Amazon Web Services setup
   
@@ -696,7 +696,7 @@ pipeline {
   
 ## Part Four: Deploy With Docker Compose
   
-- Install Docker Compose from <a href="https://docs.docker.com/compose/install/"><here</a>
+- Install Docker Compose from <a href="https://docs.docker.com/compose/install/">here</a>
 - Create a file, name it `tooling.yaml`
 - write the Docker Compose definitions with YAML syntax. The YAML file is used for defining services, networks, and volumes:
 ```
@@ -823,10 +823,39 @@ volumes:
   
 ### Updating Jenkinsfile With Test Stage
   
-- update the `php-todo` jenkinsfile above with the following test stage:
+- update the `develop` branch in `php-todo` jenkinsfile with the following stage:
+  
+```
+ ...
+  stage('Test For Staging Environment') {
+        when {
+            expression { BRANCH_NAME ==~ /(staging|develop)/}
+        }
+
+        steps {
+            script{
+
+                code = sh(script:'curl https://localhost', returnStdout: true).trim()
+                echo "HTTP response status code: $code"
+
+                        if (code == 200) {
+                            echo response
+                        }
+            }           
+        }
+    }
+  
+  ...
   
 ```
   
+<br>
+  
+![stage_test_1b](https://user-images.githubusercontent.com/92983658/218748412-e590d7a2-ee6f-4f46-9952-40b415ac3a75.jpg)
+
+<br>
+  
+
 
   
   
