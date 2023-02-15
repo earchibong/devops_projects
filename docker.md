@@ -825,8 +825,10 @@ volumes:
 - `restart`: restarts all stopped services. In this case will always restart the database service
 - `environment:` The clause allows us to set up an environment variable in the container. This is the same as the -e argument in Docker when running a container.
 - `networks`: allows us to specify custom networks instead of just using the default netowrk. It also connects services to externally-created networks which aren’t managed by Compose... such as this instance with the `tooling_app_network`
-  
-### Updating Jenkinsfile With Test Stage
+
+<br>
+ 
+### Update PHP-todo Jenkinsfile With Test Stage
   
 - update the `develop` branch in `php-todo` jenkinsfile with the following stage:
   
@@ -856,6 +858,14 @@ volumes:
 
 <br>
   
+### Update Tooling Jenkinsfile With Test Stage
+  
+- create a new branch in tooling: `jenkins-ecr`
+- create jenkinsfile as follows to build, test and deploy docker image...:
+  
+```
+  
+ 
 
 
   
