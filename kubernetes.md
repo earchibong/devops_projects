@@ -137,10 +137,19 @@ VPC_ID=$(aws ec2 create-vpc \
 
 ```
 
+NAME=k8s-cluster-from-ground-up
+
+aws ec2 create-tags \
+  --resources ${VPC_ID} \
+  --tags Key=Name,Value=${NAME}
+  
+```
+
 <br>
 
 #### 2. Domain Name System – DNS
 - Enable DNS support for VPC:
+
 ```
 
 aws ec2 modify-vpc-attribute \
