@@ -427,3 +427,79 @@ LOAD_BALANCER_ARN=$(aws elbv2 create-load-balancer \
 
 <br>
 
+#### 3. Target Groups
+- Create a target group: (For now it will be unhealthy because there are no real targets yet.)
+```
+
+TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
+  --name ${NAME} \
+  --protocol TCP \
+  --port 6443 \
+  --vpc-id ${VPC_ID} \
+  --target-type ip \
+  --output text --query 'TargetGroups[].TargetGroupArn')
+  
+```
+
+<br>
+
+<img width="1194" alt="target_1a" src="https://user-images.githubusercontent.com/92983658/219384408-8d29e828-384a-486a-8b29-9edf5534cf72.png">
+
+<br>
+
+- Register targets: (Just like above, no real targets. You will just put the IP addresses so that, when the nodes become available, they will be used as targets.)
+
+```
+
+aws elbv2 register-targets \
+  --target-group-arn ${TARGET_GROUP_ARN} \
+  --targets Id=172.31.0.1{0,1,2}
+
+
+```
+
+<br>
+
+<img width="1197" alt="targets" src="https://user-images.githubusercontent.com/92983658/219385680-cf1ea339-fbad-415f-bd8a-1ebc3f60a759.png">
+
+<br>
+
+- Create a listener to listen for requests and forward to the target nodes on TCP port 6443
+```
+
+aws elbv2 create-listener \
+--load-balancer-arn ${LOAD_BALANCER_ARN} \
+--protocol TCP \
+--port 6443 \
+--default-actions Type=forward,TargetGroupArn=${TARGET_GROUP_ARN} \
+--output text --query 'Listeners[].ListenerArn'
+
+```
+
+<br>
+
+<img width="1380" alt="listener" src="https://user-images.githubusercontent.com/92983658/219385514-f6cc78ed-645d-478a-ab3a-e1af30e42d7a.png">
+
+<br>
+
+<img width="1196" alt="listener_1b" src="https://user-images.githubusercontent.com/92983658/219386158-d8824c76-0660-40da-9a62-3e2f02327d13.png">
+
+<br>
+
+#### 4. K8s Public Address
+- Get the Kubernetes Public address
+```
+
+KUBERNETES_PUBLIC_ADDRESS=$(aws elbv2 describe-load-balancers \
+--load-balancer-arns ${LOAD_BALANCER_ARN} \
+--output text --query 'LoadBalancers[].DNSName')
+
+```
+
+<br>
+
+<img width="1015" alt="k8s_public_add" src="https://user-images.githubusercontent.com/92983658/219387303-a159a665-fa0e-4e3d-ba3d-be9bd889a742.png">
+
+<br>
+
+
