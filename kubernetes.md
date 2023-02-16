@@ -25,7 +25,7 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 - cfssl and cfssljson utilities
 - Kubernetes cluster
 
-**3 EC2 Instances will be crreated, and in the end, the following parts of the cluster will be properly configured:**
+**3 EC2 Instances will be created, and in the end, the following parts of the cluster will be properly configured:**
 
 - One Kubernetes Master
 - Two Kubernetes Worker Nodes
@@ -50,7 +50,7 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 
 <br>
 
-- On your local workstation download and install the <a href-"https://aws.amazon.com/cli/">latest version of AWS CLI</a>
+- On your local workstation download and install the <a href="https://aws.amazon.com/cli/">latest version of AWS CLI</a>
 - configure `AWS CLI`: `aws configure`
 ```
 # fill in the following details when prompted
@@ -69,5 +69,27 @@ Default output format [None]: json
 
 <br>
 
+### Install Kubectl on Mac
+
+Kubectl is a command line utility will be the main control tool to manage the K8s cluster. 
+*note: access the kubectl <a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">Cheat Sheet</a> with the most used `kubectl` commands.
+
+- Download the binary
+- Make it executable
+- Move to the Bin directory 
+
+```
+
+curl -o kubectl https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/darwin/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+
+```
+
+<br>
+
+<img width="1277" alt="kubectl" src="https://user-images.githubusercontent.com/92983658/219358637-36bb4174-d918-45c3-9305-0232845d4852.png">
+
+<br>
 
 
