@@ -502,4 +502,119 @@ KUBERNETES_PUBLIC_ADDRESS=$(aws elbv2 describe-load-balancers \
 
 <br>
 
+## PART THREE: Set Up Compute Resources
+
+### Step One: Create Compute Resources
+#### 1. AMI
+- Get an image to create EC2 instances:
+```
+
+IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
+  --filters \
+  'Name=root-device-type,Values=ebs' \
+  'Name=architecture,Values=x86_64' \
+  'Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*' \
+  | jq -r '.Images|sort_by(.Name)[-1]|.ImageId')
+  
+```
+
+<br>
+
+<img width="995" alt="ami" src="https://user-images.githubusercontent.com/92983658/219389056-eefdd744-16f1-4be6-864e-2be14dca7d1c.png">
+
+<br>
+
+#### 2. SSH Key-Pair
+- Create SSH Key-Pair
+```
+
+mkdir -p ssh
+
+aws ec2 create-key-pair \
+  --key-name ${NAME} \
+  --output text --query 'KeyMaterial' \
+  > ssh/${NAME}.id_rsa
+  
+chmod 600 ssh/${NAME}.id_rsa
+
+```
+
+<br>
+
+<img width="1024" alt="keypar" src="https://user-images.githubusercontent.com/92983658/219389092-cc21abae-de51-47ce-b6cb-9def19d340bc.png">
+
+<br>
+
+#### 3. EC2 Instances for Controle Plane (Master Nodes)
+- Create 3 Master nodes: *(Note – Using t2.micro instead of t2.small as t2.micro is covered by AWS free tier)*
+```
+
+for i in 0 1 2; do
+  instance_id=$(aws ec2 run-instances \
+    --associate-public-ip-address \
+    --image-id ${IMAGE_ID} \
+    --count 1 \
+    --key-name ${NAME} \
+    --security-group-ids ${SECURITY_GROUP_ID} \
+    --instance-type t2.micro \
+    --private-ip-address 172.31.0.1${i} \
+    --user-data "name=master-${i}" \
+    --subnet-id ${SUBNET_ID} \
+    --output text --query 'Instances[].InstanceId')  
+  aws ec2 modify-instance-attribute \
+    --instance-id ${instance_id} \
+    --no-source-dest-check    
+  aws ec2 create-tags \
+    --resources ${instance_id} \
+    --tags "Key=Name,Value=${NAME}-master-${i}"
+done
+
+```
+
+<br>
+
+<img width="1011" alt="master_nodes" src="https://user-images.githubusercontent.com/92983658/219390094-295140b3-e001-4307-bca5-d94c65c99bbe.png">
+
+<br>
+
+<img width="1196" alt="instances_1a" src="https://user-images.githubusercontent.com/92983658/219390378-029b2df9-e6d7-46f0-a172-99e91641f44a.png">
+
+<br>
+
+#### 4. EC2 Instances for Worker Nodes
+- Create 3 worker nodes:
+```
+
+for i in 0 1 2; do
+  instance_id=$(aws ec2 run-instances \
+    --associate-public-ip-address \
+    --image-id ${IMAGE_ID} \
+    --count 1 \
+    --key-name ${NAME} \
+    --security-group-ids ${SECURITY_GROUP_ID} \
+    --instance-type t2.micro \
+    --private-ip-address 172.31.0.2${i} \
+    --user-data "name=worker-${i}|pod-cidr=172.20.${i}.0/24" \
+    --subnet-id ${SUBNET_ID} \
+    --output text --query 'Instances[].InstanceId')
+  aws ec2 modify-instance-attribute \
+    --instance-id ${instance_id} \
+    --no-source-dest-check
+  aws ec2 create-tags \
+    --resources ${instance_id} \
+    --tags "Key=Name,Value=${NAME}-worker-${i}"
+done
+
+```
+
+<br>
+
+<img width="1331" alt="worker_nodes" src="https://user-images.githubusercontent.com/92983658/219391298-5ab19002-f2ac-44cf-bacb-9cdfb9e74488.png">
+
+<br>
+
+<img width="1198" alt="worker_nodes" src="https://user-images.githubusercontent.com/92983658/219391497-93401320-03d6-4c82-8edc-4d1a02ca3d39.png">
+
+<br>
+
 
