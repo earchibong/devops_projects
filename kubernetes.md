@@ -114,8 +114,62 @@ sudo mv cfssl cfssljson /usr/local/bin/
 
 ## PART TWO: Set Up AWS Cloud Resources For Kubernetes Cluster
 
-### Configure Network Infrastructure
+### Step One: Configure Network Infrastructure
 
-#### Virtual Private Cloud – VPC
+#### 1. Virtual Private Cloud – VPC
+- Create a directory named `k8s-cluster`
+- in the new directory, create a VPC and store the ID as a variable:
+```
+
+VPC_ID=$(aws ec2 create-vpc \
+--cidr-block 172.31.0.0/16 \
+--output text --query 'Vpc.VpcId'
+)
+
+```
+<br>
+
+<img width="857" alt="k8_vpc" src="https://user-images.githubusercontent.com/92983658/219364710-5015fdd8-3b64-455f-9b6e-d5b94d114fb0.png">
+
+<br>
+
+- Tag the VPC so that it is named:
+
+```
+
+<br>
+
+#### 2. Domain Name System – DNS
+- Enable DNS support for VPC:
+```
+
+aws ec2 modify-vpc-attribute \
+--vpc-id ${VPC_ID} \
+--enable-dns-support '{"Value": true}'
+
+```
+
+<br>
+
+- Enable DNS support for hostnames:
+```
+
+aws ec2 modify-vpc-attribute \
+--vpc-id ${VPC_ID} \
+--enable-dns-hostnames '{"Value": true}'
+
+```
+
+<br>
+
+<img width="1197" alt="vpc_dns_confirm" src="https://user-images.githubusercontent.com/92983658/219366622-b792d676-da52-4201-8c2c-d152d1eee1b4.png">
+
+<br>
+
+
+
+
+
+
 
 
