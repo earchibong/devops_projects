@@ -667,11 +667,11 @@ cat > ca-csr.json <<EOF
   },
   "names": [
     {
-      "C": "UK",
-      "L": "England",
+      "C": "Nigeria",
+      "L": "Abuja",
       "O": "Kubernetes",
-      "OU": "DAREY.IO DEVOPS",
-      "ST": "London"
+      "OU": "Dev DEVOPS",
+      "ST": "FCT"
     }
   ]
 }
@@ -703,5 +703,244 @@ note: The 3 important files here are:
 
 <br>
 
+### Step Two: Generating TLS Certificates For Client and Server
+
+Client/Server certificates will need to be provisioned for all the components. It is a MUST to have encrypted communication within the cluster. Therefore, the server here are the master nodes running the api-server component. While the client is every other component that needs to communicate with the api-server.
+
+Now we have a certificate for the Root CA, we can then begin to request more certificates which the different Kubernetes components, i.e. clients and server, will use to have encrypted communication.
+
+the clients here refer to every other component that will communicate with the api-server. These are:
+
+- kube-controller-manager
+- kube-scheduler
+- etcd
+- kubelet
+- kube-proxy
+- Kubernetes Admin User
+
+#### 1. Kubernetes API-Server Certificate and Private Key
+The certificate for the Api-server must have `IP addresses`, `DNS names`, and a `Load Balancer address` included
+
+- Generate the Certificate Signing Request (CSR), Private Key and the Certificate for the Kubernetes Master Nodes.
+
+```
+
+{
+cat > master-kubernetes-csr.json <<EOF
+{
+  "CN": "kubernetes",
+   "hosts": [
+   "127.0.0.1",
+   "172.31.0.10",
+   "172.31.0.11",
+   "172.31.0.12",
+   "ip-172-31-0-10",
+   "ip-172-31-0-11",
+   "ip-172-31-0-12",
+   "ip-172-31-0-10.${AWS_REGION}.compute.internal",
+   "ip-172-31-0-11.${AWS_REGION}.compute.internal",
+   "ip-172-31-0-12.${AWS_REGION}.compute.internal",
+   "${KUBERNETES_PUBLIC_ADDRESS}",
+   "kubernetes",
+   "kubernetes.default",
+   "kubernetes.default.svc",
+   "kubernetes.default.svc.cluster",
+   "kubernetes.default.svc.cluster.local"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "Kubernetes",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  master-kubernetes-csr.json | cfssljson -bare master-kubernetes
+}
+
+```
+
+<br>
+
+<img width="1051" alt="kubernetes_api" src="https://user-images.githubusercontent.com/92983658/219398898-8472caca-d447-4608-9543-47ef359b35df.png">
+
+<br>
+
+#### 2. Kubernetes API-Server Certificate and Private Key
+
+```
+
+{
+
+cat > kube-scheduler-csr.json <<EOF
+{
+  "CN": "system:kube-scheduler",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "system:kube-scheduler",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-scheduler-csr.json | cfssljson -bare kube-scheduler
+
+}
+
+```
+
+*note: it is safe to ignore any warning messages for now*
+
+<br>
+
+#### 3. kube-proxy Client Certificate and Private Key
+```
+
+{
+
+cat > kube-proxy-csr.json <<EOF
+{
+  "CN": "system:kube-proxy",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "system:node-proxier",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-proxy-csr.json | cfssljson -bare kube-proxy
+
+}
+
+```
+
+<br>
+
+#### 4. kube-controller-manager Client Certificate and Private Key
+
+```
+
+{
+cat > kube-controller-manager-csr.json <<EOF
+{
+  "CN": "system:kube-controller-manager",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "system:kube-controller-manager",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-controller-manager-csr.json | cfssljson -bare kube-controller-manager
+
+}
+
+```
+
+<br>
+
+#### 5. kubelet Client Certificate and Private Key
+Kubernetes requires that the hostname of each worker node is included in the client certificate.
+
+Also, Kubernetes uses a special-purpose authorization mode called Node Authorizer, that specifically authorizes API requests made by kubelet services. In order to be authorized by the Node Authorizer, kubelets must use a credential that identifies them as being in the system:nodes group, with a username of `system:node:<nodeName>`. Notice the `"CN": "system:node:${instance_hostname}"`, in the below code.
+
+Therefore, the certificate to be created must comply to these requirements. In the below example, there are 3 worker nodes, hence we will use bash to loop through a list of the worker nodes’ hostnames, and based on each index, the respective Certificate Signing Request (CSR), private key and client certificates will be generated.
+
+```
+
+for i in 0 1 2; do
+  instance="${NAME}-worker-${i}"
+  instance_hostname="ip-172-31-0-2${i}"
+  cat > ${instance}-csr.json <<EOF
+{
+  "CN": "system:node:${instance_hostname}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "system:nodes",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+
+  internal_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PrivateIpAddress')
+
+  cfssl gencert \
+    -ca=ca.pem \
+    -ca-key=ca-key.pem \
+    -config=ca-config.json \
+    -hostname=${instance_hostname},${external_ip},${internal_ip} \
+    -profile=kubernetes \
+    ${NAME}-worker-${i}-csr.json | cfssljson -bare ${NAME}-worker-${i}
+done
+
+```
 
 
