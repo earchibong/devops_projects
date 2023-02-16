@@ -69,7 +69,7 @@ Default output format [None]: json
 
 <br>
 
-### Install Kubectl on Mac
+### Install Kubectl (on Mac OS)
 
 Kubectl is a command line utility will be the main control tool to manage the K8s cluster. 
 *note: access the kubectl <a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">Cheat Sheet</a> with the most used `kubectl` commands.
@@ -91,5 +91,31 @@ sudo mv kubectl /usr/local/bin/
 <img width="1277" alt="kubectl" src="https://user-images.githubusercontent.com/92983658/219358637-36bb4174-d918-45c3-9305-0232845d4852.png">
 
 <br>
+
+### Install CFSSL and CFSSLJSON (on Mac OS)
+`cfssl` is an open source toolkit for everything TLS/SSL from Cloudflare
+`cfssljson` isa program, which takes the JSON output from the cfssl and writes certificates, keys, CSRs, and bundles to disk.
+
+```
+
+curl -o cfssl https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/1.4.1/darwin/cfssl
+curl -o cfssljson https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/1.4.1/darwin/cfssljson
+chmod +x cfssl cfssljson
+sudo mv cfssl cfssljson /usr/local/bin/
+
+```
+*note: if you have problems using the binaries directly, use <a href="https://formulae.brew.sh/formula/cfssl"> Homebrew Package Manager</a>
+
+<br>
+
+<img width="1151" alt="cfssl" src="https://user-images.githubusercontent.com/92983658/219361571-fde9cc7c-d42c-435a-bb2a-5523d10eb5a5.png">
+
+<br>
+
+## PART TWO: Set Up AWS Cloud Resources For Kubernetes Cluster
+
+### Configure Network Infrastructure
+
+#### Virtual Private Cloud – VPC
 
 
