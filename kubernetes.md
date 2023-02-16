@@ -617,4 +617,91 @@ done
 
 <br>
 
+## PART FOUR: Prepare Self-Signed Certificate Authority & General TLS Certificates
+### Step One: Prepare The Self-Signed Certificate Authority And Generate TLS Certificates
+The following components running on the Master node will require TLS certificates.
+
+- kube-controller-manager
+- kube-scheduler
+- etcd
+- kube-apiserver
+
+The following components running on the Worker nodes will require TLS certificates.
+
+- kubelet
+- kube-proxy
+
+Therefore, a `PKI Infrastructure` will have to be provisioned using `cfssl` which will have a Certificate Authority. The `CA` will then generate certificates for all the individual components.
+
+#### 1. Self-Signed Root Certificate Authority (CA)
+provision a CA that will be used to sign additional TLS certificates.
+
+- Create a directory and cd into it: `mkdir ca-authority && cd ca-authority`
+- Generate the CA configuration file, Root Certificate, and Private key:
+
+```
+{
+
+cat > ca-config.json <<EOF
+{
+  "signing": {
+    "default": {
+      "expiry": "8760h"
+    },
+    "profiles": {
+      "kubernetes": {
+        "usages": ["signing", "key encipherment", "server auth", "client auth"],
+        "expiry": "8760h"
+      }
+    }
+  }
+}
+EOF
+
+cat > ca-csr.json <<EOF
+{
+  "CN": "Kubernetes",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "UK",
+      "L": "England",
+      "O": "Kubernetes",
+      "OU": "DAREY.IO DEVOPS",
+      "ST": "London"
+    }
+  ]
+}
+EOF
+
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+
+}
+
+```
+
+<br>
+
+<img width="1272" alt="certificate" src="https://user-images.githubusercontent.com/92983658/219393861-c1deddef-7452-44c4-b6b9-5f81a5bd9abf.png">
+
+<br>
+
+- List the directory to see the created files: `ls -ltr`
+
+<br>
+
+<img width="1149" alt="CA_files" src="https://user-images.githubusercontent.com/92983658/219394200-96f8a048-ac5a-485b-813c-c782dd026865.png">
+
+note: The 3 important files here are:
+
+- ca.pem: The Root Certificate
+- ca-key.pem: The Private Key
+- ca.csr: The Certificate Signing Request
+
+<br>
+
+
 
