@@ -33,3 +33,20 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 - Configured Node Network
 - Configured Pod Network
 
+<br>
+
+## PART ONE: Install Client Tools
+
+### Install and configure AWS CLI
+`AWS CLI` is a unified tool to manage your AWS services
+
+- Configure AWS CLI to access all AWS services used:
+  - for this, create a user with programmatic access keys configured in AWS Identity and Access Management (IAM)
+  - Generate access keys and store them in a safe place.
+
+<br>
+
+<img width="1194" alt="IAM" src="https://user-images.githubusercontent.com/92983658/219353590-a820e9aa-9ead-4427-9486-ffa6c8ad8019.png">
+
+<br>
+
