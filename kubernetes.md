@@ -17,5 +17,19 @@ To successfully implement "K8s From-Ground-Up", the following and even more will
 
 The purpose of "K8s From-Ground-Up" is to get a better understanding of the different components as shown in the architecture diagram. 
 
-<br>
+**Tools to be used and expected result of the Project 20**
+- VM: AWS EC2
+- OS: Ubuntu 20.04 lts+
+- Docker Engine
+- kubectl console utility
+- cfssl and cfssljson utilities
+- Kubernetes cluster
+
+**3 EC2 Instances will be crreated, and in the end, the following parts of the cluster will be properly configured:**
+
+- One Kubernetes Master
+- Two Kubernetes Worker Nodes
+- Configured SSL/TLS certificates for Kubernetes components to communicate securely
+- Configured Node Network
+- Configured Pod Network
 
