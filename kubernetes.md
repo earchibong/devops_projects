@@ -408,3 +408,22 @@ aws ec2 authorize-security-group-ingress \
 
 <br>
 
+#### 2. Network Load Balancer
+- Create a network Load balancer
+```
+
+LOAD_BALANCER_ARN=$(aws elbv2 create-load-balancer \
+--name ${NAME} \
+--subnets ${SUBNET_ID} \
+--scheme internet-facing \
+--type network \
+--output text --query 'LoadBalancers[].LoadBalancerArn')
+
+```
+
+<br>
+
+<img width="1196" alt="loadbalancer" src="https://user-images.githubusercontent.com/92983658/219378407-d48963ad-4971-4c7d-8cfc-f3bd5494e6d2.png">
+
+<br>
+
