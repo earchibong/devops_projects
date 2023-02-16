@@ -41,7 +41,7 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 `AWS CLI` is a unified tool to manage your AWS services
 
 - Configure AWS CLI to access all AWS services used:
-  - for this, create a user with programmatic access keys configured in AWS Identity and Access Management (IAM)
+  - for this, create a user with programmatic access keys configured in AWS Identity and Access Management (IAM)..(i'm using one i created for project 19)
   - Generate access keys and store them in a safe place.
 
 <br>
@@ -49,4 +49,25 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 <img width="1194" alt="IAM" src="https://user-images.githubusercontent.com/92983658/219353590-a820e9aa-9ead-4427-9486-ffa6c8ad8019.png">
 
 <br>
+
+- On your local workstation download and install the <a href-"https://aws.amazon.com/cli/">latest version of AWS CLI</a>
+- configure `AWS CLI`: `aws configure`
+```
+# fill in the following details when prompted
+AWS Access Key ID [None]: <your IAM access key>
+AWS Secret Access Key [None]: < your secret key>
+Default region name [None]: < your region >
+Default output format [None]: json
+
+```
+
+- Test `AWS CLI` by running: `aws ec2 describe-vpcs`
+
+<br>
+
+<img width="1180" alt="aws_cli_test" src="https://user-images.githubusercontent.com/92983658/219356486-3bc92728-942b-41b2-a780-8df172538484.png">
+
+<br>
+
+
 
