@@ -236,7 +236,94 @@ aws ec2 associate-dhcp-options \
 
 <br>
 
+#### 5. Subnets
 
+- Create the Subnet and tags:
 
+```
+
+SUBNET_ID=$(aws ec2 create-subnet \
+  --vpc-id ${VPC_ID} \
+  --cidr-block 172.31.0.0/24 \
+  --output text --query 'Subnet.SubnetId')
+  
+```
+
+<br>
+
+```
+
+aws ec2 create-tags \
+  --resources ${SUBNET_ID} \
+  --tags Key=Name,Value=${NAME}
+  
+```
+
+<br>
+
+<img width="1195" alt="subnet" src="https://user-images.githubusercontent.com/92983658/219372126-04018165-e5ed-47e9-95bf-d27f6e101fc8.png">
+
+<br>
+
+#### 5. Internet Gateway
+
+- Create the Internet Gateway and attach it to the VPC:
+```
+
+INTERNET_GATEWAY_ID=$(aws ec2 create-internet-gateway \
+  --output text --query 'InternetGateway.InternetGatewayId')
+  
+aws ec2 create-tags \
+  --resources ${INTERNET_GATEWAY_ID} \
+  --tags Key=Name,Value=${NAME}
+ 
+```
+
+<br>
+
+```
+
+aws ec2 attach-internet-gateway \
+  --internet-gateway-id ${INTERNET_GATEWAY_ID} \
+  --vpc-id ${VPC_ID}
+
+```
+
+<br>
+
+<img width="1197" alt="internet_gateways" src="https://user-images.githubusercontent.com/92983658/219372826-750cd367-929b-4b5b-b95d-76892b436bd4.png">
+
+<br>
+
+#### 6. Route Tables
+
+- Create route tables, associate the route table to subnet, and create a route to allow external traffic to the Internet through the Internet Gateway:
+
+```
+
+ROUTE_TABLE_ID=$(aws ec2 create-route-table \
+  --vpc-id ${VPC_ID} \
+  --output text --query 'RouteTable.RouteTableId')
+  
+aws ec2 create-tags \
+  --resources ${ROUTE_TABLE_ID} \
+  --tags Key=Name,Value=${NAME}
+  
+aws ec2 associate-route-table \
+  --route-table-id ${ROUTE_TABLE_ID} \
+  --subnet-id ${SUBNET_ID}
+  
+aws ec2 create-route \
+  --route-table-id ${ROUTE_TABLE_ID} \
+  --destination-cidr-block 0.0.0.0/0 \
+  --gateway-id ${INTERNET_GATEWAY_ID}
+
+```
+
+<br>
+
+<img width="1063" alt="route_table" src="https://user-images.githubusercontent.com/92983658/219373619-c1894cdb-e238-4c1f-bec0-b0bd41652842.png">
+
+<br>
 
 
