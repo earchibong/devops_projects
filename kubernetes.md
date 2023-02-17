@@ -1143,9 +1143,8 @@ service-account.pem
 - Copy the appropriate certificates and private keys to each worker instance:
 
 ```
-
-for i in 0 1 2; do
-  instance="$worker-${i}"
+  
+for instance in worker-0 worker-1 worker-2; do
   external_ip=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=${instance}" \
     --output text --query 'Reservations[].Instances[].PublicIpAddress')
@@ -1153,13 +1152,31 @@ for i in 0 1 2; do
     ca.pem ${instance}-key.pem ${instance}.pem ubuntu@${external_ip}:~/; \
 done
 
-for instance in worker-0 worker-1 worker-2; do
+```
+
+<br>
+
+<img width="1364" alt="worker_certificates" src="https://user-images.githubusercontent.com/92983658/219695833-8644c4d7-fff3-44cd-ab4b-79651110dd63.png">
+
+<br>
+
+- Copy the appropriate certificates and private keys to each master instance:
+```
+
+for instance in master-0 master-1 master-2; do
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
   scp -i ../ssh/k8s-cluster.id_rsa \
-    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-    ca.pem ${instance}-key.pem ${instance}.pem \
-    ubuntu@${KUBERNETES_PUBLIC_ADDRESS[${instance}]}:~/
+    ca.pem ca-key.pem service-account-key.pem service-account.pem \
+    master-kubernetes.pem master-kubernetes-key.pem ubuntu@${external_ip}:~/;
 done
 
 ```
 
+<br>
+
+<img width="1368" alt="master_certificate" src="https://user-images.githubusercontent.com/92983658/219697389-ca3d9482-3552-456b-90a1-3053664e50b3.png">
+
+<br>
 
