@@ -670,7 +670,7 @@ cat > ca-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "Kubernetes",
-      "OU": "Dev DEVOPS",
+      "OU": "CA",
       "ST": "FCT"
     }
   ]
@@ -719,7 +719,9 @@ the clients here refer to every other component that will communicate with the a
 - Kubernetes Admin User
 
 #### 1. Kubernetes API-Server Certificate and Private Key
-The certificate for the Api-server must have `IP addresses`, `DNS names`, and a `Load Balancer address` included
+The certificate for the Api-server must have `IP addresses`, `DNS names`, and a `Load Balancer address` included.
+
+The `kubernetes-master` static IP address will be included in the list of subject alternative names for the Kubernetes API Server certificate. This will ensure the certificate can be validated by remote clients.
 
 - Generate the Certificate Signing Request (CSR), Private Key and the Certificate for the Kubernetes Master Nodes.
 
@@ -756,7 +758,7 @@ cat > master-kubernetes-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "Kubernetes",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -775,11 +777,24 @@ cfssl gencert \
 
 <br>
 
+- output:
+```
+
+master-kubernetes-csr.json
+master-kubernetes-key.pem
+master-kubernetes.csr
+master-kubernetes.pem
+
+```
+
+<br>
+
 <img width="1051" alt="kubernetes_api" src="https://user-images.githubusercontent.com/92983658/219398898-8472caca-d447-4608-9543-47ef359b35df.png">
 
 <br>
 
-#### 2. Kubernetes API-Server Certificate and Private Key
+#### 2. The Scheduler Client Certificate: Kube Scheduler
+- Generate the `kube-scheduler` client certificate and private key:
 
 ```
 
@@ -797,7 +812,7 @@ cat > kube-scheduler-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:kube-scheduler",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -819,7 +834,21 @@ cfssl gencert \
 
 <br>
 
-#### 3. kube-proxy Client Certificate and Private Key
+results:
+```
+
+kube-scheduler-csr.json
+kube-scheduler-key.pem
+kube-scheduler.csr
+kube-scheduler.pem
+
+```
+
+<br>
+
+#### 3. The Kube Proxy Client Certificate
+- Generate the `kube-proxy` client certificate and private key:
+
 ```
 
 {
@@ -836,7 +865,7 @@ cat > kube-proxy-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:node-proxier",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -856,7 +885,21 @@ cfssl gencert \
 
 <br>
 
-#### 4. kube-controller-manager Client Certificate and Private Key
+output:
+```
+kube-proxy-csr.json
+kube-proxy-key.pem
+kube-proxy.csr
+kube-proxy.pem
+
+```
+
+<br>
+
+
+#### 4. The Controller Manager Client Certificate
+the `kube-controller-manager` is responsible for generating and signing service account tokens which are used by pods or other resources to establish connectivity to the api-server.
+Generate the `kube-controller-manager` client certificate and private key:
 
 ```
 
@@ -873,7 +916,7 @@ cat > kube-controller-manager-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:kube-controller-manager",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -893,17 +936,29 @@ cfssl gencert \
 
 <br>
 
-#### 5. kubelet Client Certificate and Private Key
+output:
+```
+kube-controller-csr.json
+kube-controller-key.pem
+kube-controller.csr
+kube-controller.pem
+
+```
+
+<br>
+
+#### 5. The Kubelet Client Certificates
+
 Kubernetes requires that the hostname of each worker node is included in the client certificate.
 
-Also, Kubernetes uses a special-purpose authorization mode called Node Authorizer, that specifically authorizes API requests made by kubelet services. In order to be authorized by the Node Authorizer, kubelets must use a credential that identifies them as being in the system:nodes group, with a username of `system:node:<nodeName>`. Notice the `"CN": "system:node:${instance_hostname}"`, in the below code.
+Also, Kubernetes uses a special-purpose authorization mode called **Node Authorizer**, that specifically authorizes API requests made by kubelet services. In order to be authorized by the Node Authorizer, kubelets must use a credential that identifies them as being in the system:nodes group, with a username of `system:node:<nodeName>`. Notice the `"CN": "system:node:${instance_hostname}"`, in the below code.
 
 Therefore, the certificate to be created must comply to these requirements. In the below example, there are 3 worker nodes, hence we will use bash to loop through a list of the worker nodes’ hostnames, and based on each index, the respective Certificate Signing Request (CSR), private key and client certificates will be generated.
 
 ```
 
 for i in 0 1 2; do
-  instance="${NAME}_worker-${i}"
+  instance="worker-${i}"
   instance_hostname="ip-172-31-0-2${i}"
   cat > ${instance}-csr.json <<EOF
 {
@@ -917,7 +972,7 @@ for i in 0 1 2; do
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:nodes",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -945,12 +1000,28 @@ done
 
 <br>
 
+output:
+```
+worker-0-key.pem
+worker-0.pem
+worker-1-key.pem
+worker-1.pem
+worker-2-key.pem
+worker-2.pem
+
+```
+
+<br>
+
 <img width="1456" alt="kubeket_1a" src="https://user-images.githubusercontent.com/92983658/219609369-be633998-c0b5-4571-ad94-5e2f2186646b.png">
 <img width="1470" alt="kubelet_1b" src="https://user-images.githubusercontent.com/92983658/219609433-4b693336-fe6a-4878-b38f-5cb14bc6630f.png">
 
 <br>
 
-#### 6. kubernetes admin user's Client Certificate and Private Key
+#### 6. The Admin Client Certificate
+- Generate the `admin` client certificate and private key:
+
+
 ```
 
 {
@@ -966,7 +1037,7 @@ cat > admin-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:masters",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -984,12 +1055,23 @@ cfssl gencert \
 ```
 <br>
 
+output:
+```
+admin-key.pem
+admin.pem
+
+```
+
+<br>
+
 <img width="1470" alt="kube_admin" src="https://user-images.githubusercontent.com/92983658/219610722-7ac053f7-b3af-4ec0-bf51-ff8674475004.png">
 
 <br>
 
-#### 6. Token Controller
-the `kube-controller-manager` is responsible for generating and signing service account tokens which are used by pods or other resources to establish connectivity to the api-server.
+#### 6. The Service Account Key Pair
+The Kubernetes Controller Manager uses a key pair to generate and sign service account tokens
+
+Generate the `service-account` certificate and private key:
 
 ```
 
@@ -1007,7 +1089,7 @@ cat > service-account-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "Kubernetes",
-      "OU": "DEV DEVOPS",
+      "OU": "Kubernetes The Hard Way",
       "ST": "FCT"
     }
   ]
@@ -1020,13 +1102,27 @@ cfssl gencert \
   -config=ca-config.json \
   -profile=kubernetes \
   service-account-csr.json | cfssljson -bare service-account
+
 }
 
 ```
 
 <br>
 
-<img width="1468" alt="kube_controller" src="https://user-images.githubusercontent.com/92983658/219612128-a9bd40cc-5bdb-439b-b425-4880a3812651.png">
+output:
+```
+service-account-key.pem
+service-account.pem
+
+```
+
+<br>
+
+<img width="1289" alt="service" src="https://user-images.githubusercontent.com/92983658/219644683-facb4cd1-bace-432d-a7d4-b318f8f0c38f.png">
+
+<br>
+
+<img width="1024" alt="outputs" src="https://user-images.githubusercontent.com/92983658/219644800-0b398a6d-f8c3-41ec-be27-0f18ff478b37.png">
 
 <br>
 
@@ -1036,12 +1132,19 @@ cfssl gencert \
 ```
 
 for i in 0 1 2; do
-  instance="${NAME}_worker-${i}"
+  instance="$worker-${i}"
   external_ip=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=${instance}" \
     --output text --query 'Reservations[].Instances[].PublicIpAddress')
   scp -i ../ssh/k8s-cluster-from-ground-up.id_rsa \
     ca.pem ${instance}-key.pem ${instance}.pem ubuntu@${external_ip}:~/; \
+done
+
+for instance in worker-0 worker-1 worker-2; do
+  scp -i ../ssh/k8s-cluster-from-ground-up.id_rsa \
+    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    ca.pem ${instance}-key.pem ${instance}.pem \
+    ubuntu@${PUBLIC_ADDRESS[${instance}]}:~/
 done
 
 ```
