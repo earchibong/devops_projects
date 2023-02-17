@@ -770,7 +770,7 @@ cat > master-kubernetes-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "Kubernetes",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Manual",
       "ST": "FCT"
     }
   ]
@@ -824,7 +824,7 @@ cat > kube-scheduler-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:kube-scheduler",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Manual",
       "ST": "FCT"
     }
   ]
@@ -877,7 +877,7 @@ cat > kube-proxy-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:node-proxier",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Maual",
       "ST": "FCT"
     }
   ]
@@ -928,7 +928,7 @@ cat > kube-controller-manager-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:kube-controller-manager",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Manual",
       "ST": "FCT"
     }
   ]
@@ -984,7 +984,7 @@ for i in 0 1 2; do
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:nodes",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Manual",
       "ST": "FCT"
     }
   ]
@@ -1050,7 +1050,7 @@ cat > admin-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "system:masters",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Manual",
       "ST": "FCT"
     }
   ]
@@ -1102,7 +1102,7 @@ cat > service-account-csr.json <<EOF
       "C": "Nigeria",
       "L": "Abuja",
       "O": "Kubernetes",
-      "OU": "Kubernetes The Hard Way",
+      "OU": "Kubernetes Manual",
       "ST": "FCT"
     }
   ]
@@ -1149,12 +1149,12 @@ for i in 0 1 2; do
   external_ip=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=${instance}" \
     --output text --query 'Reservations[].Instances[].PublicIpAddress')
-  scp -i ../ssh/k8s-cluster-from-ground-up.id_rsa \
+  scp -i ../ssh/k8s-cluster.id_rsa \
     ca.pem ${instance}-key.pem ${instance}.pem ubuntu@${external_ip}:~/; \
 done
 
 for instance in worker-0 worker-1 worker-2; do
-  scp -i ../ssh/k8s-cluster-from-ground-up.id_rsa \
+  scp -i ../ssh/k8s-cluster.id_rsa \
     -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     ca.pem ${instance}-key.pem ${instance}.pem \
     ubuntu@${KUBERNETES_PUBLIC_ADDRESS[${instance}]}:~/
