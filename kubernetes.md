@@ -123,6 +123,7 @@ sudo mv cfssl cfssljson /usr/local/bin/
 
 VPC_ID=$(aws ec2 create-vpc \
 --cidr-block 172.31.0.0/16 \
+--tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=k8s-cluster}]' \
 --output text --query 'Vpc.VpcId'
 )
 
@@ -137,7 +138,7 @@ VPC_ID=$(aws ec2 create-vpc \
 
 ```
 
-NAME=k8s-cluster-from-ground-up
+NAME=k8s-cluster
 
 aws ec2 create-tags \
   --resources ${VPC_ID} \
@@ -207,6 +208,7 @@ DHCP_OPTION_SET_ID=$(aws ec2 create-dhcp-options \
 - Tag the `DHCP` Option set
 
 ```
+NAME=k8s-cluster
 
 aws ec2 create-tags \
   --resources ${DHCP_OPTION_SET_ID} \
@@ -245,22 +247,8 @@ aws ec2 associate-dhcp-options \
 SUBNET_ID=$(aws ec2 create-subnet \
   --vpc-id ${VPC_ID} \
   --cidr-block 172.31.0.0/24 \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=k8s-cluster}]' \
   --output text --query 'Subnet.SubnetId')
-
-SUBNET_ID=$(aws ec2 create-subnet \
-  --vpc-id ${VPC_ID} \
-  --cidr-block 172.31.0.0/24 \
-  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=k8s-cluster-from-ground-up}]' \
-  --output text --query 'Subnet.SubnetId')
-```
-
-<br>
-
-```
-
-aws ec2 create-tags \
-  --resources ${SUBNET_ID} \
-  --tags Key=Name,Value=${NAME}
   
 ```
 
@@ -276,17 +264,8 @@ aws ec2 create-tags \
 ```
 
 INTERNET_GATEWAY_ID=$(aws ec2 create-internet-gateway \
+  --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=k8s-cluster}]' \
   --output text --query 'InternetGateway.InternetGatewayId')
-  
-aws ec2 create-tags \
-  --resources ${INTERNET_GATEWAY_ID} \
-  --tags Key=Name,Value=${NAME}
- 
-```
-
-<br>
-
-```
 
 aws ec2 attach-internet-gateway \
   --internet-gateway-id ${INTERNET_GATEWAY_ID} \
@@ -308,11 +287,8 @@ aws ec2 attach-internet-gateway \
 
 ROUTE_TABLE_ID=$(aws ec2 create-route-table \
   --vpc-id ${VPC_ID} \
+  --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=k8s-cluster}]' \
   --output text --query 'RouteTable.RouteTableId')
-  
-aws ec2 create-tags \
-  --resources ${ROUTE_TABLE_ID} \
-  --tags Key=Name,Value=${NAME}
   
 aws ec2 associate-route-table \
   --route-table-id ${ROUTE_TABLE_ID} \
@@ -347,12 +323,8 @@ SECURITY_GROUP_ID=$(aws ec2 create-security-group \
   --group-name ${NAME} \
   --description "Kubernetes cluster security group" \
   --vpc-id ${VPC_ID} \
+  --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=k8s-cluster}]' \
   --output text --query 'GroupId')
-
-# Create the NAME tag for the security group
-aws ec2 create-tags \
-  --resources ${SECURITY_GROUP_ID} \
-  --tags Key=Name,Value=${NAME}
 
 # Create Inbound traffic for all communication within the subnet to connect on ports used by the master node(s)
 aws ec2 authorize-security-group-ingress \
@@ -412,6 +384,23 @@ aws ec2 authorize-security-group-ingress \
 <img width="1198" alt="AWS_sg_detail" src="https://user-images.githubusercontent.com/92983658/219376831-bfc9c63e-b585-41fe-bede-3382f50262ae.png">
 
 <br>
+
+- List the created security group rules:
+
+```
+
+aws ec2 describe-security-group-rules \
+  --filters "Name=group-id,Values=${SECURITY_GROUP_ID}" \
+  --query 'sort_by(SecurityGroupRules, &CidrIpv4)[].{a_Protocol:IpProtocol,b_FromPort:FromPort,c_ToPort:ToPort,d_Cidr:CidrIpv4}' \
+  --output table
+
+```
+<br>
+
+<img width="1385" alt="output_tcp" src="https://user-images.githubusercontent.com/92983658/219683137-78b9668d-3533-4055-9f26-19661cbb993d.png">
+
+<br>
+
 
 #### 2. Network Load Balancer
 - Create a network Load balancer
@@ -538,11 +527,11 @@ IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
 mkdir -p ssh
 
 aws ec2 create-key-pair \
-  --key-name k8s-cluster-from-ground-up \
+  --key-name k8s-cluster \
   --output text --query 'KeyMaterial' \
-  > ssh/k8s-cluster-from-ground-up.id_rsa
+  > ssh/k8s-cluster.id_rsa
   
-chmod 600 ssh/k8s-cluster-from-ground-up.id_rsa
+chmod 600 ssh/k8s-cluster.id_rsa
 
 ```
 
@@ -561,7 +550,7 @@ for i in 0 1 2; do
     --associate-public-ip-address \
     --image-id ${IMAGE_ID} \
     --count 1 \
-    --key-name k8s-cluster-from-ground-up \
+    --key-name k8s-cluster \
     --security-group-ids ${SECURITY_GROUP_ID} \
     --instance-type t2.micro \
     --private-ip-address 172.31.0.1${i} \
@@ -596,19 +585,18 @@ for i in 0 1 2; do
     --associate-public-ip-address \
     --image-id ${IMAGE_ID} \
     --count 1 \
-    --key-name ${NAME} \
+    --key-name k8s-cluster \
     --security-group-ids ${SECURITY_GROUP_ID} \
     --instance-type t2.micro \
     --private-ip-address 172.31.0.2${i} \
     --user-data "name=worker-${i}|pod-cidr=172.20.${i}.0/24" \
     --subnet-id ${SUBNET_ID} \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=worker-${i}}]" \
     --output text --query 'Instances[].InstanceId')
+
   aws ec2 modify-instance-attribute \
     --instance-id ${instance_id} \
     --no-source-dest-check
-  aws ec2 create-tags \
-    --resources ${instance_id} \
-    --tags "Key=Name,Value=${NAME}-worker-${i}"
 done
 
 ```
@@ -622,6 +610,24 @@ done
 <img width="1198" alt="worker_nodes" src="https://user-images.githubusercontent.com/92983658/219391497-93401320-03d6-4c82-8edc-4d1a02ca3d39.png">
 
 <br>
+
+verify instances
+```
+
+aws ec2 describe-instances \
+  --filters Name=vpc-id,Values=${VPC_ID} \
+  --query 'sort_by(Reservations[].Instances[],&PrivateIpAddress)[].{d_INTERNAL_IP:PrivateIpAddress,e_EXTERNAL_IP:PublicIpAddress,a_NAME:Tags[?Key==`Name`].Value | [0],b_ZONE:Placement.AvailabilityZone,c_MACHINE_TYPE:InstanceType,f_STATUS:State.Name}' \
+  --output table
+  
+```
+
+<br>
+
+<img width="1387" alt="verify_instances" src="https://user-images.githubusercontent.com/92983658/219687996-3f8224df-178b-4b62-a802-fa0d54a00722.png">
+
+<br>
+
+
 
 ## PART FOUR: Prepare Self-Signed Certificate Authority & General TLS Certificates
 ### Step One: Prepare The Self-Signed Certificate Authority And Generate TLS Certificates
