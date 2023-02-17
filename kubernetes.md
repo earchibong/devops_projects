@@ -560,13 +560,12 @@ for i in 0 1 2; do
     --private-ip-address 172.31.0.1${i} \
     --user-data "name=master-${i}" \
     --subnet-id ${SUBNET_ID} \
-    --output text --query 'Instances[].InstanceId')  
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=master-${i}}]" \
+    --output text --query 'Instances[].InstanceId')
+
   aws ec2 modify-instance-attribute \
     --instance-id ${instance_id} \
-    --no-source-dest-check    
-  aws ec2 create-tags \
-    --resources ${instance_id} \
-    --tags "Key=Name,Value=${NAME}-master-${i}"
+    --no-source-dest-check
 done
 
 ```
@@ -994,6 +993,7 @@ EOF
     -hostname=${instance_hostname},${external_ip},${internal_ip} \
     -profile=kubernetes \
     ${instance}-csr.json | cfssljson -bare ${instance}
+
 done
 
 ```
@@ -1144,7 +1144,7 @@ for instance in worker-0 worker-1 worker-2; do
   scp -i ../ssh/k8s-cluster-from-ground-up.id_rsa \
     -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     ca.pem ${instance}-key.pem ${instance}.pem \
-    ubuntu@${PUBLIC_ADDRESS[${instance}]}:~/
+    ubuntu@${KUBERNETES_PUBLIC_ADDRESS[${instance}]}:~/
 done
 
 ```
