@@ -903,7 +903,7 @@ Therefore, the certificate to be created must comply to these requirements. In t
 ```
 
 for i in 0 1 2; do
-  instance="${NAME}-worker-${i}"
+  instance="${NAME}_worker-${i}"
   instance_hostname="ip-172-31-0-2${i}"
   cat > ${instance}-csr.json <<EOF
 {
@@ -938,7 +938,110 @@ EOF
     -config=ca-config.json \
     -hostname=${instance_hostname},${external_ip},${internal_ip} \
     -profile=kubernetes \
-    ${NAME}-worker-${i}-csr.json | cfssljson -bare ${NAME}-worker-${i}
+    ${instance}-csr.json | cfssljson -bare ${instance}
+done
+
+```
+
+<br>
+
+<img width="1456" alt="kubeket_1a" src="https://user-images.githubusercontent.com/92983658/219609369-be633998-c0b5-4571-ad94-5e2f2186646b.png">
+<img width="1470" alt="kubelet_1b" src="https://user-images.githubusercontent.com/92983658/219609433-4b693336-fe6a-4878-b38f-5cb14bc6630f.png">
+
+<br>
+
+#### 6. kubernetes admin user's Client Certificate and Private Key
+```
+
+{
+cat > admin-csr.json <<EOF
+{
+  "CN": "admin",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "system:masters",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  admin-csr.json | cfssljson -bare admin
+}
+
+```
+<br>
+
+<img width="1470" alt="kube_admin" src="https://user-images.githubusercontent.com/92983658/219610722-7ac053f7-b3af-4ec0-bf51-ff8674475004.png">
+
+<br>
+
+#### 6. Token Controller
+the `kube-controller-manager` is responsible for generating and signing service account tokens which are used by pods or other resources to establish connectivity to the api-server.
+
+```
+
+{
+
+cat > service-account-csr.json <<EOF
+{
+  "CN": "service-accounts",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "Nigeria",
+      "L": "Abuja",
+      "O": "Kubernetes",
+      "OU": "DEV DEVOPS",
+      "ST": "FCT"
+    }
+  ]
+}
+EOF
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  service-account-csr.json | cfssljson -bare service-account
+}
+
+```
+
+<br>
+
+<img width="1468" alt="kube_controller" src="https://user-images.githubusercontent.com/92983658/219612128-a9bd40cc-5bdb-439b-b425-4880a3812651.png">
+
+<br>
+
+### Step Three: Distribute the Client and Server Certificates
+- Copy the appropriate certificates and private keys to each worker instance:
+
+```
+
+for i in 0 1 2; do
+  instance="${NAME}_worker-${i}"
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+  scp -i ../ssh/k8s-cluster-from-ground-up.id_rsa \
+    ca.pem ${instance}-key.pem ${instance}.pem ubuntu@${external_ip}:~/; \
 done
 
 ```
