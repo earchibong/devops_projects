@@ -1180,3 +1180,8 @@ done
 
 <br>
 
+## PART FIVE: Configuring kubectl for Remote Access
+generate Kubernetes configuration files, also known as kubeconfigs, which enables Kubernetes clients to locate and authenticate to the Kubernetes API Servers.
+
+
+### Step One: Distribute the Client and Server Certificates
