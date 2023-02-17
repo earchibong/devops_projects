@@ -246,7 +246,12 @@ SUBNET_ID=$(aws ec2 create-subnet \
   --vpc-id ${VPC_ID} \
   --cidr-block 172.31.0.0/24 \
   --output text --query 'Subnet.SubnetId')
-  
+
+SUBNET_ID=$(aws ec2 create-subnet \
+  --vpc-id ${VPC_ID} \
+  --cidr-block 172.31.0.0/24 \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=k8s-cluster-from-ground-up}]' \
+  --output text --query 'Subnet.SubnetId')
 ```
 
 <br>
@@ -516,6 +521,8 @@ IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
   'Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*' \
   | jq -r '.Images|sort_by(.Name)[-1]|.ImageId')
   
+  echo ${IMAGE_ID}
+
 ```
 
 <br>
@@ -531,11 +538,11 @@ IMAGE_ID=$(aws ec2 describe-images --owners 099720109477 \
 mkdir -p ssh
 
 aws ec2 create-key-pair \
-  --key-name ${NAME} \
+  --key-name k8s-cluster-from-ground-up \
   --output text --query 'KeyMaterial' \
-  > ssh/${NAME}.id_rsa
+  > ssh/k8s-cluster-from-ground-up.id_rsa
   
-chmod 600 ssh/${NAME}.id_rsa
+chmod 600 ssh/k8s-cluster-from-ground-up.id_rsa
 
 ```
 
@@ -554,7 +561,7 @@ for i in 0 1 2; do
     --associate-public-ip-address \
     --image-id ${IMAGE_ID} \
     --count 1 \
-    --key-name ${NAME} \
+    --key-name k8s-cluster-from-ground-up \
     --security-group-ids ${SECURITY_GROUP_ID} \
     --instance-type t2.micro \
     --private-ip-address 172.31.0.1${i} \
