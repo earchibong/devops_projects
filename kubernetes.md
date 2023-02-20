@@ -1653,8 +1653,80 @@ echo "${ETCD_NAME}"
 
 <br>
 
+- Create the `etcd.service` systemd unit file:
 
+```
 
+cat <<EOF | sudo tee /etc/systemd/system/etcd.service
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
 
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/etcd \\
+  --name ${ETCD_NAME} \\
+  --trusted-ca-file=/etc/etcd/ca.pem \\
+  --peer-trusted-ca-file=/etc/etcd/ca.pem \\
+  --peer-client-cert-auth \\
+  --client-cert-auth \\
+  --listen-peer-urls https://${INTERNAL_IP}:2380 \\
+  --listen-client-urls https://${INTERNAL_IP}:2379,https://127.0.0.1:2379 \\
+  --advertise-client-urls https://${INTERNAL_IP}:2379 \\
+  --initial-cluster-token etcd-cluster-0 \\
+  --initial-cluster master-0=https://172.31.0.10:2380,master-1=https://172.31.0.11:2380,master-2=https://172.31.0.12:2380 \\
+  --cert-file=/etc/etcd/master-kubernetes.pem \\
+  --key-file=/etc/etcd/master-kubernetes-key.pem \\
+  --peer-cert-file=/etc/etcd/master-kubernetes.pem \\
+  --peer-key-file=/etc/etcd/master-kubernetes-key.pem \\
+  --initial-advertise-peer-urls https://${INTERNAL_IP}:2380 \\
+  --initial-cluster-state new \\
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+```
+
+<br>
+
+### Start the etcd Server
+
+```
+{
+sudo systemctl daemon-reload
+sudo systemctl enable etcd
+sudo systemctl start etcd
+}
+
+```
+*note: Remember to run the above commands on each controller node: master-0, master-1, and master-2.*
+
+<br>
+
+<img width="1040" alt="start_etcd" src="https://user-images.githubusercontent.com/92983658/220117344-b708d7a6-7188-4a80-9f2c-b1b4a38486a1.png">
+
+<br>
+
+### Verification
+- List the etcd cluster members:
+```
+
+sudo ETCDCTL_API=3 etcdctl member list \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/etcd/ca.pem \
+  --cert=/etc/etcd/master-kubernetes.pem \
+  --key=/etc/etcd/master-kubernetes-key.pem
+  
+```
+
+<br>
+
+<img width="947" alt="verification" src="https://user-images.githubusercontent.com/92983658/220118058-a9994ff5-aa05-45a3-90b7-740941d5845c.png">
+
+<br>
 
 
