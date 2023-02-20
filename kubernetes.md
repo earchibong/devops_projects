@@ -1178,10 +1178,261 @@ done
 
 <img width="1368" alt="master_certificate" src="https://user-images.githubusercontent.com/92983658/219697389-ca3d9482-3552-456b-90a1-3053664e50b3.png">
 
+*Note: The `kube-proxy`, `kube-controller-manager`, `kube-scheduler`, and `kubelet client certificates` will be used to generate client authentication configuration files later.*
+
 <br>
 
 ## PART FIVE: Configuring kubectl for Remote Access
-generate Kubernetes configuration files, also known as kubeconfigs, which enables Kubernetes clients to locate and authenticate to the Kubernetes API Servers.
+generate Kubernetes configuration files, also known as kubeconfigs, which enables Kubernetes clients to locate and authenticate to the Kubernetes API Servers. A client tool called `kubectl` is needed to do this
 
 
-### Step One: Distribute the Client and Server Certificates
+### Step One: Kubernetes Public IP Address
+Each kubeconfig requires a Kubernetes API Server to connect to. To support high availability, the IP address assigned to the external load balancer fronting the Kubernetes API Servers will be used.
+
+- create a few environment variables for reuse by multiple commands.
+
+```
+
+KUBERNETES_API_SERVER_ADDRESS=$(aws elbv2 describe-load-balancers --load-balancer-arns ${LOAD_BALANCER_ARN} --output text --query 'LoadBalancers[].DNSName')
+
+```
+
+<br>
+
+### Step Two: The kubelet Kubernetes Configuration File
+- Generate a `kubeconfig` file for each worker node:
+
+
+```
+
+for i in 0 1 2; do
+
+instance="worker-${i}"
+instance_hostname="ip-172-31-0-2${i}"
+
+ # Set the kubernetes cluster in the kubeconfig file
+  kubectl config set-cluster ${NAME} \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://$KUBERNETES_API_SERVER_ADDRESS:6443 \
+    --kubeconfig=${instance}.kubeconfig
+
+# Set the cluster credentials in the kubeconfig file
+  kubectl config set-credentials system:node:${instance_hostname} \
+    --client-certificate=${instance}.pem \
+    --client-key=${instance}-key.pem \
+    --embed-certs=true \
+    --kubeconfig=${instance}.kubeconfig
+
+# Set the context in the kubeconfig file
+  kubectl config set-context default \
+    --cluster=${NAME} \
+    --user=system:node:${instance_hostname} \
+    --kubeconfig=${instance}.kubeconfig
+
+  kubectl config use-context default --kubeconfig=${instance}.kubeconfig
+done
+
+
+```
+<br>
+
+<img width="1188" alt="kubectl_config" src="https://user-images.githubusercontent.com/92983658/220082908-ff277f97-9537-4486-9705-280490f7d001.png">
+
+<br>
+
+- List the output: `ls *.kubeconfig`
+- results:
+
+```
+worker-0.kubeconfig
+worker-1.kubeconfig
+worker-2.kubeconfig
+
+```
+
+<br>
+
+<img width="937" alt="kubeconfig_kubelet" src="https://user-images.githubusercontent.com/92983658/220088258-2ff1423c-627b-466b-a79b-5616fd932db5.png">
+
+
+<br>
+
+### Step Three: The kube-proxy Kubernetes Configuration File
+- Generate a kubeconfig file for the `kube-proxy` service:
+
+```
+
+{
+  kubectl config set-cluster ${NAME} \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://${KUBERNETES_API_SERVER_ADDRESS}:6443 \
+    --kubeconfig=kube-proxy.kubeconfig
+
+  kubectl config set-credentials system:kube-proxy \
+    --client-certificate=kube-proxy.pem \
+    --client-key=kube-proxy-key.pem \
+    --embed-certs=true \
+    --kubeconfig=kube-proxy.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=${NAME} \
+    --user=system:kube-proxy \
+    --kubeconfig=kube-proxy.kubeconfig
+
+  kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
+}
+
+```
+
+<br>
+
+<img width="821" alt="kubeproxy_config" src="https://user-images.githubusercontent.com/92983658/220089166-6463d17f-d9a1-4252-8275-29c3e060bd02.png">
+
+<br>
+
+- results: `ls *.kubeconfig`
+```
+kube-proxy.kubeconfig
+
+```
+
+<br>
+
+### Step Four: The kube-controller-manager Kubernetes Configuration File
+- Generate a kubeconfig file for the `kube-controller-manager` service:
+
+```
+{
+  kubectl config set-cluster ${NAME} \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=kube-controller-manager.kubeconfig
+
+  kubectl config set-credentials system:kube-controller-manager \
+    --client-certificate=kube-controller-manager.pem \
+    --client-key=kube-controller-manager-key.pem \
+    --embed-certs=true \
+    --kubeconfig=kube-controller-manager.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=${NAME} \
+    --user=system:kube-controller-manager \
+    --kubeconfig=kube-controller-manager.kubeconfig
+
+  kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
+}
+
+```
+
+*note: Notice that the --server is set to use 127.0.0.1. This is because, this component runs on the API-Server so there is no point routing through the Load Balancer.*
+
+<br>
+
+<img width="852" alt="kubecontroller_config" src="https://user-images.githubusercontent.com/92983658/220090560-482aaa9c-fe5a-4eb5-bca7-9680b75d8279.png">
+
+<br>
+
+- result
+```
+kube-controller-manager.kubeconfig
+
+```
+
+<br>
+
+### Step Five: The kube-scheduler Kubernetes Configuration File
+- Generate a kubeconfig file for the `kube-scheduler` service:
+
+```
+{
+  kubectl config set-cluster ${NAME} \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=kube-scheduler.kubeconfig
+
+  kubectl config set-credentials system:kube-scheduler \
+    --client-certificate=kube-scheduler.pem \
+    --client-key=kube-scheduler-key.pem \
+    --embed-certs=true \
+    --kubeconfig=kube-scheduler.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=${NAME} \
+    --user=system:kube-scheduler \
+    --kubeconfig=kube-scheduler.kubeconfig
+
+  kubectl config use-context default --kubeconfig=kube-scheduler.kubeconfig
+}
+
+```
+
+<br>
+
+<img width="757" alt="kube_scheduler_config" src="https://user-images.githubusercontent.com/92983658/220091123-6a03dcbe-b3e4-4628-823e-178bc3262198.png">
+
+<br>
+
+- results
+```
+kube-scheduler.kubeconfig
+
+```
+
+<br>
+
+### Step Six: The admin Kubernetes Configuration File
+- Generate a kubeconfig file for the `admin` user:
+
+```
+
+{
+  kubectl config set-cluster ${NAME} \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=https://${KUBERNETES_API_SERVER_ADDRESS}:6443 \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config set-credentials admin \
+    --client-certificate=admin.pem \
+    --client-key=admin-key.pem \
+    --embed-certs=true \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=${NAME} \
+    --user=admin \
+    --kubeconfig=admin.kubeconfig
+
+  kubectl config use-context default --kubeconfig=admin.kubeconfig
+}
+
+```
+
+<br>
+
+- results
+```
+admin.kubeconfig
+
+```
+
+<br>
+
+<img width="797" alt="kubeconfig_admin" src="https://user-images.githubusercontent.com/92983658/220091893-292e3860-7968-4cb5-8357-51293b884124.png">
+
+<br>
+
+<img width="938" alt="list_kubeconfig" src="https://user-images.githubusercontent.com/92983658/220092196-57ef3e39-8b7d-4fea-aded-924eacd449e8.png">
+
+<br>
+
+
+
+
+
+
+
