@@ -1430,6 +1430,49 @@ admin.kubeconfig
 
 <br>
 
+### Step Seven: Distribute the Kubernetes Configuration Files
+- Copy the appropriate `kubelet` and `kube-prox`y kubeconfig files to each worker instance:
+
+```
+
+for instance in worker-0 worker-1 worker-2; do
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+  scp -i ../ssh/k8s-cluster.id_rsa \
+    ${instance}.kubeconfig kube-proxy.kubeconfig ubuntu@${external_ip}:~/; \
+done
+
+```
+
+<br>
+
+<img width="1363" alt="worker_node_kube_config_dist" src="https://user-images.githubusercontent.com/92983658/220094806-d0a5d918-df52-4c31-9105-da584a48ab3b.png">
+
+<br>
+
+- Copy the appropriate `kube-controller-manager` and `kube-scheduler` kubeconfig files to each master instance:
+
+```
+
+for instance in master-0 master-1 master-2; do
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+  scp -i ../ssh/k8s-cluster.id_rsa \
+    admin.kubeconfig kube-controller-manager.kubeconfig kube-scheduler.kubeconfig ubuntu@${external_ip}:~/;
+done
+
+```
+
+<br>
+
+<img width="1405" alt="master_kube_config_dist" src="https://user-images.githubusercontent.com/92983658/220096500-5b0d4be9-aed3-4559-9360-ccf06e41d0dd.png">
+
+<br>
+
+
+
 
 
 
