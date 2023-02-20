@@ -1471,8 +1471,187 @@ done
 
 <br>
 
+## PART Six: Generating the Data Encryption Config and Key
+
+Kubernetes stores a variety of data including cluster state, application configurations, and secrets. Kubernetes supports the ability to encrypt cluster data at rest.
+
+### The Encryption Key
+- Generate an encryption key: `ETCD_ENCRYPTION_KEY=$(head -c 64 /dev/urandom | base64)`
+
+<br>
+
+<img width="1246" alt="encryption_key" src="https://user-images.githubusercontent.com/92983658/220099585-1e139642-9eec-4da1-bcd9-c375dd5b53d3.png">
+
+<br>
+
+### The Encryption Config File
+
+- Create the `encryption-config.yaml` encryption config file:
 
 
+```
+
+cat > encryption-config.yaml <<EOF
+kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: ${ENCRYPTION_KEY}
+      - identity: {}
+EOF
+
+```
+
+<br>
+
+
+<img width="991" alt="encryption_yaml_1a" src="https://user-images.githubusercontent.com/92983658/220100719-50963def-2b3a-4d1e-aaf4-c42a57a68b94.png">
+
+<br>
+
+<img width="992" alt="encryption_yaml_1b" src="https://user-images.githubusercontent.com/92983658/220100742-3f929162-c874-4b90-b8b7-1de7acd7c6eb.png">
+
+<br>
+
+#### Copy the encryption-config.yaml encryption config file to each master instance:
+
+```
+
+for instance in master-0 master-1 master-2; do
+  external_ip=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${instance}" \
+    --output text --query 'Reservations[].Instances[].PublicIpAddress')
+  scp -i ../ssh/k8s-cluster.id_rsa \
+    encryption-config.yaml ubuntu@${external_ip}:~/;
+done
+
+```
+
+<br>
+
+<img width="1371" alt="distribute_encryption_master" src="https://user-images.githubusercontent.com/92983658/220101664-67cafd26-385f-4867-a524-262ef85f26b8.png">
+
+<br>
+
+## PART Seven: Bootstrapping the etcd Cluster
+The primary purpose of the `etcd` component is to store the state of the cluster. This is because Kubernetes itself is stateless. Therefore, all its stateful data will persist in `etcd`.
+
+Since Kubernetes is a distributed system – it needs a distributed storage to keep persistent data in it. `etcd` is a highly-available key value store that fits the purpose.
+
+The following commands must be run on each `master` instance: `master-0`, `master-1`, and `master-2`
+
+#### ssh separately into each master instance
+```
+#master-1
+master_1_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=master-0" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_1_ip}
+
+#master 2
+master_2_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=master-1" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_2_ip}
+
+#master 3
+master_3_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=master-2" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_3_ip}
+
+```
+
+<br>
+
+<img width="1058" alt="instances" src="https://user-images.githubusercontent.com/92983658/220110824-9e20ae68-8f86-4dbb-af24-2ee97f35afbc.png">
+
+<br>
+
+### Bootstrapping an etcd Cluster Member
+
+#### Download and Install the etcd Binaries
+- Download the official etcd release binaries from the etcd GitHub project:
+```
+
+wget -q --show-progress --https-only --timestamping \
+  "https://github.com/etcd-io/etcd/releases/download/v3.4.15/etcd-v3.4.15-linux-amd64.tar.gz"
+
+
+```
+
+<br>
+
+- Extract and install the `etcd server` and the `etcdctl` command line utility:
+```
+
+{
+  tar -xvf etcd-v3.4.15-linux-amd64.tar.gz
+  sudo mv etcd-v3.4.15-linux-amd64/etcd* /usr/local/bin/
+}
+
+```
+
+<br>
+
+#### Configure the etcd Server
+
+```
+
+{
+  sudo mkdir -p /etc/etcd /var/lib/etcd
+  sudo chmod 700 /var/lib/etcd
+  sudo cp ca.pem master-kubernetes-key.pem master-kubernetes.pem /etc/etcd/
+}
+
+```
+
+<br>
+
+- The instance internal IP address will be used to serve client requests and communicate with etcd cluster peers. Retrieve the internal IP address for the current compute instance:
+
+```
+
+export INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+
+echo "${INTERNAL_IP}"
+
+```
+
+<br>
+
+<img width="977" alt="internal_ip_1a" src="https://user-images.githubusercontent.com/92983658/220113883-d012a5a8-b6b7-4628-9110-70feb6d42eed.png">
+
+<img width="972" alt="internal_ip_1b" src="https://user-images.githubusercontent.com/92983658/220113901-1ca843b3-d04f-4429-a5c4-9fc45a70cff1.png">
+
+<img width="960" alt="internal_ip_1c" src="https://user-images.githubusercontent.com/92983658/220113945-b199682a-7f49-4bec-814c-9fd48e2b33f2.png">
+
+<br>
+
+- Each `etcd` member must have a unique name within an etcd cluster. Set the etcd name to match the hostname of the current compute instance:
+
+```
+ETCD_NAME=$(curl -s http://169.254.169.254/latest/user-data/ \
+  | tr "|" "\n" | grep "^name" | cut -d"=" -f2)
+
+echo "${ETCD_NAME}"
+
+```
+
+<br>
+
+<img width="871" alt="etcd_1a" src="https://user-images.githubusercontent.com/92983658/220115924-1d2ac0db-dc14-474d-be46-e3e3f97bd81a.png">
+
+<img width="817" alt="etcd_1c" src="https://user-images.githubusercontent.com/92983658/220115932-1092ef89-f968-435c-8657-df425dc19c68.png">
+
+<img width="808" alt="etcd_1d" src="https://user-images.githubusercontent.com/92983658/220115961-1d3ac8c9-6456-47ec-83c0-1354026791c8.png">
+
+<br>
 
 
 
