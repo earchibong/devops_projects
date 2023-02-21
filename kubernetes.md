@@ -1471,7 +1471,7 @@ done
 
 <br>
 
-## PART Six: Generating the Data Encryption Config and Key
+## PART SIX: Generating the Data Encryption Config and Key
 
 Kubernetes stores a variety of data including cluster state, application configurations, and secrets. Kubernetes supports the ability to encrypt cluster data at rest.
 
@@ -1538,7 +1538,7 @@ done
 
 <br>
 
-## PART Seven: Bootstrapping the etcd Cluster
+## PART SEVEN: Bootstrapping the etcd Cluster
 The primary purpose of the `etcd` component is to store the state of the cluster. This is because Kubernetes itself is stateless. Therefore, all its stateful data will persist in `etcd`.
 
 Since Kubernetes is a distributed system – it needs a distributed storage to keep persistent data in it. `etcd` is a highly-available key value store that fits the purpose.
@@ -1666,20 +1666,20 @@ Documentation=https://github.com/coreos
 Type=notify
 ExecStart=/usr/local/bin/etcd \\
   --name ${ETCD_NAME} \\
-  --trusted-ca-file=/etc/etcd/ca.pem \\
-  --peer-trusted-ca-file=/etc/etcd/ca.pem \\
-  --peer-client-cert-auth \\
-  --client-cert-auth \\
-  --listen-peer-urls https://${INTERNAL_IP}:2380 \\
-  --listen-client-urls https://${INTERNAL_IP}:2379,https://127.0.0.1:2379 \\
-  --advertise-client-urls https://${INTERNAL_IP}:2379 \\
-  --initial-cluster-token etcd-cluster-0 \\
-  --initial-cluster master-0=https://172.31.0.10:2380,master-1=https://172.31.0.11:2380,master-2=https://172.31.0.12:2380 \\
   --cert-file=/etc/etcd/master-kubernetes.pem \\
   --key-file=/etc/etcd/master-kubernetes-key.pem \\
   --peer-cert-file=/etc/etcd/master-kubernetes.pem \\
   --peer-key-file=/etc/etcd/master-kubernetes-key.pem \\
+  --trusted-ca-file=/etc/etcd/ca.pem \\
+  --peer-trusted-ca-file=/etc/etcd/ca.pem \\
+  --peer-client-cert-auth \\
+  --client-cert-auth \\
   --initial-advertise-peer-urls https://${INTERNAL_IP}:2380 \\
+  --listen-peer-urls https://${INTERNAL_IP}:2380 \\
+  --listen-client-urls https://${INTERNAL_IP}:2379,https://127.0.0.1:2379 \\
+  --advertise-client-urls https://${INTERNAL_IP}:2379 \\
+  --initial-cluster-token etcd-cluster-0 \\
+  --initial-cluster master-0=https://172.31.0.10:2380,master-1=https://172.31.0.10:2380,master-2=https://172.31.0.10:2380 \\
   --initial-cluster-state new \\
   --data-dir=/var/lib/etcd
 Restart=on-failure
@@ -1733,7 +1733,7 @@ sudo ETCDCTL_API=3 etcdctl member list \
 
 <br>
 
-## PART Eight: Bootstrapping the Kubernetes Control Plane
+## PART EIGHT: Bootstrapping the Kubernetes Control Plane
 
 - SSH to each master as described in previous section.
 
@@ -1802,14 +1802,6 @@ export INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 echo $INTERNAL_IP
 
 ```
-<br>
-
-```
-
-REGION=$(curl -s -H "Metadata-Flavor: Google" \
-  http://metadata.google.internal/computeMetadata/v1/project/attributes/google-compute-default-region)
-
-```
 
 <br>
 
@@ -1843,7 +1835,7 @@ ExecStart=/usr/local/bin/kube-apiserver \\
   --enable-admission-plugins=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \\
   --etcd-cafile=/var/lib/kubernetes/ca.pem \\
   --etcd-certfile=/var/lib/kubernetes/master-kubernetes.pem \\
-  --etcd-keyfile=/var/lib/kubernetes/master-kubernetes-key.pem\\
+  --etcd-keyfile=/var/lib/kubernetes/master-kubernetes-key.pem \\
   --etcd-servers=https://172.31.0.10:2379,https://172.31.0.11:2379,https://172.31.0.12:2379 \\
   --event-ttl=1h \\
   --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \\
@@ -1985,6 +1977,7 @@ EOF
 }
 
 ```
+*note: Allow up to 10 seconds for the Kubernetes API Server to fully initialize.*
 
 <br>
 
@@ -2002,7 +1995,17 @@ sudo systemctl status kube-scheduler
 }
 
 ```
+*note: it can take a while for te services to fully load*
 
+<br>
+
+<img width="1382" alt="system_ctl" src="https://user-images.githubusercontent.com/92983658/220297530-e0c4f1db-b12d-4b3a-a604-be16ef8b4383.png">
+
+<br>
+
+### Enable HTTP Health Checks
+
+- get the cluster details run: `kubectl cluster-info --kubeconfig admin.kubeconfig`
 
 
 
