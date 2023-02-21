@@ -1431,7 +1431,7 @@ admin.kubeconfig
 <br>
 
 ### Step Seven: Distribute the Kubernetes Configuration Files
-- Copy the appropriate `kubelet` and `kube-prox`y kubeconfig files to each worker instance:
+- Copy the appropriate `kubelet` and `kube-proxy` kubeconfig files to each worker instance:
 
 ```
 
@@ -2003,7 +2003,11 @@ sudo systemctl status kube-scheduler
 
 <br>
 
-<img width="1382" alt="system_ctl" src="https://user-images.githubusercontent.com/92983658/220297530-e0c4f1db-b12d-4b3a-a604-be16ef8b4383.png">
+<img width="1380" alt="status_scheduler" src="https://user-images.githubusercontent.com/92983658/220362064-c8554635-63d8-4a80-a68e-7aa457be142f.png">
+
+<img width="1389" alt="status_controller" src="https://user-images.githubusercontent.com/92983658/220362125-73dfc7dc-0d1e-41e1-ba90-075f627bec87.png">
+
+<img width="1385" alt="ststatus_api" src="https://user-images.githubusercontent.com/92983658/220362150-4873f33b-d970-4de4-9941-da304381715f.png">
 
 <br>
 
