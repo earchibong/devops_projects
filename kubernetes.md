@@ -1807,8 +1807,6 @@ echo $INTERNAL_IP
 
 <br>
 
-```
-
 <img width="1377" alt="internal_ip_2" src="https://user-images.githubusercontent.com/92983658/220124241-74e909d8-998a-480c-8e56-9caa162de1af.png">
 
 <br>
