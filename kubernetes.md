@@ -1713,6 +1713,7 @@ sudo systemctl start etcd
 
 ### Verification
 - List the etcd cluster members:
+
 ```
 
 sudo ETCDCTL_API=3 etcdctl member list \
@@ -1787,6 +1788,7 @@ encryption-config.yaml /var/lib/kubernetes/
 }
 
 ```
+
 <br>
 
 <img width="815" alt="configure_api" src="https://user-images.githubusercontent.com/92983658/220124176-049e9e17-c208-4155-b9fa-885051c97b57.png">
@@ -1968,6 +1970,7 @@ EOF
 <br>
 
 ### Start the Controller Services
+
 ```
 
 {
@@ -1977,6 +1980,7 @@ EOF
 }
 
 ```
+
 *note: Allow up to 10 seconds for the Kubernetes API Server to fully initialize.*
 
 <br>
@@ -1986,6 +1990,7 @@ EOF
 <br>
 
 - check status of controller services:
+
 ```
 
 {
@@ -1995,6 +2000,7 @@ sudo systemctl status kube-scheduler
 }
 
 ```
+
 *note: it can take a while for te services to fully load*
 
 <br>
