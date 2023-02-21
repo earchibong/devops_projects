@@ -1182,11 +1182,12 @@ done
 
 <br>
 
-## PART FIVE: Configuring kubectl for Remote Access
-generate Kubernetes configuration files, also known as kubeconfigs, which enables Kubernetes clients to locate and authenticate to the Kubernetes API Servers. A client tool called `kubectl` is needed to do this
+## PART FIVE: Generating Kubernetes Configuration Files for Authentication
+Configuring kubectl for Remote Access generating Kubernetes configuration files, also known as kubeconfigs, which enables Kubernetes clients to locate and authenticate to the Kubernetes API Servers. A client tool called `kubectl` is needed to do this
 
+### Client Authentication Configs
 
-### Step One: Kubernetes Public IP Address
+## Step One: Kubernetes Public IP Address
 Each kubeconfig requires a Kubernetes API Server to connect to. To support high availability, the IP address assigned to the external load balancer fronting the Kubernetes API Servers will be used.
 
 - create a few environment variables for reuse by multiple commands.
@@ -1199,7 +1200,7 @@ KUBERNETES_API_SERVER_ADDRESS=$(aws elbv2 describe-load-balancers --load-balance
 
 <br>
 
-### Step Two: The kubelet Kubernetes Configuration File
+## Step Two: The kubelet Kubernetes Configuration File
 - Generate a `kubeconfig` file for each worker node:
 
 
@@ -1258,7 +1259,7 @@ worker-2.kubeconfig
 
 <br>
 
-### Step Three: The kube-proxy Kubernetes Configuration File
+## Step Three: The kube-proxy Kubernetes Configuration File
 - Generate a kubeconfig file for the `kube-proxy` service:
 
 ```
@@ -1300,7 +1301,7 @@ kube-proxy.kubeconfig
 
 <br>
 
-### Step Four: The kube-controller-manager Kubernetes Configuration File
+## Step Four: The kube-controller-manager Kubernetes Configuration File
 - Generate a kubeconfig file for the `kube-controller-manager` service:
 
 ```
@@ -1343,7 +1344,7 @@ kube-controller-manager.kubeconfig
 
 <br>
 
-### Step Five: The kube-scheduler Kubernetes Configuration File
+## Step Five: The kube-scheduler Kubernetes Configuration File
 - Generate a kubeconfig file for the `kube-scheduler` service:
 
 ```
@@ -1384,7 +1385,7 @@ kube-scheduler.kubeconfig
 
 <br>
 
-### Step Six: The admin Kubernetes Configuration File
+## Step Six: The admin Kubernetes Configuration File
 - Generate a kubeconfig file for the `admin` user:
 
 ```
@@ -1430,7 +1431,7 @@ admin.kubeconfig
 
 <br>
 
-### Step Seven: Distribute the Kubernetes Configuration Files
+### Distribute the Kubernetes Configuration Files
 - Copy the appropriate `kubelet` and `kube-proxy` kubeconfig files to each worker instance:
 
 ```
