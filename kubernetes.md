@@ -2008,7 +2008,7 @@ sudo systemctl status kube-scheduler
 - get the cluster details run: `kubectl cluster-info --kubeconfig admin.kubeconfig`
 
 
-
+xxx
 
 
 
