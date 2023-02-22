@@ -118,7 +118,7 @@ sudo mv cfssl cfssljson /usr/local/bin/
 
 #### 1. Virtual Private Cloud – VPC
 - Create a directory named `k8s-cluster`
-- in the new directory, create a VPC and store the ID as a variable:
+- in the new directory, create a custom VPC, store the ID as a variable and tag it so it is named `k8s-cluster`:
 ```
 
 VPC_ID=$(aws ec2 create-vpc \
@@ -130,19 +130,15 @@ VPC_ID=$(aws ec2 create-vpc \
 ```
 <br>
 
-<img width="857" alt="k8_vpc" src="https://user-images.githubusercontent.com/92983658/219364710-5015fdd8-3b64-455f-9b6e-d5b94d114fb0.png">
+<img width="799" alt="customer_vpc" src="https://user-images.githubusercontent.com/92983658/220583395-7f5b0dec-51f9-485b-935a-eb3dadd26d35.png">
 
 <br>
 
-- Tag the VPC so that it is named:
+- store the name ID as a variable:
 
 ```
 
 NAME=k8s-cluster
-
-aws ec2 create-tags \
-  --resources ${VPC_ID} \
-  --tags Key=Name,Value=${NAME}
   
 ```
 
