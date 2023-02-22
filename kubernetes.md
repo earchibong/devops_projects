@@ -1475,11 +1475,7 @@ done
 Kubernetes stores a variety of data including cluster state, application configurations, and secrets. Kubernetes supports the ability to encrypt cluster data at rest.
 
 ### The Encryption Key
-- Generate an encryption key: `ETCD_ENCRYPTION_KEY=$(head -c 64 /dev/urandom | base64)`
-
-<br>
-
-<img width="1246" alt="encryption_key" src="https://user-images.githubusercontent.com/92983658/220099585-1e139642-9eec-4da1-bcd9-c375dd5b53d3.png">
+- Generate an encryption key: `ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)`
 
 <br>
 
@@ -1513,7 +1509,7 @@ EOF
 
 <br>
 
-<img width="992" alt="encryption_yaml_1b" src="https://user-images.githubusercontent.com/92983658/220100742-3f929162-c874-4b90-b8b7-1de7acd7c6eb.png">
+<img width="865" alt="encryption_yaml_1b" src="https://user-images.githubusercontent.com/92983658/220701069-f2182534-a40b-4c40-a1ef-51b0b8add797.png">
 
 <br>
 
@@ -1525,7 +1521,7 @@ for instance in master-0 master-1 master-2; do
   external_ip=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=${instance}" \
     --output text --query 'Reservations[].Instances[].PublicIpAddress')
-  scp -i ./ssh/k8s-cluster.id_rsa \
+  scp -i ../ssh/k8s-cluster.id_rsa \
     encryption-config.yaml ubuntu@${external_ip}:~/;
 done
 
@@ -1543,6 +1539,8 @@ The primary purpose of the `etcd` component is to store the state of the cluster
 Since Kubernetes is a distributed system – it needs a distributed storage to keep persistent data in it. `etcd` is a highly-available key value store that fits the purpose.
 
 The following commands must be run on each `master` instance: `master-0`, `master-1`, and `master-2`
+
+- split terminal on mac : `navigation bar > view > split pane`
 
 #### ssh separately into each master instance
 ```
