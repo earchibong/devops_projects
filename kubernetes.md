@@ -248,7 +248,7 @@ SUBNET_ID=$(aws ec2 create-subnet \
   
 ```
 
-*note: The  172.31.0.0/24 IP address range can host up to 254 compute instances.*
+*note: The  `172.31.0.0/24` IP address range can host up to 254 compute instances.*
 
 <br>
 
