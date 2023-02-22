@@ -1525,7 +1525,7 @@ for instance in master-0 master-1 master-2; do
   external_ip=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=${instance}" \
     --output text --query 'Reservations[].Instances[].PublicIpAddress')
-  scp -i ../ssh/k8s-cluster.id_rsa \
+  scp -i ./ssh/k8s-cluster.id_rsa \
     encryption-config.yaml ubuntu@${external_ip}:~/;
 done
 
@@ -1550,19 +1550,19 @@ The following commands must be run on each `master` instance: `master-0`, `maste
 master_1_ip=$(aws ec2 describe-instances \
 --filters "Name=tag:Name,Values=master-0" \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
-ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_1_ip}
+ssh -i ./ssh/k8s-cluster.id_rsa ubuntu@${master_1_ip}
 
 #master 2
 master_2_ip=$(aws ec2 describe-instances \
 --filters "Name=tag:Name,Values=master-1" \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
-ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_2_ip}
+ssh -i ./ssh/k8s-cluster.id_rsa ubuntu@${master_2_ip}
 
 #master 3
 master_3_ip=$(aws ec2 describe-instances \
 --filters "Name=tag:Name,Values=master-2" \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
-ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_3_ip}
+ssh -i ./ssh/k8s-cluster.id_rsa ubuntu@${master_3_ip}
 
 ```
 
