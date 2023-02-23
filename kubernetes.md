@@ -2041,7 +2041,7 @@ kubectl get componentstatuses --kubeconfig admin.kubeconfig
 
 **The commands in this section will affect the entire cluster and only need to be run once from one of the master nodes.**
 
-- Create the `system:kube-apiserver-to-kubelet ClusterRole` with permissions to access the Kubelet API and perform most common tasks associated with managing pods:
+- Create the ClusterRole with permissions to access the Kubelet API and perform most common tasks associated with managing pods:
 
 ```
 
@@ -2077,7 +2077,7 @@ EOF
 
 The Kubernetes API Server authenticates to the Kubelet as the kubernetes user using the client certificate as defined by the `--kubelet-client-certificate` flag.
 
-- Bind the `system:kube-apiserver-to-kubelet` ClusterRole to the kubernetes user:
+- Create the ClusterRoleBinding to bind the kubernetes user with the role created above:
 ```
 
 cat <<EOF | kubectl --kubeconfig admin.kubeconfig  apply -f -
