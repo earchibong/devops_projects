@@ -1540,7 +1540,7 @@ Since Kubernetes is a distributed system – it needs a distributed storage to k
 
 The following commands must be run on each `master` instance: `master-0`, `master-1`, and `master-2`
 
-- split terminal on mac : `navigation bar > view > split pane`
+- `tmux` can be used to run commands on multiple compute instances at the same time
 
 #### ssh separately into each master instance
 ```
@@ -1548,25 +1548,25 @@ The following commands must be run on each `master` instance: `master-0`, `maste
 master_1_ip=$(aws ec2 describe-instances \
 --filters "Name=tag:Name,Values=master-0" \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
-ssh -i ./ssh/k8s-cluster.id_rsa ubuntu@${master_1_ip}
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_1_ip}
 
 #master 2
 master_2_ip=$(aws ec2 describe-instances \
 --filters "Name=tag:Name,Values=master-1" \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
-ssh -i ./ssh/k8s-cluster.id_rsa ubuntu@${master_2_ip}
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_2_ip}
 
 #master 3
 master_3_ip=$(aws ec2 describe-instances \
 --filters "Name=tag:Name,Values=master-2" \
 --output text --query 'Reservations[].Instances[].PublicIpAddress')
-ssh -i ./ssh/k8s-cluster.id_rsa ubuntu@${master_3_ip}
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_3_ip}
 
 ```
 
 <br>
 
-<img width="1058" alt="instances" src="https://user-images.githubusercontent.com/92983658/220110824-9e20ae68-8f86-4dbb-af24-2ee97f35afbc.png">
+<img width="870" alt="ssh_master" src="https://user-images.githubusercontent.com/92983658/220931051-0482ce83-d174-4870-a3d3-535d64bc471c.png">
 
 <br>
 
@@ -1622,11 +1622,8 @@ echo "${INTERNAL_IP}"
 
 <br>
 
-<img width="977" alt="internal_ip_1a" src="https://user-images.githubusercontent.com/92983658/220113883-d012a5a8-b6b7-4628-9110-70feb6d42eed.png">
+<img width="1456" alt="internal_ip" src="https://user-images.githubusercontent.com/92983658/220936976-9981242b-087d-401d-a000-7a8d061a151f.png">
 
-<img width="972" alt="internal_ip_1b" src="https://user-images.githubusercontent.com/92983658/220113901-1ca843b3-d04f-4429-a5c4-9fc45a70cff1.png">
-
-<img width="960" alt="internal_ip_1c" src="https://user-images.githubusercontent.com/92983658/220113945-b199682a-7f49-4bec-814c-9fd48e2b33f2.png">
 
 <br>
 
@@ -1642,11 +1639,7 @@ echo "${ETCD_NAME}"
 
 <br>
 
-<img width="871" alt="etcd_1a" src="https://user-images.githubusercontent.com/92983658/220115924-1d2ac0db-dc14-474d-be46-e3e3f97bd81a.png">
-
-<img width="817" alt="etcd_1c" src="https://user-images.githubusercontent.com/92983658/220115932-1092ef89-f968-435c-8657-df425dc19c68.png">
-
-<img width="808" alt="etcd_1d" src="https://user-images.githubusercontent.com/92983658/220115961-1d3ac8c9-6456-47ec-83c0-1354026791c8.png">
+<img width="1448" alt="etcd_name" src="https://user-images.githubusercontent.com/92983658/220937358-4eaed645-6095-470f-b804-ddee33410105.png">
 
 <br>
 
@@ -1704,10 +1697,6 @@ sudo systemctl start etcd
 
 <br>
 
-<img width="1040" alt="start_etcd" src="https://user-images.githubusercontent.com/92983658/220117344-b708d7a6-7188-4a80-9f2c-b1b4a38486a1.png">
-
-<br>
-
 ### Verification
 - List the etcd cluster members:
 
@@ -1723,17 +1712,15 @@ sudo ETCDCTL_API=3 etcdctl member list \
 
 <br>
 
-<img width="947" alt="verification" src="https://user-images.githubusercontent.com/92983658/220118058-a9994ff5-aa05-45a3-90b7-740941d5845c.png">
+<img width="1452" alt="verfication_1a" src="https://user-images.githubusercontent.com/92983658/220938185-2d59bf4f-dbc9-4a31-b0bb-c1fa3419b462.png">
 
 <br>
 
-<img width="1381" alt="etcd_status" src="https://user-images.githubusercontent.com/92983658/220118409-54353a41-a3fc-4fe6-b240-8ebea8f7bf52.png">
+<img width="1450" alt="etcd_status_1b" src="https://user-images.githubusercontent.com/92983658/220938542-b657e866-514f-4915-bd2d-9b40a4dfca94.png">
 
 <br>
 
 ## PART EIGHT: Bootstrapping the Kubernetes Control Plane
-
-- SSH to each master as described in previous section.
 
 ### Provision the Kubernetes Control Plane
 
@@ -1804,7 +1791,7 @@ echo $INTERNAL_IP
 
 <br>
 
-<img width="1377" alt="internal_ip_2" src="https://user-images.githubusercontent.com/92983658/220124241-74e909d8-998a-480c-8e56-9caa162de1af.png">
+<img width="1456" alt="internal_ip_3" src="https://user-images.githubusercontent.com/92983658/220975845-ee0b558e-1c00-4d55-992d-5c6c45b3570e.png">
 
 <br>
 
@@ -2000,11 +1987,7 @@ sudo systemctl status kube-scheduler
 
 <br>
 
-<img width="1380" alt="status_scheduler" src="https://user-images.githubusercontent.com/92983658/220362064-c8554635-63d8-4a80-a68e-7aa457be142f.png">
-
-<img width="1389" alt="status_controller" src="https://user-images.githubusercontent.com/92983658/220362125-73dfc7dc-0d1e-41e1-ba90-075f627bec87.png">
-
-<img width="1385" alt="ststatus_api" src="https://user-images.githubusercontent.com/92983658/220362150-4873f33b-d970-4de4-9941-da304381715f.png">
+<img width="1452" alt="api_service_status" src="https://user-images.githubusercontent.com/92983658/220977868-4cb3b204-c59f-4f1e-a828-3413fd1317c9.png">
 
 <br>
 
@@ -2012,8 +1995,34 @@ sudo systemctl status kube-scheduler
 
 - get the cluster details run: `kubectl cluster-info --kubeconfig admin.kubeconfig`
 
+<br>
 
-xxx
+<img width="1451" alt="kubeclusterinfo" src="https://user-images.githubusercontent.com/92983658/220979186-bdcdb62d-e58f-473f-8911-70daebe35ba4.png">
+
+<br>
+
+- get the current namespaces: `kubectl get namespaces --kubeconfig admin.kubeconfig`
+
+<br>
+
+<img width="1453" alt="namespaces" src="https://user-images.githubusercontent.com/92983658/220980022-a7660a68-1827-44c5-b2dd-c332cbd917dc.png">
+
+<br>
+
+- reach the Kubernetes API Server publicly:
+```
+
+curl --cacert /var/lib/kubernetes/ca.pem https://$INTERNAL_IP:6443/version
+
+```
+
+<br>
+
+<img width="1457" alt="api_public" src="https://user-images.githubusercontent.com/92983658/220980462-cdec63a3-29dc-4f8c-9663-73c4217a053f.png">
+
+<br>
+
+
 
 
 
