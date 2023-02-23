@@ -2106,7 +2106,12 @@ EOF
 
 ## PART NINE: Bootstrapping the Kubernetes Worker Nodes
 
+The following components will be installed on each node:
 
+- kubelet
+- kube-proxy
+- Containerd or Docker
+- Networking plugins
 
 
 
