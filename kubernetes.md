@@ -2022,6 +2022,90 @@ curl --cacert /var/lib/kubernetes/ca.pem https://$INTERNAL_IP:6443/version
 
 <br>
 
+- get the status of each component:
+```
+kubectl get componentstatuses --kubeconfig admin.kubeconfig
+
+```
+
+<br>
+
+<img width="1460" alt="component_status" src="https://user-images.githubusercontent.com/92983658/220981805-1da48376-54f3-4356-8e6e-038aeb99c95b.png">
+
+<br>
+
+### RBAC for Kubelet Authorization
+
+- configure RBAC permissions so that the api-server has necessary authorization for the kubelet. Access to the Kubelet API is required for retrieving metrics, logs, and executing commands in pods.
+
+
+**The commands in this section will affect the entire cluster and only need to be run once from one of the master nodes.**
+
+- Create the `system:kube-apiserver-to-kubelet ClusterRole` with permissions to access the Kubelet API and perform most common tasks associated with managing pods:
+
+```
+
+cat <<EOF | kubectl apply --kubeconfig admin.kubeconfig -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:kube-apiserver-to-kubelet
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/proxy
+      - nodes/stats
+      - nodes/log
+      - nodes/spec
+      - nodes/metrics
+    verbs:
+      - "*"
+EOF
+
+```
+
+<br>
+
+<img width="727" alt="cluster_role" src="https://user-images.githubusercontent.com/92983658/220983206-10181a50-bb3d-49cd-8c37-4e90d8e74508.png">
+
+<br>
+
+The Kubernetes API Server authenticates to the Kubelet as the kubernetes user using the client certificate as defined by the `--kubelet-client-certificate` flag.
+
+- Bind the `system:kube-apiserver-to-kubelet` ClusterRole to the kubernetes user:
+```
+
+cat <<EOF | kubectl --kubeconfig admin.kubeconfig  apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:kube-apiserver
+  namespace: ""
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-apiserver-to-kubelet
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: kubernetes
+EOF
+
+```
+
+<br>
+
+<img width="728" alt="cluster_bind" src="https://user-images.githubusercontent.com/92983658/220983936-e9337c8d-c8fc-413d-bfb9-0c824db3f94c.png">
+
+<br>
+
+## PART NINE: Bootstrapping the Kubernetes Worker Nodes
+
 
 
 
