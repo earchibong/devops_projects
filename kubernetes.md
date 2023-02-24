@@ -2126,6 +2126,427 @@ The following components will be installed on each node:
 - Containerd or Docker
 - Networking plugins
 
+<br>
+
+#### ssh separately into each worker instance
+
+- The commands below must be run on each worker instance: worker-0, worker-1, and worker-2. Login to each worker instance using the following AWS command.
+
+```
+#worker-1
+worker_1_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=worker-0" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${worker_1_ip}
+
+#worker 2
+worker_2_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=worker-1" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${worker_2_ip}
+
+#worker 3
+worker_3_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=worker-2" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${worker_3_ip}
+
+```
+
+<br>
+
+<img width="1450" alt="worker_nodes" src="https://user-images.githubusercontent.com/92983658/221116452-6c827c5f-6db7-4d42-82ca-cefc127b43c8.png">
+
+<br>
+
+### Provisioning a Kubernetes Worker Node
+
+- Install the OS dependencies:
+
+```
+
+{
+  sudo apt-get update
+  sudo apt-get -y install socat conntrack ipset
+}
+
+```
+*The socat binary enables support for the `kubectl port-forward` command.*
+
+<br>
+
+### Disable Swap
+By default the kubelet will fail to start if swap is enabled. It is recommended that swap be disabled to ensure Kubernetes can provide proper resource allocation and quality of service.
+
+Verify if swap is enabled:
+```
+sudo swapon --show
+
+```
+
+If output is empty then swap is not enabled. If swap is enabled run the following command to disable swap immediately:
+
+```
+sudo swapoff -a
+
+```
+
+<br>
+
+### Download and Install Worker Binaries
+```
+
+wget -q --show-progress --https-only --timestamping \
+  https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.21.0/crictl-v1.21.0-linux-amd64.tar.gz \
+  https://github.com/opencontainers/runc/releases/download/v1.0.0-rc93/runc.amd64 \
+  https://github.com/containernetworking/plugins/releases/download/v0.9.1/cni-plugins-linux-amd64-v0.9.1.tgz \
+  https://github.com/containerd/containerd/releases/download/v1.4.4/containerd-1.4.4-linux-amd64.tar.gz \
+  https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/amd64/kubectl \
+  https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/amd64/kube-proxy \
+  https://storage.googleapis.com/kubernetes-release/release/v1.21.0/bin/linux/amd64/kubelet
+  
+```
+
+<br>
+
+- Create the installation directories:
+```
+
+sudo mkdir -p \
+  /etc/cni/net.d \
+  /opt/cni/bin \
+  /var/lib/kubelet \
+  /var/lib/kube-proxy \
+  /var/lib/kubernetes \
+  /var/run/kubernetes
+  
+```
+
+<br>
+
+<img width="1451" alt="installation_directories" src="https://user-images.githubusercontent.com/92983658/221118865-7409f428-9182-4816-bbac-9fe8dc53cac5.png">
+
+<br>
+
+- Install the worker binaries:
+
+```
+
+{
+  mkdir containerd
+  tar -xvf crictl-v1.21.0-linux-amd64.tar.gz
+  tar -xvf containerd-1.4.4-linux-amd64.tar.gz -C containerd
+  sudo tar -xvf cni-plugins-linux-amd64-v0.9.1.tgz -C /opt/cni/bin/
+  sudo mv runc.amd64 runc
+  chmod +x crictl kubectl kube-proxy kubelet runc 
+  sudo mv crictl kubectl kube-proxy kubelet runc /usr/local/bin/
+  sudo mv containerd/bin/* /bin/
+}
+
+```
+
+<br>
+
+<img width="1444" alt="worker_binaries" src="https://user-images.githubusercontent.com/92983658/221119920-f8f00bbb-6a50-4205-b475-1c25cceedd44.png">
+
+<br>
+
+### Configure CNI Networking
+
+- Retrieve the Pod CIDR range for the current compute instance:
+
+```
+
+POD_CIDR=$(curl -s http://169.254.169.254/latest/user-data/ \
+  | tr "|" "\n" | grep "^pod-cidr" | cut -d"=" -f2)
+
+echo "${POD_CIDR}"
+  
+```
+
+<br>
+
+<img width="1448" alt="pod_cidr" src="https://user-images.githubusercontent.com/92983658/221127917-45952a0c-4789-49af-8df1-0b17366f2e39.png">
+
+<br>
+
+- Create the bridge network configuration file:
+
+```
+
+cat <<EOF | sudo tee /etc/cni/net.d/10-bridge.conf
+{
+    "cniVersion": "0.4.0",
+    "name": "bridge",
+    "type": "bridge",
+    "bridge": "cnio0",
+    "isGateway": true,
+    "ipMasq": true,
+    "ipam": {
+        "type": "host-local",
+        "ranges": [
+          [{"subnet": "${POD_CIDR}"}]
+        ],
+        "routes": [{"dst": "0.0.0.0/0"}]
+    }
+}
+EOF
+
+```
+
+<br>
+
+<img width="1455" alt="bridge_config" src="https://user-images.githubusercontent.com/92983658/221128380-9811808e-6a74-46ba-8d87-91232d1d8a2e.png">
+
+<br>
+
+- Create the loopback network configuration file:
+```
+
+cat <<EOF | sudo tee /etc/cni/net.d/99-loopback.conf
+{
+    "cniVersion": "0.4.0",
+    "name": "lo",
+    "type": "loopback"
+}
+EOF
+
+```
+
+<br>
+
+### Configure containerd
+
+- Create the containerd configuration file:
+```
+sudo mkdir -p /etc/containerd/
+
+```
+
+<br>
+
+```
+
+cat << EOF | sudo tee /etc/containerd/config.toml
+[plugins]
+  [plugins.cri.containerd]
+    snapshotter = "overlayfs"
+    [plugins.cri.containerd.default_runtime]
+      runtime_type = "io.containerd.runtime.v1.linux"
+      runtime_engine = "/usr/local/bin/runc"
+      runtime_root = ""
+EOF
+
+```
+
+<br>
+
+<img width="731" alt="containernerd_config" src="https://user-images.githubusercontent.com/92983658/221129118-ac5a5be2-8574-4608-9e94-7b26ef41ea2d.png">
+
+<br>
+
+- Create the `containerd.service` systemd unit file:
+```
+
+cat <<EOF | sudo tee /etc/systemd/system/containerd.service
+[Unit]
+Description=containerd container runtime
+Documentation=https://containerd.io
+After=network.target
+
+[Service]
+ExecStartPre=/sbin/modprobe overlay
+ExecStart=/bin/containerd
+Restart=always
+RestartSec=5
+Delegate=yes
+KillMode=process
+OOMScoreAdjust=-999
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+```
+
+<br>
+
+### Configure the Kubelet
+
+- set HOSTNAME in the local shell :
+
+```
+HOSTNAME=$(curl -s http://169.254.169.254/latest/user-data/ \
+  | tr "|" "\n" | grep "^name" | cut -d"=" -f2)
+
+echo "${HOSTNAME}"
+
+```
+
+<br>
+
+<img width="1460" alt="set_hostname" src="https://user-images.githubusercontent.com/92983658/221130588-b057f64d-c279-4a22-82ff-814c148b25b1.png">
+
+<br>
+
+```
+
+{
+  sudo mv ${HOSTNAME}-key.pem ${HOSTNAME}.pem /var/lib/kubelet/
+  sudo mv ${HOSTNAME}.kubeconfig /var/lib/kubelet/kubeconfig
+  sudo mv ca.pem /var/lib/kubernetes/
+}
+
+```
+
+<br>
+
+- Create the `kubelet-config.yaml` configuration file:
+
+```
+
+cat <<EOF | sudo tee /var/lib/kubelet/kubelet-config.yaml
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    enabled: true
+  x509:
+    clientCAFile: "/var/lib/kubernetes/ca.pem"
+authorization:
+  mode: Webhook
+clusterDomain: "cluster.local"
+clusterDNS:
+  - "10.32.0.10"
+podCIDR: "${POD_CIDR}"
+resolvConf: "/run/systemd/resolve/resolv.conf"
+runtimeRequestTimeout: "15m"
+tlsCertFile: "/var/lib/kubelet/${HOSTNAME}.pem"
+tlsPrivateKeyFile: "/var/lib/kubelet/${HOSTNAME}-key.pem"
+EOF
+
+```
+
+*The `resolvConf` configuration is used to avoid loops when using CoreDNS for service discovery on systems running systemd-resolved.*
+
+<br>
+
+- Create the `kubelet.service` systemd unit file:
+
+```
+
+cat <<EOF | sudo tee /etc/systemd/system/kubelet.service
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=containerd.service
+Requires=containerd.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \\
+  --config=/var/lib/kubelet/kubelet-config.yaml \\
+  --container-runtime=remote \\
+  --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock \\
+  --image-pull-progress-deadline=2m \\
+  --kubeconfig=/var/lib/kubelet/kubeconfig \\
+  --network-plugin=cni \\
+  --register-node=true \\
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+```
+
+<br>
+
+### Configure the Kubernetes Proxy
+```
+sudo mv kube-proxy.kubeconfig /var/lib/kube-proxy/kubeconfig
+
+```
+
+<br>
+
+- Create the `kube-proxy-config.yaml` configuration file:
+```
+
+cat <<EOF | sudo tee /var/lib/kube-proxy/kube-proxy-config.yaml
+kind: KubeProxyConfiguration
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+clientConnection:
+  kubeconfig: "/var/lib/kube-proxy/kubeconfig"
+mode: "iptables"
+clusterCIDR: "172.31.0.0/16"
+EOF
+
+```
+
+<br>
+
+<img width="1459" alt="kube_proxy_config" src="https://user-images.githubusercontent.com/92983658/221134337-91db81fe-2baa-4331-ae56-1b37a3e241e1.png">
+
+<br>
+
+- Create the kube-proxy.service systemd unit file:
+```
+
+cat <<EOF | sudo tee /etc/systemd/system/kube-proxy.service
+[Unit]
+Description=Kubernetes Kube Proxy
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-proxy \\
+  --config=/var/lib/kube-proxy/kube-proxy-config.yaml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+```
+
+<br>
+
+<img width="1455" alt="kube_proxy_service" src="https://user-images.githubusercontent.com/92983658/221138093-aa9ee962-cc46-4516-8fc3-5c9901792838.png">
+
+<br>
+
+### Start the Worker Services
+```
+
+{
+  sudo systemctl daemon-reload
+  sudo systemctl enable containerd kubelet kube-proxy
+  sudo systemctl start containerd kubelet kube-proxy
+}
+
+```
+
+<br>
+
+<img width="1450" alt="kube_ststus" src="https://user-images.githubusercontent.com/92983658/221141430-7071253e-1545-4878-8b31-03e1f29395a4.png">
+
+<br>
+
+### Verification
+
+```
+
+kubectl get nodes --kubeconfig admin.kubeconfig -o wide
+
+```
+
 
 
 
