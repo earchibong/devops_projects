@@ -2540,13 +2540,22 @@ EOF
 <br>
 
 ### Verification
+- The compute instances created in this tutorial will not have permission to complete this section. Run the following commands from the same machine used to create the compute instances.
 
 ```
-
+master_1_ip=$(aws ec2 describe-instances \
+--filters "Name=tag:Name,Values=master-0" \
+--output text --query 'Reservations[].Instances[].PublicIpAddress')
+ssh -i ../ssh/k8s-cluster.id_rsa ubuntu@${master_1_ip} \
 kubectl get nodes --kubeconfig admin.kubeconfig -o wide
 
 ```
 
+<br>
+
+<img width="1299" alt="worker_verification" src="https://user-images.githubusercontent.com/92983658/221145327-d22378e6-9818-4efb-abc5-f7279961af04.png">
+
+<br>
 
 
 
