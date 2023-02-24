@@ -35,6 +35,19 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 
 <br>
 
+## Labs
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-one-install-client-tools"> Installing The Client Tools</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-two-set-up-aws-cloud-resources-for-kubernetes-cluster">Set Up AWS Cloud Resources</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-three-set-up-compute-resources">Provision Compute Resources</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-four-prepare-self-signed-certificate-authority--general-tls-certificates">Provisioning a CA and Generating TLS Certificates</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-five-generating-kubernetes-configuration-files-for-authentication">Generating Kubernetes Configuration Files For Authentication</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-six-generating-the-data-encryption-config-and-key">Generating The Data Encryption Config And Key</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-six-generating-the-data-encryption-config-and-key">Bootstrapping The ETCD Cluster</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-eight-bootstrapping-the-kubernetes-control-plane">Bootstrapping The Kubernetes Control Pane</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-nine-bootstrapping-the-kubernetes-worker-nodes">Bootstrapping the Kubernetes Worker Nodes</a>
+
+<br>
+
 ## PART ONE: Install Client Tools
 
 ### Install and configure AWS CLI
