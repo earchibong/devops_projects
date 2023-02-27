@@ -41,7 +41,6 @@ Within this project we are going to learn and see in action following:
 
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploying A Random Pod</a>
 
-## Deploying the Tooling app using Kubernetes objects
 
 ## Deploy A Pod
 Deploy a basic Nginx container to run inside a Pod.
