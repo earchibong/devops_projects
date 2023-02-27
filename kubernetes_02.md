@@ -50,7 +50,6 @@ Deploy a basic Nginx container to run inside a Pod.
 ```
 
 sudo cat <<EOF | sudo tee ./nginx-pod.yaml
-
 apiVersion: v1
 kind: Pod
 metadata:
@@ -60,16 +59,11 @@ spec:
   - image: nginx
     name: nginx-pod
     ports:
-    - containerPort:
-      protocol: TCP
-      port: 80
+    - containerPort: 80
+      protocol: TCP  
 EOF
 
 ```
-
-<br>
-
-<img width="703" alt="nginx_yaml" src="https://user-images.githubusercontent.com/92983658/221557439-3a6c1419-e059-4317-ac58-ca4702e58c78.png">
 
 <br>
 
@@ -80,7 +74,35 @@ kubectl apply -f nginx-pod.yaml --kubeconfig admin.kubeconfig
 
 ```
 
+- output:
+```
+pod/nginx-pod created
+
+```
+
 <br>
 
+<img width="1041" alt="manifest" src="https://user-images.githubusercontent.com/92983658/221602012-ea713379-b1a4-4e9e-a33e-05f482789487.png">
 
-- 
+<br>
+
+ - Get an output of the pods running in the cluster
+ ```
+kubectl get pods --kubeconfig admin.kubeconfig
+
+```
+
+- output
+```
+
+NAME        READY   STATUS    RESTARTS   AGE
+nginx-pod   1/1     Running   0          19m
+
+```
+
+<br>
+
+<img width="759" alt="get_pods" src="https://user-images.githubusercontent.com/92983658/221603769-bbe75c7f-b983-4ed3-819d-16155cc24165.png">
+
+<br>
+
