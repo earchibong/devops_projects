@@ -4,8 +4,44 @@ Following from <a href="https://github.com/earchibong/devops_training/blob/main/
 demonstrates how containerised applications are deployed as pods in Kubernetes and how to access the application from 
 the browser.
 
+Within this project we are going to learn and see in action following:
+
+**Deployment of software applications using YAML manifest files with following K8s objects:**
+- Pods
+- ReplicaSets
+- Deployments
+- StatefulSets
+- Services (ClusterIP, NodeIP, Loadbalancer)
+- Configmaps
+- Volumes
+- PersistentVolumes
+- PersistentVolumeClaims
+
+
+**Difference between stateful and stateless applications**
+- Deploy MySQL as a StatefulSet and explain why
+
+**Limitations of using manifests directly to deploy on K8s**
+- Working with Helm templates, its components and the most important parts – semantic versioning
+- Converting all the .yaml templates into a helm chart
+
+**Deploying more tools with Helm charts on AWS Elastic Kubernetes Service (EKS)**
+- Jenkins
+- -MySQL
+- -Ingress Controllers (Nginx)
+- Cert-Manager
+- Ingress for Jenkins
+- Ingress for the actual application
+
+**Deploy Monitoring Tools**
+- Prometheus
+- Grafana
+
+**Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux.
+
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploying A Random Pod</a>
 
+## Deploying the Tooling app using Kubernetes objects
 
 ## Deploy A Pod
 Deploy a basic Nginx container to run inside a Pod.
