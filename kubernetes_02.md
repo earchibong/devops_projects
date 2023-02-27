@@ -50,17 +50,19 @@ Deploy a basic Nginx container to run inside a Pod.
 ```
 
 sudo cat <<EOF | sudo tee ./nginx-pod.yaml
+
 apiVersion: v1
 kind: Pod
 metadata:
-name: nginx-pod
+  name: nginx-pod
 spec:
-containers:
-- image: nginx:latest
-name: nginx-pod
-ports:
-- containerPort: 80
-  protocol: TCP
+  containers:
+  - image: nginx
+    name: nginx-pod
+    ports:
+    - containerPort:
+      protocol: TCP
+      port: 80
 EOF
 
 ```
@@ -74,7 +76,7 @@ EOF
 - Apply the manifest with the help of `kubectl`
 ```
 
-kubectl apply -f nginx-pod.yaml
+kubectl apply -f nginx-pod.yaml --kubeconfig admin.kubeconfig
 
 ```
 
