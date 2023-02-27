@@ -100,9 +100,32 @@ nginx-pod   1/1     Running   0          19m
 
 ```
 
+- If the Pods were not ready for any reason, for example if there are no worker nodes, you will see something like the below output.
+
+```
+
+NAME        READY   STATUS    RESTARTS   AGE
+nginx-pod   0/1     Pending   0          111s
+
+```
+
 <br>
 
 <img width="759" alt="get_pods" src="https://user-images.githubusercontent.com/92983658/221603769-bbe75c7f-b983-4ed3-819d-16155cc24165.png">
 
 <br>
+
+- To see other fields introduced by kubernetes after you have deployed the resource, simply run below command, and examine the output. You will see other fields that kubernetes updates from time to time to represent the state of the resource within the cluster. -o simply means the output format.
+
+```
+kubectl get pod nginx-pod -o yaml 
+
+or
+
+kubectl describe pod nginx-pod
+
+```
+
+<br>
+
 
