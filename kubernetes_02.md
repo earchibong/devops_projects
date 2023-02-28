@@ -39,7 +39,9 @@ Within this project we are going to learn and see in action following:
 
 **Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux.
 
+## Labs
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploy A Pod</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#accessing-the-application-from-the-browser">Accessing The Application From The Browser</a>
 
 
 ## Deploy A Pod
@@ -117,15 +119,50 @@ nginx-pod   0/1     Pending   0          111s
 - To see other fields introduced by kubernetes after you have deployed the resource, simply run below command, and examine the output. You will see other fields that kubernetes updates from time to time to represent the state of the resource within the cluster. -o simply means the output format.
 
 ```
-kubectl get pod nginx-pod -o yaml 
+kubectl get pod nginx-pod -o yaml --kubeconfig admin.kubeconfig
 
 or
 
-kubectl describe pod nginx-pod
+kubectl describe pod nginx-pod --kubeconfig admin.kubeconfig
 
 ```
 
 <br>
 
-## Accessing The Application From THe Browser
+## Accessing The Application From The Browser
+A service is an object that accepts requests on behalf of the Pods and forwards it to the Pod’s IP address. Run the command below, you will be able to see the Pod’s IP address.
+
+```
+
+kubectl get pod nginx-pod  -o wide --kubeconfig admin.kubeconfig
+
+```
+
+<br>
+
+<img width="1078" alt="service_kubectl" src="https://user-images.githubusercontent.com/92983658/221848138-dffcc459-4c0c-4be4-9a4d-bcd111faaf54.png">
+
+<br>
+
+
+### Access the Pod through its IP address from within the K8s cluster.
+- access an image that already has curl software installed
+```
+
+kubectl run curl --image=dareyregistry/curl -i --tty --kubeconfig admin.kubeconfig
+
+```
+
+<br>
+
+- curl and point to the IP address of the Nginx Pod (Use the IP address of your own Pod)
+```
+
+curl -v ipaddress:80
+
+```
+
+<br>
+
+
 
