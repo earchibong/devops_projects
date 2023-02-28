@@ -39,7 +39,7 @@ Within this project we are going to learn and see in action following:
 
 **Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux.
 
-- <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploying A Random Pod</a>
+- <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploy A Pod</a>
 
 
 ## Deploy A Pod
@@ -127,4 +127,5 @@ kubectl describe pod nginx-pod
 
 <br>
 
+## Accessing The Application From THe Browser
 
