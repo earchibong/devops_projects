@@ -68,11 +68,12 @@ brew install weaveworks/tap/eksctleksctl version
 ```
 
 eksctl create cluster --managed=false \
---name K8s-cluster \
---tags Key=Name,Value=K8s-cluster
---nodegroup-name k8s-cluster-nodes \
+--name PBL22-cluster \
+--tags Key=Name,Value=PBL22-cluster \
+--ssh-access --ssh-public-key=devops --region=eu-west-2 \
+--nodegroup-name PBL22-nodes \
 --node-type t2.micro \
---nodes int 2
+--nodes 2 \
 
 ```
 
@@ -80,9 +81,19 @@ eksctl create cluster --managed=false \
 
 *- the above command is to create a cluster with 2 worker nodes. The process can tak up to 20 mins*
 
+*for ssh-access use your existing ssh keypair set up for previous projects and state the region on AWS where it is stored*
+
 <br>
 
-<img width="983" alt="confirm_eksctl" src="https://user-images.githubusercontent.com/92983658/222435685-4daa5b07-5038-4adf-b23a-2f8a26c60562.png">
+<img width="1061" alt="verify_eksctl" src="https://user-images.githubusercontent.com/92983658/222449145-a7f54747-ea0a-4324-9ff2-4405c8735355.png">
+
+<br>
+
+<img width="1193" alt="cluster" src="https://user-images.githubusercontent.com/92983658/222450893-340e2d1a-8af7-4eff-b735-03e87b7d9013.png">
+
+<br>
+
+<img width="1199" alt="nodes" src="https://user-images.githubusercontent.com/92983658/222450927-3fa327eb-8472-412a-af46-41d5fbc5f34c.png">
 
 <br>
 
