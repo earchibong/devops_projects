@@ -40,8 +40,11 @@ Within this project we are going to learn and see in action following:
 **Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux.
 
 ## Labs
+- <a href="https://github.com/earchibong/devops_training/edit/main/kubernetes_02.md#create-a-kubernetes-cluster-on-aws-eks">Create a kubernetes clusters eksctl</a>
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploy A Pod</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#accessing-the-application-from-the-browser">Accessing The Application From The Browser</a>
+
+<br>
 
 ## Create A Kubernetes Cluster ON AWS EKS
 find out more about AWS EKS <a href="https://www.youtube.com/watch?v=p6xDCz00TxU">here</a>
@@ -64,18 +67,22 @@ brew install weaveworks/tap/eksctleksctl version
 - create cluster using eksctl
 ```
 
-eksctl create cluster \
---name k8s-cluster \
+eksctl create cluster --managed=false \
+--name K8s-cluster \
 --tags Key=Name,Value=K8s-cluster
 --nodegroup-name k8s-cluster-nodes \
 --node-type t2.micro \
---nodes 2
+--nodes int 2
 
 ```
 
 *- note: for the above command to authenticate on AWS you will needs to add your AWS secret key and password on the path using `aws configure`...find out more <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md">here</a>*
 
 *- the above command is to create a cluster with 2 worker nodes. The process can tak up to 20 mins*
+
+<br>
+
+<img width="983" alt="confirm_eksctl" src="https://user-images.githubusercontent.com/92983658/222435685-4daa5b07-5038-4adf-b23a-2f8a26c60562.png">
 
 <br>
 
