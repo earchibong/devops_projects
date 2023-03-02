@@ -75,7 +75,7 @@ eksctl create cluster \
 
 *- note: for the above command to authenticate on AWS you will needs to add your AWS secret key and password on the path using `aws configure`...find out more <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md">here</a>*
 
-*- the above command is to create a cluster with 2 worker nodes. The process can tak upto 20 mins*
+*- the above command is to create a cluster with 2 worker nodes. The process can tak up to 20 mins*
 
 <br>
 
