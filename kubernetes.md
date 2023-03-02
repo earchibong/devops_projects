@@ -45,6 +45,7 @@ The purpose of "K8s From-Ground-Up" is to get a better understanding of the diff
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-six-generating-the-data-encryption-config-and-key">Bootstrapping The ETCD Cluster</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-eight-bootstrapping-the-kubernetes-control-plane">Bootstrapping The Kubernetes Control Pane</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md#part-nine-bootstrapping-the-kubernetes-worker-nodes">Bootstrapping the Kubernetes Worker Nodes</a>
+- <a href="https://github.com/earchibong/devops_training/edit/main/kubernetes.md#cleaning-up">Cleaning Up</a>
 
 <br>
 
@@ -2556,6 +2557,143 @@ kubectl get nodes --kubeconfig admin.kubeconfig -o wide
 <img width="1299" alt="worker_verification" src="https://user-images.githubusercontent.com/92983658/221145327-d22378e6-9818-4efb-abc5-f7279961af04.png">
 
 <br>
+
+## Cleaning Up
+
+### Compute Instances
+```
+
+INSTANCE_IDS=($(aws ec2 describe-instances \
+      --filter "Name=tag:Name,Values=master-0,master-1,master-2,worker-0,worker-1,worker-2" "Name=instance-state-name,Values=running" \
+      --output text --query 'Reservations[].Instances[].InstanceId'))
+
+aws ec2 terminate-instances \
+  --instance-ids ${INSTANCE_IDS[@]} \
+  --query 'TerminatingInstances[].InstanceId' \
+  --output table
+
+aws ec2 delete-key-pair \
+  --key-name k8s-cluster
+
+aws ec2 wait instance-terminated \
+  --instance-ids ${INSTANCE_IDS[@]}
+  
+```
+
+### Networking
+- Delete Load Balancer
+```
+
+LOAD_BALANCER_ARN=$(aws elbv2 describe-load-balancers \
+  --name kubernetes-the-hard-way \
+  --output text --query 'LoadBalancers[0].LoadBalancerArn')
+
+LISTENER_ARN=$(aws elbv2 describe-listeners \
+  --load-balancer-arn "${LOAD_BALANCER_ARN}" \
+  --output text --query 'Listeners[0].ListenerArn')
+
+aws elbv2 delete-listener \
+  --listener-arn "${LISTENER_ARN}"
+
+aws elbv2 delete-load-balancer \
+  --load-balancer-arn "${LOAD_BALANCER_ARN}"
+
+TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups \
+  --name k8s-cluster \
+  --output text --query 'TargetGroups[0].TargetGroupArn')
+
+aws elbv2 delete-target-group \
+  --target-group-arn "${TARGET_GROUP_ARN}"
+  
+```
+
+<br>
+
+- Delete Security Group
+```
+
+SECURITY_GROUP_ID=$(aws ec2 describe-security-groups \
+  --filters "Name=tag:Name,Values=k8s-cluster" \
+  --output text --query 'SecurityGroups[0].GroupId')
+
+aws ec2 delete-security-group \
+  --group-id "${SECURITY_GROUP_ID}"
+  
+```
+
+<br>
+
+- Delete Route Table
+```
+
+ROUTE_TABLE_ASSOCIATION_ID="$(aws ec2 describe-route-tables \
+  --route-table-ids "${ROUTE_TABLE_ID}" \
+  --output text --query 'RouteTables[].Associations[].RouteTableAssociationId')"
+
+aws ec2 disassociate-route-table \
+  --association-id "${ROUTE_TABLE_ASSOCIATION_ID}"
+
+ROUTE_TABLE_ID=$(aws ec2 describe-route-tables \
+  --filters "Name=tag:Name,Values=k8s-cluster" \
+  --output text --query 'RouteTables[0].RouteTableId')
+
+aws ec2 delete-route-table \
+  --route-table-id "${ROUTE_TABLE_ID}"
+  
+```
+
+<br>
+
+- Delete Internet Gateway
+```
+
+INTERNET_GATEWAY_ID=$(aws ec2 describe-internet-gateways \
+  --filters "Name=tag:Name,Values=k8s-cluster" \
+  --output text --query 'InternetGateways[0].InternetGatewayId')
+
+aws ec2 detach-internet-gateway \
+  --internet-gateway-id "${INTERNET_GATEWAY_ID}" \
+  --vpc-id "${VPC_ID}"
+
+aws ec2 delete-internet-gateway \
+  --internet-gateway-id "${INTERNET_GATEWAY_ID}"
+  
+```
+
+<br>
+
+- Delete Subnet and VPC
+```
+
+SUBNET_ID=$(aws ec2 describe-subnets \
+  --filters Name=tag:Name,Values=k8s-cluster \
+  --output text --query 'Subnets[0].SubnetId')
+
+aws ec2 delete-subnet \
+  --subnet-id "${SUBNET_ID}"
+
+VPC_ID=$(aws ec2 describe-vpcs \
+  --filters Name=tag:Name,Values=k8s-cluster \
+  --output text --query 'Vpcs[0].VpcId')
+
+aws ec2 delete-vpc \
+  --vpc-id "${VPC_ID}"
+  
+```
+<br>
+
+- Ensure there are no more resources left
+```
+
+aws resourcegroupstaggingapi get-resources \
+  --tag-filters Key=Name,Values=k8s-cluster \
+  --query 'sort_by(ResourceTagMappingList, &ResourceARN)[].ResourceARN' \
+  --output table
+  
+```
+
+<br>
+
 
 
 
