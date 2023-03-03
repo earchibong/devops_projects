@@ -44,6 +44,7 @@ Within this project we are going to learn and see in action following:
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploy A Pod</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#accessing-the-application-from-the-browser">Accessing The Application From The Browser</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#create-a-replica-set">Create A Replica Set</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#access-kubernetes-services-with-aws-load-balancer">Accessing Kubernetes Service With AWS Loadbalancer</a>
 
 <br>
 
@@ -552,3 +553,212 @@ kubectl get service nginx-service -o yaml
 
 - Ensure that port range `30000-32767` is opened in your inbound Security Group configuration for the loadbalancer
 - copy and paste loadbalancer address to access nginx service
+
+## Using deployment Controllers
+A Deployment is another layer above ReplicaSets and Pods, newer and more advanced level concept than ReplicaSets. It manages the deployment of ReplicaSets and allows for easy updating of a ReplicaSet as well as the ability to roll back to a previous version of deployment. It is declarative and can be used for rolling updates of micro-services, ensuring there is no downtime.
+
+Officially, it is highly recommended to use Deplyments to manage replica sets rather than using replica sets directly.
+
+- Delete the ReplicaSet
+```
+kubectl delete rs nginx-rs
+
+```
+
+- create `deployment.yaml`
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 8
+  
+  
+ ```
+ 
+ ```
+ 
+ kubectl apply -f deployment.yaml
+ 
+ ```
+ 
+ - Inspecting the setup:
+```
+kubectl get po #get the pods
+kubectl get deploy #get the deployment
+kubectl get rs #get replicaset
+
+```
+
+ <br>
+ 
+ <img width="1382" alt="deployment_inspect" src="https://user-images.githubusercontent.com/92983658/222750987-5d8f5d48-faaf-4892-b6fc-2a09a709c10d.png">
+
+<br>
+
+- Exec into one of the Pod’s container to run Linux commands
+```
+kubectl exec <pod name> -i -t -- bash
+ 
+```
+
+<br>
+
+- list all files in nginx directory
+
+<br>
+
+<img width="1384" alt="exec_nginx" src="https://user-images.githubusercontent.com/92983658/222752237-d4f62743-abdc-4d00-940e-51c4d5a7206f.png">
+
+<br>
+
+- Check the content of the default Nginx configuration file
+```
+
+cat  /etc/nginx/conf.d/default.conf 
+
+```
+
+<br>
+
+<img width="1006" alt="conf" src="https://user-images.githubusercontent.com/92983658/222752720-270a2ebb-9a22-4867-9b75-d4afe92269cf.png">
+
+<br>
+
+Most common Kubernetes workloads covered so far
+
+![image](https://user-images.githubusercontent.com/92983658/222753121-c69d3814-6cdc-4937-a610-cf1a8b90af92.png)
+
+
+<br>
+
+### Persisting Data For Pods
+Deployments are stateless by design. Hence, any data stored inside the Pod’s container does not persist when the Pod dies.
+
+- scale down pods to 1
+```
+nano rs.yaml
+
+# then...
+spec:
+  replicas: 1
+  
+```
+
+- apply configuration
+```
+kubectl apply -f rs.yaml
+
+```
+
+<br>
+
+<img width="1265" alt="scale_down_2c" src="https://user-images.githubusercontent.com/92983658/222754569-feba41ef-6f45-4120-b844-20b86c79a573.png">
+
+
+<br>
+
+- Exec into the running container 
+```
+kubectl exec <pod name> -i -t -- bash
+
+```
+
+<br>
+
+<img width="1382" alt="exec_2c" src="https://user-images.githubusercontent.com/92983658/222755373-1f0072f6-a0f6-46bf-9724-141681b6107e.png">
+
+<br>
+
+- install nano
+```
+
+apt update
+apt install nano
+
+```
+
+- Update the content of the file and add the code below `/usr/share/nginx/html/index.html`
+
+```
+nano /usr/share/nginx/html/index.html
+
+```
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to DAREY.IO!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to DAREY.IO!</h1>
+<p>I love experiencing Kubernetes</p>
+
+<p>Learning by doing is absolutely the best strategy at 
+<a href="https://darey.io/">www.darey.io</a>.<br/>
+for skills acquisition
+<a href="https://darey.io/">www.darey.io</a>.</p>
+
+<p><em>Thank you for learning from DAREY.IO</em></p>
+</body>
+</html>
+
+```
+
+<br>
+
+<img width="1218" alt="nano" src="https://user-images.githubusercontent.com/92983658/222757111-1d76d7ba-d1f3-4dc4-ba2e-f667f79b1169.png">
+
+<br>
+
+- check browser with loadbalancer ip 
+
+<br>
+
+<img width="1200" alt="browser_2v" src="https://user-images.githubusercontent.com/92983658/222757504-98f2d963-c064-42b8-93ac-db0165bdb638.png">
+
+<br>
+
+- delete the only running Pod
+
+```
+ kubectl delete po <pod name>
+ 
+```
+
+<br>
+
+<img width="1381" alt="delete_pod_3" src="https://user-images.githubusercontent.com/92983658/222758232-b777153c-ac4b-49ce-8334-4f9ccb1f95f1.png">
+
+<br>
+
+- Refresh the web page : You will see that the content you saved in the container is no longer there. That is because Pods do not store data when they are being recreated – that is why they are called ephemeral or stateless.
+  
+  
+  
+  
