@@ -24,4 +24,7 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/terraform_04.md">PROJECT NINETEEN: Automating Infrastructure With IAC Using Terraform. Part Four</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/docker.md">PROJECT TWENTY: Migration To The Cloud With Containerization. Part One: Docker & Docker Compose</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md"> PROJECT TWENTY-ONE: Setting Up A Kubernetes Cluster (Manually)</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md"> PROJECT TWENTY-TWO: Deploying An App Into Kubernetes Cluster (Manually)</a></li>
 </ul>
+
+
