@@ -45,6 +45,7 @@ Within this project we are going to learn and see in action following:
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#accessing-the-application-from-the-browser">Accessing The Application From The Browser</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#create-a-replica-set">Create A Replica Set</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#access-kubernetes-services-with-aws-load-balancer">Accessing Kubernetes Service With AWS Loadbalancer</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#cleaning-up">Cleaning Up</a>
 
 <br>
 
@@ -759,6 +760,12 @@ for skills acquisition
 
 - Refresh the web page : You will see that the content you saved in the container is no longer there. That is because Pods do not store data when they are being recreated – that is why they are called ephemeral or stateless.
   
-  
+## Cleaning Up
+
+- delete cluster
+```
+eksctl delete cluster --name PBL22-cluster
+
+```
   
   
