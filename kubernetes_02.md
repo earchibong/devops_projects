@@ -37,7 +37,7 @@ Within this project we are going to learn and see in action following:
 - Prometheus
 - Grafana
 
-**Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux.
+**Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux**
 
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubernetes_02.md#create-a-kubernetes-cluster-on-aws-eks">Create a kubernetes clusters eksctl</a>
@@ -46,7 +46,7 @@ Within this project we are going to learn and see in action following:
 
 <br>
 
-## Create A Kubernetes Cluster ON AWS EKS
+## Create A Kubernetes Cluster On AWS EKS
 find out more about AWS EKS <a href="https://www.youtube.com/watch?v=p6xDCz00TxU">here</a>
 
 - install `eksctl` on mac
@@ -78,7 +78,9 @@ eksctl create cluster \
 ```
 
 *- note: for the above command to authenticate on AWS you will needs to add your AWS secret key and password on the path using `aws configure`...find out more <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md">here</a>*
+
 *- the above command is to create a cluster with 2 worker nodes. The process can tak up to 20 mins*
+
 *for ssh-access use your existing ssh keypair set up for previous projects and state the region on AWS where it is stored*
 
 <br>
@@ -278,10 +280,10 @@ kubectl get service
 <br>
 
 *The TYPE column in the output shows that there are different service types.*
-* - ClusterIP*
-* - NodePort*
-* - LoadBalancer *
-* - Headless Service *
+*- ClusterIP*
+*- NodePort*
+*- LoadBalancer *
+*- Headless Service *
 
 *Since type was not specified, the default type is ClusterIP in this case *
 
@@ -338,7 +340,7 @@ kubectl  port-forward svc/nginx-service 8089:80
 
 ```
 
-*note: `kubectl's port-forward` functionality is being used because no public ip address*
+*note: `kubectl's port-forward` functionality is being used because no public ip address...tunnelling traffic through the machine's port number to the port number of the nginx-service*
 
 - output:
 ```
@@ -363,6 +365,42 @@ Forwarding from [::1]:8089 -> 80
 
 <br>
 
+## Create a Replica Set
+- create a `rs.yaml` manifest for a ReplicaSet object:
+```
+touch rs.yaml && nano rs.yaml
+
+```
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-pod
+  template:
+    metadata:
+      name: nginx-pod
+      labels:
+         app: nginx-pod
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx-pod
+        ports:
+        - containerPort: 80
+          protocol: TCP
+ 
+```
+
+<br>
+
+<img width="1229" alt="manifest_1b" src="https://user-images.githubusercontent.com/92983658/222724063-ac6099cb-7d9c-4500-99ec-e2a88dac1aa7.png">
+
+<br>
 
 
 
