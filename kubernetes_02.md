@@ -768,4 +768,10 @@ eksctl delete cluster --name PBL22-cluster
 
 ```
   
-  
+<br>
+
+<img width="1340" alt="cluster_deleted" src="https://user-images.githubusercontent.com/92983658/222770035-090f1cf4-4b91-41c8-b6dc-feea923aec12.png">
+
+<br>
+
+
