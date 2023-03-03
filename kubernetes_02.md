@@ -278,20 +278,29 @@ kubectl get service
 <br>
 
 *The TYPE column in the output shows that there are different service types.*
-
-*- ClusterIP*
-*- NodePort*
-*- LoadBalancer *
-*- Headless Service *
+* - ClusterIP*
+* - NodePort*
+* - LoadBalancer *
+* - Headless Service *
 
 *Since type was not specified, the default type is ClusterIP in this case *
 
 <br>
 
 - Update the Pod manifest with the below and apply the manifest:
+
+<br>
+
 ```
 
-sudo cat <<EOF | sudo tee ./nginx-service.yaml
+sudo nano nginx-pod.yaml
+
+```
+
+<br>
+
+```
+
 apiVersion: v1
 kind: Pod
 metadata:
@@ -305,14 +314,22 @@ spec:
     ports:
     - containerPort: 80
       protocol: TCP
- EOF
  
 
  ```
  
  <br>
  
+ ```
+ kubectl apply -f nginx-pod.yaml
  
+```
+
+<br>
+
+<img width="1236" alt="pod_configured" src="https://user-images.githubusercontent.com/92983658/222714878-472f0fbd-5224-421b-95ee-1fa05f317937.png">
+
+<br>
 
 - access the app using `kubectl's port-forward` functionality.
 ```
@@ -322,6 +339,29 @@ kubectl  port-forward svc/nginx-service 8089:80
 ```
 
 *note: `kubectl's port-forward` functionality is being used because no public ip address*
+
+- output:
+```
+
+kubectl  port-forward svc/nginx-service 8089:80
+Forwarding from 127.0.0.1:8089 -> 80
+Forwarding from [::1]:8089 -> 80
+
+```
+
+<br>
+
+<img width="1202" alt="port_forward" src="https://user-images.githubusercontent.com/92983658/222715030-c603bbc1-d76c-4879-9a7b-c7063330bd0f.png">
+
+<br>
+
+- verfiy in web browser: `localhost:8089`
+
+<br>
+
+<img width="1200" alt="localhost8089" src="https://user-images.githubusercontent.com/92983658/222715553-6b2f4a8a-7a57-416b-a567-8103281bf4cd.png">
+
+<br>
 
 
 
