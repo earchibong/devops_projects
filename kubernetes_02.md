@@ -487,9 +487,68 @@ kubectl apply -f rs.yaml
 
 <br>
 
-*replicaset scaled down to 2 *
+* replicaset scaled down to 2 *
 
 <br>
 
+## Access Kubernetes Services With AWs Load Balancer
+Previously Niginx Service was accessed through `ClusterIP`, and `NodeIP`. a `load balancder` service can also be used for this purpose. This type of service does not only create a Service object in K8s, but also provisions a real external Load Balancer (e.g. Elastic Load Balancer – ELB in AWS)
+
+- update service manifest and use the `LoadBalancer` type. Also, ensure that the selector references the Pods in the replica set.
+```
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: LoadBalancer
+  selector:
+    tier: frontend
+  ports:
+    - protocol: TCP
+      port: 80 # This is the port the Loadbalancer is listening at
+      targetPort: 80 # This is the port the container is listening at
+      
+ ```
+
+- apply configuration
+```
+
+kubectl apply -f nginx-service.yaml
 
 
+```
+
+- get the new configured service
+```
+kubectl get service nginx-service
+
+```
+
+<br>
+
+<img width="1387" alt="get_service" src="https://user-images.githubusercontent.com/92983658/222740183-75e2d72c-f712-400c-bad6-a1ff034f0f42.png">
+
+<br>
+
+<img width="1195" alt="load_balancer_verify" src="https://user-images.githubusercontent.com/92983658/222740216-c523413b-6072-44bb-9564-5cb60aa78945.png">
+
+<br>
+
+<img width="1195" alt="load_balancer_1b" src="https://user-images.githubusercontent.com/92983658/222740616-dd57aa73-2b71-4b7c-89f5-2458a259eb2e.png">
+
+<br>
+
+<img width="1195" alt="load_tags" src="https://user-images.githubusercontent.com/92983658/222741078-df33ad8c-1394-4929-ba93-a19a075317a0.png">
+
+<br>
+
+- Get the output of the entire `yaml` for the service.
+```
+kubectl get service nginx-service -o yaml
+
+```
+
+- Ensure that port range `30000-32767` is opened in your inbound Security Group configuration for the loadbalancer
+- copy and paste loadbalancer address to access nginx service
