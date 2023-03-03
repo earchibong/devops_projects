@@ -43,6 +43,7 @@ Within this project we are going to learn and see in action following:
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubernetes_02.md#create-a-kubernetes-cluster-on-aws-eks">Create a kubernetes clusters eksctl</a>
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploy A Pod</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#accessing-the-application-from-the-browser">Accessing The Application From The Browser</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#create-a-replica-set">Create A Replica Set</a>
 
 <br>
 
@@ -372,6 +373,9 @@ touch rs.yaml && nano rs.yaml
 
 ```
 
+- add the following to the file:
+```
+
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
@@ -402,9 +406,90 @@ spec:
 
 <br>
 
+- apply manifest
+```
 
+kubectl apply -f rs.yaml
 
+```
 
+The manifest file of ReplicaSet consist of the following fields:
+
+- **apiVersion:** This field specifies the version of kubernetes Api to which the object belongs. ReplicaSet belongs to apps/v1 apiVersion.
+- **kind:** This field specify the type of object for which the manifest belongs to. Here, it is ReplicaSet.
+- **metadata:** This field includes the metadata for the object. It mainly includes two fields: name and labels of the ReplicaSet.
+- **spec:** This field specifies the label selector to be used to select the Pods, number of replicas of the Pod to be run and the container or list of containers which the Pod will run. In the above example, we are running 3 replicas of nginx container.
+
+<br>
+
+- verfiy pods
+```
+
+kubectl get pods
+kubectl get rs
+
+```
+
+<br>
+
+<img width="1293" alt="get_pod" src="https://user-images.githubusercontent.com/92983658/222732928-588be0dd-b61d-44ad-b32f-7bb4a996c2c2.png">
+
+<br>
+
+- delete a pod
+```
+
+kubectl delete pod <inser pod name>
+
+```
+
+- replica set immediately creates a new one
+
+<br>
+
+<img width="1203" alt="replica_set_1c" src="https://user-images.githubusercontent.com/92983658/222733636-423f534d-56a1-4e68-83f2-17c791856da0.png">
+
+<br>
+
+Two ways pods can be scaled: **Imperative and Declarative**
+
+- scale up ReplicaSet up by specifying the desired number of replicas in an imperative command:
+```
+
+kubectl scale --replicas 5 replicaset nginx-rs
+
+```
+
+<br>
+
+<img width="1152" alt="scale_replicas" src="https://user-images.githubusercontent.com/92983658/222735251-4c88d55f-2959-4dc9-ba4c-7efce02d2925.png">
+
+<br>
+
+- scale down ReplicaSet up by specifying the desired number of replicas in an delarative command:
+open `rs.yaml` manifest, change desired number of replicas in respective section
+
+```
+spec:
+  replicas: 2
+  
+```
+
+- apply updated manifest
+```
+kubectl apply -f rs.yaml
+
+```
+
+<br>
+
+<img width="1292" alt="scale_down" src="https://user-images.githubusercontent.com/92983658/222736446-ce5cdc60-42a5-4c49-9c28-66ca40a5c15e.png">
+
+<br>
+
+*replicaset scaled down to 2 *
+
+<br>
 
 
 
