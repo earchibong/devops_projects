@@ -158,19 +158,19 @@ kubectl describe node <node ip>
 ```
 <br>
 
-<img width="1303" alt="availability_zone" src="https://user-images.githubusercontent.com/92983658/223110994-bb58fd65-06a3-46f2-b1b9-f326df14cdf3.png">
+<img width="1270" alt="availability_zone_1a" src="https://user-images.githubusercontent.com/92983658/223118496-1cb39f27-d61a-40c5-afd4-4a7cd8622013.png">
 
 <br>
 
-*note: node is create in `eu-west-2c` as pointed out in the image above, so volume must be create in the same availability zone*
+*note: node is create in `eu-west-2b` as pointed out in the image above, so volume must be create in the same availability zone*
 
 - create a volume from the AWS console.
   - choose the size of the volume
-  - ensure availability zone is the same as node above... in the is case `eu-west-2c`
+  - ensure availability zone is the same as node above... in the is case `eu-west-2b`
 
 <br>
 
-<img width="1229" alt="volume_1a" src="https://user-images.githubusercontent.com/92983658/223111881-47c2dc8c-a0f4-47e4-a827-9db54d37d386.png">
+<img width="1228" alt="volume_1e" src="https://user-images.githubusercontent.com/92983658/223118543-9c9056da-30cc-4ec1-9c29-24e61b233856.png">
 
 <br>
 
@@ -178,7 +178,7 @@ kubectl describe node <node ip>
 
 <br>
 
-<img width="1228" alt="volume_1b" src="https://user-images.githubusercontent.com/92983658/223112362-3b783858-7b87-4544-b9b3-b8e5b386dc4a.png">
+<img width="1225" alt="volume_1h" src="https://user-images.githubusercontent.com/92983658/223118782-35b60ac4-556a-4079-97a9-de141926642d.png">
 
 <br>
 
@@ -213,7 +213,7 @@ spec:
       - name: nginx-volume
         # This AWS EBS volume must already exist.
         awsElasticBlockStore:
-          volumeID: "vol-0d25f5caa98908fc1"
+          volumeID: "vol-0739694e179ed6861"
           fsType: ext4
 EOF
 
@@ -229,12 +229,124 @@ kubectl apply -f nginx-pod.yaml
 
 <br>
 
-<img width="1305" alt="volume_1c" src="https://user-images.githubusercontent.com/92983658/223113792-7b4f5fb1-c0e1-46a9-baf7-704530f3a64f.png">
+<img width="1209" alt="volume_1g" src="https://user-images.githubusercontent.com/92983658/223119485-545175fc-8d20-470b-b4fc-d5707f58dfbf.png">
 
 <br>
 
-*note: in the first instance, the updated pod was being created, the old pod is now terminated and the updated pod is up and running. The new pod has a volume attached to it, and can now be used to run a container for statefuleness*
+*note: the old pod is being terminated and the new pod is being created. The new pod has a volume attached to it, and can now be used to run a container for statefuleness*
 
 *The value provided to name in `volumeMounts` must be the same value used in the `volumes` section. It basically means mount the volume with the name provided, to the provided mountpath*
 
+The problem with this configuration is that when we port forward the service and try to reach the endpoint, we will get a `403 error`. Mounting a volume on a filesystem that already contains data will automatically erase all the existing data To solve this issue is by using:
+- Persistent Volume (PV) and Persistent Volume Claim (PVC)
+- configMap
+
+## Persistent Volumes & Persistent Volume Claim
+PVs are volume plugins that have a lifecycle completely independent of any individual Pod that uses the PV. This means that even when a pod dies, the PV remains. A PV is a piece of storage in the cluster that is either provisioned by an administrator through a manifest file, or it can be dynamically created if a storage class has been pre-configured.
+
+### Managing Volumes Dynamically With PV and PVCs
+- Verify that there is a storageClass in the cluster:
+```
+kubectl get storageclass
+
+```
+<br>
+
+- Create a manifest file for a PVC, and based on the gp2 storageClass a PV will be dynamically created
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+   name: nginx-volume-claim
+spec:
+   accessModes:
+   - ReadWriteOnce
+   resources:
+     requests:
+       storage: 2Gi
+   storageClassName: gp2 
+ 
+ ```
+ 
+ <br>
+ 
+ - apply configuration
+ ```
+ 
+ kubectl apply -f nginx-volume-claim.yaml
+ 
+ ```
+ 
+ <br>
+ 
+ <img width="1189" alt="pvc_yaml" src="https://user-images.githubusercontent.com/92983658/223133205-0ee9605e-c7ca-41c7-8571-e533102437ac.png">
+
+<br>
+
+*note:pvc is waiting for the first consumer to be created before binding the PV to a PV..hance the pending state*
+
+<br>
+
+- Check for the volume binding section:
+```
+ kubectl describe storageclass gp2
+ 
+```
+
+<br>
+
+<img width="1385" alt="describe_storage" src="https://user-images.githubusercontent.com/92983658/223134143-686c76b5-2ca7-4270-8169-1b86e8b29891.png">
+
+<br>
+
+<img width="1440" alt="describe_storage_1b" src="https://user-images.githubusercontent.com/92983658/223134549-3e6e769f-3c38-4e06-84be-23f16459b46f.png">
+
+<br>
+
+- apply new configuration below to `nginx-pod.yaml` bind PV
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-volume-claim
+          mountPath: /tmp/PBL23
+      volumes:
+      - name: nginx-volume-claim
+        persistentVolumeClaim:
+          claimName: nginx-volume-claim
+          
+          
+ ```
+ 
+ *note: The '/tmp/PBL23' directory will be persisted, and any data written in there will be stored permanetly on the volume, which can be used by another Pod if the current one gets replaced.*
+ <br>
+ 
+- Checking the dynamically created PV
+```
+
+kubectl get pv
+
+```
+
+<br>
 
