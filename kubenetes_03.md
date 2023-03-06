@@ -4,8 +4,12 @@ kubernetes pods are run, they still remain stateless unless the configuration su
 
 To achieve statefuleness in kubernetes, we must understand how `volumes`, `persistent volumes`, and `persistent volume claims` work.
 
+## Labs
+<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#create-an-eks-cluster">Create an EKS Kubenetes Cluster</a>
+<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#volumes">Persisting Data on Volumes</a>
 
-## Create An EKS Cluster
+
+## Create A Kubernetes EKS Cluster
 Follow the steps in <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md">Project 22</a> to achieve this.
 
 - create cluster using eksctl
