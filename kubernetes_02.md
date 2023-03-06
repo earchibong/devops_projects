@@ -40,7 +40,7 @@ Within this project we are going to learn and see in action following:
 **Hybrid CI/CD by combining different tools such as: Gitlab CICD, Jenkins. And also concepts around GitOps using Weaveworks Flux**
 
 ## Labs
-- <a href="https://github.com/earchibong/devops_training/edit/main/kubernetes_02.md#create-a-kubernetes-cluster-on-aws-eks">Create a kubernete clusters on AWS EKS</a>
+- <a href="https://github.com/earchibong/devops_training/edit/main/kubernetes_02.md#create-a-kubernetes-cluster-on-aws-eks">Create a kubernetes Cluster on AWS EKS</a>
 - <a href="https://github.com/earchibong/devops_training/new/main#deploying-a-random-pod">Deploy A Pod</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#accessing-the-application-from-the-browser">Accessing The Application From The Browser</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md#create-a-replica-set">Create A Replica Set</a>
