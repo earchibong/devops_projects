@@ -20,7 +20,6 @@ Follow the steps in <a href="https://github.com/earchibong/devops_training/blob/
 eksctl create cluster \
 --name PBL23-cluster \
 --tags Key=Name,Value=PBL23-cluster \
---ssh-access --ssh-public-key=devops --region=eu-west-2 \
 --nodegroup-name PBL23-nodes \
 --node-type t2.micro \
 --nodes 2 \
@@ -40,6 +39,20 @@ eksctl create cluster \
 <img width="1229" alt="eks_1b" src="https://user-images.githubusercontent.com/92983658/223100917-6ff65140-9e88-4e17-ad72-dcee98ed6309.png">
 
 <br>
+
+- The cluster add-ons `kube-proxy`, `coredns`, and `vpc-cni` are NOT enabled by default, and they’ll most likely be needed. On EKS dashboard, navigate to `your Cluster » Add-ons » Get more add-ons ” and manually enable them.
+
+<br>
+
+<img width="1227" alt="add-ons" src="https://user-images.githubusercontent.com/92983658/223771469-e1e74139-82d2-4b6a-8ed2-9080467bffaf.png">
+
+<br>
+
+<img width="1230" alt="add_ons_1a" src="https://user-images.githubusercontent.com/92983658/223771510-11159ec2-4b5c-4d88-a79a-4eb2547d1335.png">
+<img width="1228" alt="add-ons_1b" src="https://user-images.githubusercontent.com/92983658/223771532-b7c547f1-5eba-4068-a329-ae05aafa0aa0.png">
+
+<br>
+
 
 ## Volumes
 
@@ -241,10 +254,10 @@ The problem with this configuration is that when we port forward the service and
 - Persistent Volume (PV) and Persistent Volume Claim (PVC)
 - configMap
 
-## Persistent Volumes & Persistent Volume Claim
+
+## Managing Volumes Dynamically With PV and PVCs
 PVs are volume plugins that have a lifecycle completely independent of any individual Pod that uses the PV. This means that even when a pod dies, the PV remains. A PV is a piece of storage in the cluster that is either provisioned by an administrator through a manifest file, or it can be dynamically created if a storage class has been pre-configured.
 
-### Managing Volumes Dynamically With PV and PVCs
 - Verify that there is a storageClass in the cluster:
 ```
 kubectl get storageclass
@@ -252,7 +265,7 @@ kubectl get storageclass
 ```
 <br>
 
-- Create a manifest file for a PVC, and based on the gp2 storageClass a PV will be dynamically created
+- Create a manifest file `pvc.yaml` for a PVC and, based on the gp2 storageClass, a PV will be dynamically created
 ```
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -270,10 +283,11 @@ spec:
  
  <br>
  
- - apply configuration
+ - apply configuration and confirm
  ```
  
- kubectl apply -f nginx-volume-claim.yaml
+ kubectl apply -f pvc.yaml
+ kubectl get pvc
  
  ```
  
@@ -303,7 +317,7 @@ spec:
 
 <br>
 
-- apply new configuration below to `nginx-pod.yaml` bind PV
+- The Persistent Volume Claim created is in a pending state because a Persistent Volume is not created yet. Edit the `nginx-pod.yaml` to create a Persistent volume.
 ```
 
 apiVersion: apps/v1
@@ -334,12 +348,23 @@ spec:
       - name: nginx-volume-claim
         persistentVolumeClaim:
           claimName: nginx-volume-claim
-          
-          
+ 
+   
+   
  ```
  
  *note: The '/tmp/PBL23' directory will be persisted, and any data written in there will be stored permanetly on the volume, which can be used by another Pod if the current one gets replaced.*
+ 
  <br>
+ 
+- apply configuration
+```
+
+kubectl apply -f nginx-pod.yaml
+
+```
+
+<br>
  
 - Checking the dynamically created PV
 ```
