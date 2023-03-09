@@ -20,6 +20,7 @@ Follow the steps in <a href="https://github.com/earchibong/devops_training/blob/
 eksctl create cluster \
 --name PBL23-cluster \
 --tags Key=Name,Value=PBL23-cluster \
+--ssh-access --ssh-public-key=devops --region=eu-west-2 \
 --nodegroup-name PBL23-nodes \
 --node-type t2.micro \
 --nodes 2 \
@@ -62,7 +63,7 @@ a Pod. The Kubernetes volume abstraction solves both of these problems.
 
 At its core, a volume is a directory, possibly with some data in it, which is accessible to the containers in a pod. How that directory comes to be, the medium that backs it, and the contents of it are all determined by the particular volume type used
 
-### Persisiting Data With AWS Elastic Block Store Volume
+### Static Provisioning With AWS Elastic Block Store Volume
 An **aws Elastic Block Store** volume mounts an **Amazon Web Services (AWS) EBS volume** into a pod. The contents of an EBS volume are persisted and the volume is only unmmounted when the pod crashes, or terminates. This means that an EBS volume can be pre-populated with data, and that data can be shared between pods.
 
 - update `Nginx` pod manifest
@@ -150,7 +151,7 @@ Note: restrictions when using `AWS Elastic Block Store volume`:
 
 - confirm which node is running the pod:
 ```
-kubectl get po <pod name> -o wide
+kubectl get pod <pod name> -o wide
 
 ```
 
