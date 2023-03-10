@@ -301,6 +301,7 @@ spec:
    resources:
      requests:
        storage: 2Gi
+   volumeName: "nginx-pv-volume"
    storageClassName: gp2 
  
  ```
@@ -349,7 +350,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nginx-volume
+  name: nginx-pv-volume
 spec:
   storageClassName: gp2
   capacity:
@@ -370,13 +371,13 @@ kubectl get pv
 
 <br>
 
-<img width="1155" alt="get_pv" src="https://user-images.githubusercontent.com/92983658/224318791-83b107dd-df9c-44ca-b743-55529c2c25b4.png">
+<img width="1381" alt="bound_pv" src="https://user-images.githubusercontent.com/92983658/224329922-8af9e9b0-40a9-469f-978a-9f768cfe8b7a.png">
 
 <br>
 
+- Edit the `nginx-pod.yaml` to mount the `PVC`
+Run a pod with an NGINX image, and specify the `PVC` created earlier in the relevant part of the pod specification
 
-
-- Edit the `nginx-pod.yaml` to create a Persistent volume.
 ```
 
 apiVersion: apps/v1
@@ -396,17 +397,17 @@ spec:
         tier: frontend
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - name: nginx-volume-claim
-          mountPath: "/tmp/PBL23"
+        - name: nginx-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: nginx-storage   
       volumes:
-      - name: nginx-volume-claim
-        persistentVolumeClaim:
-          claimName: nginx-volume-claim
+        - name: nginx-storage
+          persistentVolumeClaim:
+            claimName: nginx-volume-claim
  
    
    
@@ -426,11 +427,71 @@ kubectl apply -f nginx-pod.yaml
 <br>
  
 - Checking the dynamically created PV
+Bash into the pod, install curl and run the command curl `http://localhost/`. The output should show the content of the `index.html` file created in step 1. This shows that the new pod was able to access the data in the `PV` via the `PersistentVolumeClaim`.
+
+
 ```
 
-kubectl get pv
+kubectl get po
+kubectl exec <pod name> -i -t -- bash
+apt update
+apt install curl
+
 
 ```
 
 <br>
 
+<img width="942" alt="curl_2" src="https://user-images.githubusercontent.com/92983658/224337231-d2c3e240-0ae1-4fe9-a84c-6f6b4f7666be.png">
+
+<br>
+
+<img width="1182" alt="pv_pvc" src="https://user-images.githubusercontent.com/92983658/224338332-b5afd057-0b65-42ca-8317-381c10e5e428.png">
+
+<br>
+
+
+### Volume Claim Template
+Rather than creating separate manifest files, a volume claim template can be created where everything is defined within the deployment manifest
+
+update `nginx-pod.yaml`
+
+```
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+spec:
+  selector:
+    matchLabels:
+      tier: frontend
+  serviceName: nginx-service
+  replicas: 1  
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80 
+        volumeMounts:
+        - name: nginx-volume
+          mountPath: "/mnt/PBL23"
+  volumeClaimTemplates:
+  - metadata:
+      name: nginx-volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: standard
+      
+ ```
+ 
+ 
