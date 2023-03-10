@@ -54,6 +54,15 @@ At its core, a volume is a directory, possibly with some data in it, which is ac
 ### Static Provisioning With AWS Elastic Block Store Volume
 An **aws Elastic Block Store** volume mounts an **Amazon Web Services (AWS) EBS volume** into a pod. The contents of an EBS volume are persisted and the volume is only unmmounted when the pod crashes, or terminates. This means that an EBS volume can be pre-populated with data, and that data can be shared between pods.
 
+- on EKS dashboard, ensure that `aws-ebs-csi-driver` add-on is enabled on cluster.
+
+<br>
+
+<img width="1225" alt="csi_driver" src="https://user-images.githubusercontent.com/92983658/224299782-335bb3e7-0fde-4c32-94af-ee5d83120039.png">
+
+<br>
+
+
 - update `Nginx` pod manifest
 ```
 
@@ -106,13 +115,16 @@ kubectl get pods
 
 ```
 
+*note: Kubernetes Pod Stuck In The Pending State Due To Scheduling Failure?...fix the issue by either reducing the requests in the pod spec or by increasing the capacity of the cluster by adding more nodes or increasing the size of every node.*
+
+
 <br>
 
 <img width="1286" alt="get_pods_1a" src="https://user-images.githubusercontent.com/92983658/223104671-6caa0c04-a736-433f-8826-2cbadf6ee7dd.png">
 
 <br>
 
-- Exec into the pod and navigate to the nginx configuration file `/etc/nginx/conf.d`
+- Exec into a pod and navigate to the nginx configuration file `/etc/nginx/conf.d`
 ```
 kubectl exec <pod name> -i -t -- bash
 
@@ -166,21 +178,24 @@ kubectl describe node <node ip>
 
 *note: node is create in `eu-west-2b` as pointed out in the image above, so volume must be create in the same availability zone*
 
-- create a volume from the AWS console.
+- on terminal, create an EBS
   - choose the size of the volume
   - ensure availability zone is the same as node above... in the is case `eu-west-2b`
 
+
+```
+
+aws ec2 create-volume --availability-zone=eu-west-2b --size=10 --volume-type=gp2
+
+```
+
 <br>
 
-<img width="1228" alt="volume_1e" src="https://user-images.githubusercontent.com/92983658/223118543-9c9056da-30cc-4ec1-9c29-24e61b233856.png">
+<img width="1057" alt="volume_2b" src="https://user-images.githubusercontent.com/92983658/224303270-b40e60f1-673a-447f-a1bd-46482f9273d1.png">
 
 <br>
 
 - copy the volume id and Update the deployment configuration with the volume spec and volume mount.
-
-<br>
-
-<img width="1225" alt="volume_1h" src="https://user-images.githubusercontent.com/92983658/223118782-35b60ac4-556a-4079-97a9-de141926642d.png">
 
 <br>
 
@@ -213,19 +228,23 @@ spec:
           mountPath: /usr/share/nginx/
       volumes:
       - name: nginx-volume
-        # This AWS EBS volume must already exist.
         awsElasticBlockStore:
-          volumeID: "vol-0739694e179ed6861"
+          volumeID: "vol-03363fc4b40017a69"
           fsType: ext4
 EOF
 
 ```
+
+*note: the Elastic block sotre volume must already exist before it can be used on the manifest *
+
+<br>
 
 - Apply the new configuration and check the pod.
 
 ```
 
 kubectl apply -f nginx-pod.yaml
+kubectl get pods
 
 ```
 
@@ -246,6 +265,22 @@ The problem with this configuration is that when we port forward the service and
 
 ## Managing Volumes Dynamically With PV and PVCs
 PVs are volume plugins that have a lifecycle completely independent of any individual Pod that uses the PV. This means that even when a pod dies, the PV remains. A PV is a piece of storage in the cluster that is either provisioned by an administrator through a manifest file, or it can be dynamically created if a storage class has been pre-configured.
+
+- exec into an available node:
+
+```
+kubectl exec <node name> -i -t -- bash
+
+```
+
+- create a difrectory `mnt/PBL23` and inside that directory create an `index.html` file
+
+<br>
+
+<img width="923" alt="crreate_index" src="https://user-images.githubusercontent.com/92983658/224317939-6b7dc21b-0919-45c9-9edf-a9ed3b71c6e5.png">
+
+<br>
+
 
 - Verify that there is a storageClass in the cluster:
 ```
@@ -286,7 +321,7 @@ spec:
 
 <br>
 
-*note:pvc is waiting for the first consumer to be created before binding the PV to a PV..hance the pending state*
+*note:pvc is waiting for the first consumer to be created before binding the PV to a PV..hence the pending state*
 
 <br>
 
@@ -306,7 +341,42 @@ spec:
 
 <br>
 
-- The Persistent Volume Claim created is in a pending state because a Persistent Volume is not created yet. Edit the `nginx-pod.yaml` to create a Persistent volume.
+- The Persistent Volume Claim created is in a pending state because a Persistent Volume is not created yet. Create a file name `pv.yaml` and add the following:
+
+```
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-volume
+spec:
+  storageClassName: gp2
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/PBL23"
+    
+```
+
+- apply and confirm the configuration
+```
+kubectl apply -f pv.yaml
+kubectl get pv
+
+```
+
+<br>
+
+<img width="1155" alt="get_pv" src="https://user-images.githubusercontent.com/92983658/224318791-83b107dd-df9c-44ca-b743-55529c2c25b4.png">
+
+<br>
+
+
+
+- Edit the `nginx-pod.yaml` to create a Persistent volume.
 ```
 
 apiVersion: apps/v1
@@ -332,7 +402,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: nginx-volume-claim
-          mountPath: /tmp/PBL23
+          mountPath: "/tmp/PBL23"
       volumes:
       - name: nginx-volume-claim
         persistentVolumeClaim:
