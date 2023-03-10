@@ -5,9 +5,10 @@ kubernetes pods are run, they still remain stateless unless the configuration su
 To achieve statefuleness in kubernetes, we must understand how `volumes`, `persistent volumes`, and `persistent volume claims` work.
 
 ## Labs
-<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#create-a-kubernetes-eks-cluster">Create an EKS Kubenetes Cluster</a> 
-
-<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#volumes">Persisting Data on Volumes</a>
+<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#create-a-kubernetes-eks-cluster">Create an EKS Kubenetes Cluster</a>  
+<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#volumes">Persisting Data on Volumes</a>  
+<a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_03.md#static-provisioning-with-aws-elastic-block-store-volume">Static Provisioning with AWS Elastic Block Store Volume</a>  
+<a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_03.md#managing-volumes-dynamically-with-pv-and-pvcs">Managing volumes dynamically with PVs and PVCs</a>
 
 
 ## Create A Kubernetes EKS Cluster
@@ -22,7 +23,7 @@ eksctl create cluster \
 --tags Key=Name,Value=PBL23-cluster \
 --ssh-access --ssh-public-key=devops --region=eu-west-2 \
 --nodegroup-name PBL23-nodes \
---node-type t2.micro \
+--node-type t2.medium \
 --nodes 2 \
 
 ```
@@ -38,19 +39,6 @@ eksctl create cluster \
 <br>
 
 <img width="1229" alt="eks_1b" src="https://user-images.githubusercontent.com/92983658/223100917-6ff65140-9e88-4e17-ad72-dcee98ed6309.png">
-
-<br>
-
-- The cluster add-ons `kube-proxy`, `coredns`, and `vpc-cni` are NOT enabled by default, and they’ll most likely be needed. On EKS dashboard, navigate to `your Cluster » Add-ons » Get more add-ons ” and manually enable them.
-
-<br>
-
-<img width="1227" alt="add-ons" src="https://user-images.githubusercontent.com/92983658/223771469-e1e74139-82d2-4b6a-8ed2-9080467bffaf.png">
-
-<br>
-
-<img width="1230" alt="add_ons_1a" src="https://user-images.githubusercontent.com/92983658/223771510-11159ec2-4b5c-4d88-a79a-4eb2547d1335.png">
-<img width="1228" alt="add-ons_1b" src="https://user-images.githubusercontent.com/92983658/223771532-b7c547f1-5eba-4068-a329-ae05aafa0aa0.png">
 
 <br>
 
