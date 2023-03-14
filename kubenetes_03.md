@@ -262,7 +262,7 @@ The problem with this configuration is that when we port forward the service and
 - Persistent Volume (PV) and Persistent Volume Claim (PVC)
 - configMap
 
-
+<br>
 
 ## Managing Volumes Dynamically With PV and PVCs
 PVs are volume plugins that have a lifecycle completely independent of any individual Pod that uses the PV. This means that even when a pod dies, the PV remains. A PV is a piece of storage in the cluster that is either provisioned by an administrator through a manifest file, or it can be dynamically created if a storage class has been pre-configured.
