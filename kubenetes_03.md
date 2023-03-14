@@ -510,4 +510,293 @@ spec:
  
  ```
  
- 
+<br>
+
+## Config Map
+Using configMaps for persistence is not something that would be considered for data storage. Rather it is a way to manage configuration files and ensure they are not lost as a result of Pod replacement.
+
+- Remove the volumeMounts and PVC sections of the `nginx-pod` manifest
+```
+
+sudo cat <<EOF | sudo tee ./nginx-pod.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+EOF
+
+
+```
+
+<br>
+
+- port forward the service and ensure that the "Welcome to nginx" page is visible
+
+```
+
+kubectl apply -f nginx-service.yaml
+
+
+```
+
+<br>
+
+```
+
+kubectl get pods
+kubectl port-forward pods/<pod name> 8080:80
+
+## on browser
+localhost:8080
+
+```
+
+<br>
+
+<img width="1128" alt="port_forward" src="https://user-images.githubusercontent.com/92983658/224994362-b2931033-e683-4e66-8299-6b70ed4cb440.png">
+
+<br>
+
+<img width="1228" alt="port_forward_2" src="https://user-images.githubusercontent.com/92983658/224994650-64dc4ea4-9b05-4093-8b2a-b4579a05ad19.png">
+
+<br>
+
+*note: kubectl port-forward syntax:*
+```
+#Sample command to perform port forwarding on pod:
+kubectl port-forward pods/my-pod 8080:80
+
+#Sample command to perform port forwarding on deployment:
+kubectl port-forward deployment/my-deployment 8080:80
+
+#Sample command to perform port forwarding on replicaset:
+kubectl port-forward replicaset/my-replicaset 8080:80
+
+#Sample command to perform port forwarding on service:
+kubectl port-forward service/my-service 8080:80
+
+```
+
+<br>
+
+- on another terminal, exec into the running container and save a copy of the `index.html` file 
+
+```
+
+kubectl exec -it <pod name> -- bash
+cat /usr/share/nginx/html/index.html 
+## Copy the output and save the file on local pc because it will needed to create a configmap.
+
+```
+
+<br>
+
+<img width="1087" alt="output" src="https://user-images.githubusercontent.com/92983658/224996578-df45f872-1407-45c5-99e9-13f776d6cf32.png">
+
+<br>
+
+### Persisting configuration data with configMaps
+
+- create configmap nmanifest on `configmap.yaml`
+```
+
+cat <<EOF | tee ./nginx-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: website-index-file
+data:
+  # file to be mounted inside a volume
+  index-file: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Welcome to nginx!</title>
+    <style>
+    html { color-scheme: light dark; }
+    body { width: 35em; margin: 0 auto;
+    font-family: Tahoma, Verdana, Arial, sans-serif; }
+    </style>
+    </head>
+    <body>
+    <h1>Welcome to nginx!</h1>
+    <p>If you see this page, the nginx web server is successfully installed and
+    working. Further configuration is required.</p>
+
+    <p>For online documentation and support please refer to
+    <a href="http://nginx.org/">nginx.org</a>.<br/>
+    Commercial support is available at
+    <a href="http://nginx.com/">nginx.com</a>.</p>
+
+    <p><em>Thank you for using nginx.</em></p>
+    </body>
+    </html>
+EOF
+
+```
+
+<br>
+
+apply configuration
+```
+
+kubectl apply -f nginx-configmap.yaml 
+
+```
+
+<br>
+
+<img width="874" alt="config_manifest" src="https://user-images.githubusercontent.com/92983658/224997535-cb928e9a-4e53-4e97-8d76-ac831f3f128a.png">
+
+<br>
+
+- Update the deployment file to use the configmap in the volumeMounts section
+
+```
+
+cat <<EOF | tee ./nginx-pod.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: config
+            mountPath: /usr/share/nginx/html
+            readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: website-index-file
+          items:
+          - key: index-file
+            path: index.html
+EOF
+
+```
+
+- apply configuration
+```
+kubectl apply -f nginx-pod.yaml 
+
+```
+
+- the `index.html` file is no longer ephemeral because it is now using a configMap that has been mounted onto the filesystem. exec into the pod and list the `/usr/share/nginx/html` directory to confirm this.
+
+```
+kubectl exec -it <pod name> -- bash
+ls -ltr  /usr/share/nginx/html
+
+```
+
+<br>
+
+<img width="899" alt="configmap_2a" src="https://user-images.githubusercontent.com/92983658/224999394-d339627f-463d-448e-b2de-4734fdaa66d7.png">
+
+<br>
+
+*note: notice the `index.html` is now a soft link to `../data`*
+
+Accessing the site will not change anything at this time because the same html file is being loaded through configmap.
+
+But if any changes are made to the content of the html file through the configmap, and the pod restarted, all changes will persist.
+
+<br>
+
+- List the available configmaps. 
+```
+
+kubectl get configmap
+or 
+
+```
+
+<br>
+
+<img width="728" alt="configmap_2b" src="https://user-images.githubusercontent.com/92983658/225000020-2b76b5fe-b55a-4dc6-82dc-96a559079b5b.png">
+
+<br>
+
+- Update the configmap. This can be done can either through the manifest file, or the kubernetes object directly. 
+```
+#using kubernetes object
+
+kubectl edit cm website-index-file 
+
+# a vim editor, or whatever default editor the local ystem is configured to use will open
+#Update the content as needed . "Only the html data section", then save the file. 
+```
+
+<br>
+
+<img width="988" alt="config_edit_2" src="https://user-images.githubusercontent.com/92983658/225002714-7cd2d351-b557-4742-9762-78a3ed4377a6.png">
+
+<br>
+
+<img width="994" alt="config_edit" src="https://user-images.githubusercontent.com/92983658/225002739-c2e85d7e-93eb-4771-9a50-76264933d347.png">
+
+<br>
+
+- Without restarting the pod, your site should be loaded automatically.
+- port forward the service
+```
+kubectl port-forward pods/<nginx-deployment-5dbc79879c-mldzs> 8080:80
+localhost 8080
+
+```
+
+<br>
+
+<img width="1225" alt="browser_2v" src="https://user-images.githubusercontent.com/92983658/225004335-c585d6a2-576b-4633-9db9-259cdb054e52.png">
+
+<br>
+
+- To restart the deployment for any reason, simply use the command
+```
+   kubectl rollout restart deploy nginx-deployment 
+```
+
+-output
+```
+
+deployment.apps/nginx-deployment restarted
+
+```
+
+This will terminate the running pod and spin up a new one.
+
+
+
