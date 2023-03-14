@@ -436,7 +436,7 @@ kubectl get po
 kubectl exec <pod name> -i -t -- bash
 apt update
 apt install curl
-
+curl http://localhost/
 
 ```
 
@@ -457,6 +457,21 @@ Rather than creating separate manifest files, a volume claim template can be cre
 update `nginx-pod.yaml`
 
 ```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: nginx
+    
+---
 
 apiVersion: apps/v1
 kind: StatefulSet
@@ -491,7 +506,8 @@ spec:
         requests:
           storage: 5Gi
       storageClassName: standard
-      
+ 
+ 
  ```
  
  
