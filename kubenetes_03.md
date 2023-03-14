@@ -263,6 +263,7 @@ The problem with this configuration is that when we port forward the service and
 - configMap
 
 
+
 ## Managing Volumes Dynamically With PV and PVCs
 PVs are volume plugins that have a lifecycle completely independent of any individual Pod that uses the PV. This means that even when a pod dies, the PV remains. A PV is a piece of storage in the cluster that is either provisioned by an administrator through a manifest file, or it can be dynamically created if a storage class has been pre-configured.
 
@@ -277,7 +278,7 @@ kubectl exec <node name> -i -t -- bash
 
 <br>
 
-<img width="923" alt="crreate_index" src="https://user-images.githubusercontent.com/92983658/224317939-6b7dc21b-0919-45c9-9edf-a9ed3b71c6e5.png">
+<img width="1386" alt="index" src="https://user-images.githubusercontent.com/92983658/224979105-50849994-a955-4f64-aaf7-d0a2f837029d.png">
 
 <br>
 
