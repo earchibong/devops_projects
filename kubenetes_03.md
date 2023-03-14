@@ -279,7 +279,7 @@ kubectl exec <node name> -i -t -- bash
 
 <br>
 
-<img width="1386" alt="index" src="https://user-images.githubusercontent.com/92983658/224979105-50849994-a955-4f64-aaf7-d0a2f837029d.png">
+<img width="1382" alt="testing_persistent_volumes" src="https://user-images.githubusercontent.com/92983658/225015122-57e29b00-3832-4bb1-8375-971d830e77ed.png">
 
 <br>
 
@@ -511,6 +511,10 @@ spec:
  
  ```
  
+<br>
+
+<img width="1380" alt="statefulset" src="https://user-images.githubusercontent.com/92983658/225018438-37b8fe9f-d556-4383-8b41-826969574326.png">
+
 <br>
 
 ## Config Map
