@@ -414,7 +414,6 @@ spec:
    
  ```
  
- *note: The '/tmp/PBL23' directory will be persisted, and any data written in there will be stored permanetly on the volume, which can be used by another Pod if the current one gets replaced.*
  
  <br>
  
