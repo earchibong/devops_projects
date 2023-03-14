@@ -25,6 +25,6 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/docker.md">PROJECT TWENTY: Migration To The Cloud With Containerization. Part One: Docker & Docker Compose</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubernetes.md"> PROJECT TWENTY-ONE: Setting Up A Kubernetes Cluster (Manually)</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md"> PROJECT TWENTY-TWO: Deploying An App Into Kubernetes Cluster</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_03.md"> PROJECT TWENTY-THREE: Persisting Data In Kubernetes</a></li>
 </ul>
-
 
