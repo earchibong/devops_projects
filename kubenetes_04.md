@@ -380,13 +380,15 @@ Plan: 53 to add, 0 to change, 0 to destroy.
 
 ```
 
+if t    terraform apply` is applied to this current plan it will cause some errors at some point because to connect to the cluster using the kubeconfig, Terraform needs to be able to connect and set the credentials correctly.
+
 <br>
 
 <img width="785" alt="plan_1a" src="https://user-images.githubusercontent.com/92983658/225326853-595b3089-8c7f-402b-8ca7-a28ebd4276d2.png">
 
 <br>
 
-- update `data.tf` and `provider.tf` to enable Terraform to connect and set the credentials correctly.
+- update `data.tf` and `provider.tf` to enable Terraform to connect and set the credentials correctly and connect cluster to kubeconfig
 
 append to `data.tf`
 ```
@@ -418,8 +420,24 @@ provider "kubernetes" {
 <br>
 
 - Run the `init`, `plan` and `appy` again
+
+<br>
+
+<img width="869" alt="apply" src="https://user-images.githubusercontent.com/92983658/225334488-0d542937-f860-492b-9120-5ffaa1c0bab0.png">
+
+<br>
+
+
 - Create kubeconfig file using awscli.
 ```
 aws eks update-kubeconfig --name <cluster_name> --region <cluster_region> --kubeconfig kubeconfig
 
 ```
+
+<br>
+
+<img width="1376" alt="kubeconfig" src="https://user-images.githubusercontent.com/92983658/225334994-3d01d3ea-7593-4417-a7aa-ffee25de7228.png">
+
+<br>
+
+## Deploy Applications With HELM
