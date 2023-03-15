@@ -100,12 +100,19 @@ module "vpc" {
     for zone_id in data.aws_availability_zones.available_azs.zone_ids :
     cidrsubnet(var.main_network_block, var.subnet_prefix_extension, tonumber(substr(zone_id, length(zone_id) - 1, 1)) + var.zone_offset - 1)
   ]
+  
+# Enable single NAT Gateway to save some money
+# WARNING: this could create a single point of failure, since we are creating a NAT Gateway in one AZ only
+# feel free to change these options if you need to ensure full Availability without the need of running 'terraform apply'
+# reference: https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/2.44.0#nat-gateway-scenarios
+
   enable_nat_gateway     = true
   single_nat_gateway     = true
   one_nat_gateway_per_az = false
   enable_dns_hostnames   = true
   reuse_nat_ips          = true
   external_nat_ip_ids    = [aws_eip.nat_gw_elastic_ip.id]
+
 
   # Add VPC/Subnet tags required by EKS
   tags = {
@@ -149,3 +156,209 @@ Value: 1
 ```
 
 <br>
+
+- Create a file – `variables.tf`
+```
+
+# create some variables
+variable "cluster_name" {
+type        = string
+description = "EKS cluster name."
+}
+variable "iac_environment_tag" {
+type        = string
+description = "AWS tag to indicate environment name of each infrastructure object."
+}
+variable "name_prefix" {
+type        = string
+description = "Prefix to be used on each infrastructure object Name created in AWS."
+}
+variable "main_network_block" {
+type        = string
+description = "Base CIDR block to be used in our VPC."
+}
+variable "subnet_prefix_extension" {
+type        = number
+description = "CIDR block bits extension to calculate CIDR blocks of each subnetwork."
+}
+variable "zone_offset" {
+type        = number
+description = "CIDR block bits extension offset to calculate Public subnets, avoiding collisions with Private subnets."
+}
+
+```
+
+<br>
+
+<img width="781" alt="variables" src="https://user-images.githubusercontent.com/92983658/225303283-1664feca-e29a-41da-b691-2a1701eba3e9.png">
+
+<br>
+
+- Create a file : `data.tf` (This will pull the available AZs for use.)
+```
+# get all available AZs in our region
+data "aws_availability_zones" "available_azs" {
+state = "available"
+}
+data "aws_caller_identity" "current" {} # used for accesing Account ID and ARN
+
+```
+
+<br>
+
+<img width="781" alt="data" src="https://user-images.githubusercontent.com/92983658/225303758-9a1ba2b1-b0f7-4029-91ae-320e5c1df219.png">
+
+<br>
+
+- Create a file – `eks.tf` and provision EKS cluster
+note: Create the file only if you are not using existing Terraform code. Otherwise simply append it to the `main.tf` from your existing code
+```
+module "eks_cluster" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 18.0"
+  cluster_name    = var.cluster_name
+  cluster_version = "1.22"
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access = true
+
+  # Self Managed Node Group(s)
+  self_managed_node_group_defaults = {
+    instance_type                          = var.asg_instance_types[0]
+    update_launch_template_default_version = true
+  }
+  self_managed_node_groups = local.self_managed_node_groups
+
+  # aws-auth configmap
+  create_aws_auth_configmap = true
+  manage_aws_auth_configmap = true
+  aws_auth_users = concat(local.admin_user_map_users, local.developer_user_map_users)
+  tags = {
+    Environment = "prod"
+    Terraform   = "true"
+  }
+}
+
+```
+
+<br>
+
+<img width="782" alt="eks" src="https://user-images.githubusercontent.com/92983658/225305510-7e25ef0e-6c91-4eec-a104-6e27118c5387.png">
+
+<br>
+
+- Create a file – `locals.tf` to create local variables
+```
+# render Admin & Developer users list with the structure required by EKS module
+locals {
+  admin_user_map_users = [
+    for admin_user in var.admin_users :
+    {
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${admin_user}"
+      username = admin_user
+      groups   = ["system:masters"]
+    }
+  ]
+  developer_user_map_users = [
+    for developer_user in var.developer_users :
+    {
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${developer_user}"
+      username = developer_user
+      groups   = ["${var.name_prefix}-developers"]
+    }
+  ]
+
+  self_managed_node_groups = {
+    worker_group1 = {
+      name = "${var.cluster_name}-wg"
+
+      min_size      = var.autoscaling_minimum_size_by_az * length(data.aws_availability_zones.available_azs.zone_ids)
+      desired_size  = var.autoscaling_minimum_size_by_az * length(data.aws_availability_zones.available_azs.zone_ids)
+      max_size      = var.autoscaling_maximum_size_by_az * length(data.aws_availability_zones.available_azs.zone_ids)
+      instance_type = var.asg_instance_types[0].instance_type
+
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
+
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            delete_on_termination = true
+            encrypted             = false
+            volume_size           = 10
+            volume_type           = "gp2"
+          }
+        }
+      }
+
+      use_mixed_instances_policy = true
+      mixed_instances_policy = {
+        instances_distribution = {
+          spot_instance_pools = 4
+        }
+
+        override = var.asg_instance_types
+      }
+    }
+  }
+}
+
+```
+
+<br>
+
+- add to `variables.tf`
+```
+
+# create some variables
+variable "admin_users" {
+  type        = list(string)
+  description = "List of Kubernetes admins."
+}
+variable "developer_users" {
+  type        = list(string)
+  description = "List of Kubernetes developers."
+}
+variable "asg_instance_types" {
+  description = "List of EC2 instance machine types to be used in EKS."
+}
+variable "autoscaling_minimum_size_by_az" {
+  type        = number
+  description = "Minimum number of EC2 instances to autoscale our EKS cluster on each AZ."
+}
+variable "autoscaling_maximum_size_by_az" {
+  type        = number
+  description = "Maximum number of EC2 instances to autoscale our EKS cluster on each AZ."
+}
+
+```
+
+<br>
+
+- Create a file – `variables.tfvars` to set values for variables.
+```
+
+cluster_name            = "tooling-app-eks"
+iac_environment_tag     = "development"
+name_prefix             = "libby-io-eks"
+main_network_block      = "10.0.0.0/16"
+subnet_prefix_extension = 4
+zone_offset             = 8
+
+# Ensure that these users already exist in AWS IAM. Another approach is that you can introduce an iam.tf file to manage users separately, get the data source and interpolate their ARN.
+admin_users                    = ["libby", "grace"]
+developer_users                = ["eddy", "abigail"]
+asg_instance_types             = [ { instance_type = "t3.small" }, { instance_type = "t2.small" }, ]
+autoscaling_minimum_size_by_az = 1
+autoscaling_maximum_size_by_az = 10
+
+```
+<br>
+
+<img width="777" alt="tfvars" src="https://user-images.githubusercontent.com/92983658/225309043-d9a7cf92-a5ef-47f2-b17d-2cbc2721d811.png">
+
+<br>
+
+
+
