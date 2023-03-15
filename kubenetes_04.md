@@ -38,23 +38,11 @@ aws s3api create-bucket \
 - Create a file – `backend.tf` ensure the backend is configured for remote state in S3
 ```
 
-resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-locks"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-}
-
 terraform {
   backend "s3" {
     bucket         = "pbl24"
     key            = "global/s3/terraform.tfstate"
     region         = "eu-west-2"
-    dynamodb_table = "terraform-locks"
-    encrypt        = true
   }
 }
 
@@ -62,7 +50,8 @@ terraform {
 
 <br>
 
-<img width="785" alt="backend" src="https://user-images.githubusercontent.com/92983658/225299661-d3bc94a8-d7dd-45dc-af76-a3e57049ff5b.png">
+<img width="782" alt="backend" src="https://user-images.githubusercontent.com/92983658/225326498-fed2a2c7-1c99-416c-b111-a110eaab605e.png">
+
 
 <br>
 
@@ -352,13 +341,85 @@ developer_users                = ["eddy", "abigail"]
 asg_instance_types             = [ { instance_type = "t3.small" }, { instance_type = "t2.small" }, ]
 autoscaling_minimum_size_by_az = 1
 autoscaling_maximum_size_by_az = 10
+autoscaling_average_cpu        = 30
+
 
 ```
 <br>
 
-<img width="777" alt="tfvars" src="https://user-images.githubusercontent.com/92983658/225309043-d9a7cf92-a5ef-47f2-b17d-2cbc2721d811.png">
+<img width="782" alt="tfvars_1a" src="https://user-images.githubusercontent.com/92983658/225309792-839d32a9-be47-4639-b647-10eb47434c29.png">
+
+<br>
+
+- Create file – `provider.tf`
+```
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+provider "random" {
+}
+
+```
+
+<br>
+
+- Run `terraform init`
+
+<br>
+
+<img width="817" alt="terraform_init" src="https://user-images.githubusercontent.com/92983658/225314327-66869b9c-d99b-49af-8a82-9cdd12f05473.png">
 
 <br>
 
 
+- Run `Terraform plan` - plan should have an output as below:
+```
+Plan: 53 to add, 0 to change, 0 to destroy.
 
+```
+
+<br>
+
+<img width="785" alt="plan_1a" src="https://user-images.githubusercontent.com/92983658/225326853-595b3089-8c7f-402b-8ca7-a28ebd4276d2.png">
+
+<br>
+
+- update `data.tf` and `provider.tf` to enable Terraform to connect and set the credentials correctly.
+
+append to `data.tf`
+```
+
+# get EKS cluster info to configure Kubernetes and Helm providers
+data "aws_eks_cluster" "cluster" {
+  name = module.eks_cluster.cluster_id
+}
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks_cluster.cluster_id
+}
+
+```
+
+<br>
+
+append to providers.tf`
+```
+
+# get EKS authentication for being able to manage k8s objects from terraform
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+
+````
+
+<br>
+
+- Run the `init`, `plan` and `appy` again
+- Create kubeconfig file using awscli.
+```
+aws eks update-kubeconfig --name <cluster_name> --region <cluster_region> --kubeconfig kubeconfig
+
+```
