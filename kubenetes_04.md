@@ -9,6 +9,7 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#building-eks-with-terraform">Building EKS With Terraform</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#deploy-applications-with-helm">Deploy Applications With Helm</a>
 - 
 
 ## Building EKS with Terraform
@@ -526,5 +527,100 @@ kubectl logs <pod name> -c jenkins --kubeconfig [kubeconfig file]
 <img width="1381" alt="helm_kubeconfig" src="https://user-images.githubusercontent.com/92983658/225638382-20ada17b-877a-423d-b312-da9b1c384d22.png">
 
 <br>
+
+### Configuring Kubeconfig File ( ~/.kube/config)
+Kubectl expects to find the default kubeconfig file in the location `~/.kube/config`. But if there is another cluster using that same file, It doesn’t make sense to overwrite it. Instead, it best to to merge all the kubeconfig files together using a kubectl plugin called <a href="https://github.com/corneliusweig/konfig">konfig</a> and select whichever one is needed to be active.
+
+- Install a package manager for kubectl called <a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/">`krew`</a> so that it will enable you to install plugins to extend the functionality of kubectl.
+
+<br>
+
+<img width="1318" alt="krew" src="https://user-images.githubusercontent.com/92983658/225641279-d2ef1145-364f-4b0e-b3fc-2cf7bcc47a50.png">
+
+<br>
+
+- Install the <a href="https://github.com/corneliusweig/konfig">`konfig plugin`</a>
+```
+  kubectl krew install konfig
+```
+
+- Import the kubeconfig into the default kubeconfig file. Ensure to accept the prompt to overide.
+```
+  sudo kubectl konfig import --save  [kubeconfig file]
+
+```
+
+<br>
+
+<img width="925" alt="kubectl_krew" src="https://user-images.githubusercontent.com/92983658/225641935-19022996-17d6-43a3-a92d-8d73dcb458c2.png">
+
+<br>
+
+- Show all the contexts (Meaning all the clusters configured in your kubeconfig)
+```
+  kubectl config get-contexts
+  
+```
+
+- Set the current context to use for all kubectl and helm commands
+```
+  kubectl config use-context [name of EKS cluster context]
+  
+```
+
+<br>
+
+<img width="1381" alt="set_context" src="https://user-images.githubusercontent.com/92983658/225643110-c4578dd0-f506-40dd-b814-004c848ed902.png">
+
+<br>
+
+- Test that it is working without specifying the `--kubeconfig` flag
+```
+  kubectl get po
+
+```
+
+- Display the current context. This will let you know the context in which you are using to interact with Kubernetes.
+```
+  kubectl config current-context
+
+```
+
+<br>
+
+<img width="1002" alt="config_context" src="https://user-images.githubusercontent.com/92983658/225643676-e54de62d-76c4-4361-9864-c0afcc293f26.png">
+
+<br>
+
+### Access Jenkins UI With Kubectl
+- acquire the Jenkins administrator's password credential 
+There are some commands that were provided on the screen when Jenkins was installed with Helm. See above...Get the password to the admin user
+
+```
+kubectl exec --namespace default -it svc/pbl24-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+
+```
+
+- Use port forwarding to access Jenkins from the UI
+```
+echo http://127.0.0.1:8080
+kubectl --namespace default port-forward svc/pbl24-jenkins 8080:8080
+
+```
+
+<br>
+
+<img width="1432" alt="port_forward_jenkins" src="https://user-images.githubusercontent.com/92983658/225646101-f874770a-428d-4c93-9090-c802841216ce.png">
+
+<br>
+
+- Go to the browser `localhost:8080` and authenticate with the username and password
+
+<br>
+
+<img width="1227" alt="jenkins_helm" src="https://user-images.githubusercontent.com/92983658/225646744-bcfa7204-49eb-4727-8f17-0d7c84bbfba1.png">
+
+<br>
+
 
 
