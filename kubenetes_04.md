@@ -462,7 +462,7 @@ Alternatively, install Helm using other methods <a href="https://helm.sh/docs/in
 
 <br>
 
-### Deploy JenkinsWIth Helm
+### Deploy Jenkins With Helm
 - Visit <a href="https://artifacthub.io/packages/search">Artifact Hub</a> to find packaged applications as Helm Charts
 - Search for Jenkins
 
@@ -622,5 +622,38 @@ kubectl --namespace default port-forward svc/pbl24-jenkins 8080:8080
 
 <br>
 
+## Deploying Artifactory With Helm
+- Adding the Artifactory's repository to helm
+- update the repo
+- install the chart
 
+```
+helm repo add jfrog https://charts.jfrog.io
+helm repo update
+helm upgrade --install jfrog-platform jfrog/jfrog-platform
+
+```
+
+<br>
+
+<img width="1468" alt="jfrog_helm" src="https://user-images.githubusercontent.com/92983658/225653473-334f65ee-d27f-4f69-ad0d-2346ea8cb139.png">
+
+<br>
+
+## Deploying Hashicorp Vault With Helm
+
+- add the Hashicorp helm repository and check that you have access to the chart
+- update the repo
+- install the chart
+
+```
+helm repo add hashicorp https://helm.releases.hashicorp.com
+helm search repo hashicorp/vault
+helm repo update
+helm upgrade ReleaseName Chart --values OverrideValuesFile --values NewOverrideValuesFile -n Namespace 
+helm upgrade --install vault hashicorp/vault
+
+```
+
+<br>
 
