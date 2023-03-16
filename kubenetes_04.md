@@ -335,7 +335,8 @@ main_network_block      = "10.0.0.0/16"
 subnet_prefix_extension = 4
 zone_offset             = 8
 
-# Ensure that these users already exist in AWS IAM. Another approach is that you can introduce an iam.tf file to manage users separately, get the data source and interpolate their ARN.
+# Ensure that these users already exist in AWS IAM. Another approach is that you can introduce an iam.tf file to manage 
+users separately, get the data source and interpolate their ARN.
 admin_users                    = ["libby", "grace"]
 developer_users                = ["eddy", "abigail"]
 asg_instance_types             = [ { instance_type = "t3.small" }, { instance_type = "t2.small" }, ]
@@ -380,7 +381,7 @@ Plan: 53 to add, 0 to change, 0 to destroy.
 
 ```
 
-if t    terraform apply` is applied to this current plan it will cause some errors at some point because to connect to the cluster using the kubeconfig, Terraform needs to be able to connect and set the credentials correctly.
+if `terraform apply` is applied to this current plan it will cause some errors at some point because to connect to the cluster using the kubeconfig, Terraform needs to be able to connect and set the credentials correctly.
 
 <br>
 
@@ -405,7 +406,7 @@ data "aws_eks_cluster_auth" "cluster" {
 
 <br>
 
-append to providers.tf`
+append to `providers.tf`
 ```
 
 # get EKS authentication for being able to manage k8s objects from terraform
@@ -441,3 +442,49 @@ aws eks update-kubeconfig --name <cluster_name> --region <cluster_region> --kube
 <br>
 
 ## Deploy Applications With HELM
+A Helm chart is a definition of the resources that are required to run an application in Kubernetes. Instead of having to think about all of the various deployments/services/volumes/configmaps/ etc that make up your application, you can use a command like:
+`helm install stable/mysql` and Helm will make sure all the required resources are installed. In addition we can tweak the helm configuration by setting a single variable to a particular value and more or less resources will be deployed. For example, enabling slave for MySQL so that it can have read only replicas.
+
+Behind the scenes, a helm chart is essentially a bunch of YAML manifests that defines all the resources required by the application. Helm takes care of creating the resources in Kubernetes (where they don’t exist) and removing old resources.
+
+### Helm Set Up
+If using Mac Os, Install helm with `Homebrew` package manager
+```
+homebrew install helm
+
+```
+
+Alternatively, install Helm from the binary releases <a href="https://helm.sh/docs/intro/install/">here</a>
+
+<br>
+
+### Deploy JenkinsWIth Helm
+- Visit <a href="https://artifacthub.io/packages/search">Artifact Hub</a> to find packaged applications as Helm Charts
+- Search for Jenkins
+
+<br>
+
+<img width="1222" alt="helm_artifact" src="https://user-images.githubusercontent.com/92983658/225588087-a9f65341-55cb-4f4e-a4bc-a75c875b3c3e.png">
+
+<br>
+
+- Add the repository to helm so that it can easily be downloaded and deployed, update and install it
+```
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
+helm install [RELEASE_NAME] jenkins/jenkins --kubeconfig [kubeconfig file]
+
+```
+
+<br>
+
+<img width="1277" alt="heml_jenkins" src="https://user-images.githubusercontent.com/92983658/225588611-789a278b-d342-4ed3-93e9-c96a365c36b4.png">
+
+<br>
+
+*note: if you get the following error: `Error: INSTALLATION FAILED: Kubernetes cluster unreachable: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1"`..then do the following:*
+*Update apiVersion value in User section of `kubeconfig` file to `client.authentication.k8s.io/v1beta1`*
+
+ <img width="1034" alt="vbeta1" src="https://user-images.githubusercontent.com/92983658/225607100-e95dfcc4-be69-482e-bd5b-808096eda7aa.png">
+
+<br>
