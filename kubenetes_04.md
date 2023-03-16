@@ -448,13 +448,16 @@ A Helm chart is a definition of the resources that are required to run an applic
 Behind the scenes, a helm chart is essentially a bunch of YAML manifests that defines all the resources required by the application. Helm takes care of creating the resources in Kubernetes (where they don’t exist) and removing old resources.
 
 ### Helm Set Up
-If using Mac Os, Install helm with `Homebrew` package manager
+
 ```
-homebrew install helm
+wget -O helm.tar.gz https://get.helm.sh/helm-v3.8.2-linux-arm.tar.gz
+tar -zxvf helm-v3.8.2-linux-amd64.tar.gz
+mv linux-arm/helm /usr/local/bin/helm
+helm
 
 ```
 
-Alternatively, install Helm from the binary releases <a href="https://helm.sh/docs/intro/install/">here</a>
+Alternatively, install Helm using other methods <a href="https://helm.sh/docs/intro/install/">here</a>
 
 <br>
 
@@ -482,9 +485,46 @@ helm install [RELEASE_NAME] jenkins/jenkins --kubeconfig [kubeconfig file]
 
 <br>
 
-*note: if you get the following error: `Error: INSTALLATION FAILED: Kubernetes cluster unreachable: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1"`..then do the following:*
-*Update apiVersion value in User section of `kubeconfig` file to `client.authentication.k8s.io/v1beta1`*
-
- <img width="1034" alt="vbeta1" src="https://user-images.githubusercontent.com/92983658/225607100-e95dfcc4-be69-482e-bd5b-808096eda7aa.png">
+<img width="1381" alt="helm_install" src="https://user-images.githubusercontent.com/92983658/225631395-68103ff0-b194-4b5f-bdf7-7a2c44bbc6a7.png">
 
 <br>
+
+*note: if the forllowing error occurs: invalid apiVersion `client.authentication.k8s.io/v1alpha1`...update `AWS CLI`*
+```
+#for mac os:
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+sudo installer -pkg AWSCLIV2.pkg -target /
+
+#For Linux x86 (64-bit)
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && sudo ./aws/install
+
+#For Windows
+C:\> msiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi
+
+```
+
+<br>
+
+- Running some commands to inspect the installation:
+```
+#Check the Helm deployment
+helm ls --kubeconfig [kubeconfig file]
+
+#Check the pods
+kubectl get pods --kubeconfig [kubeconfig file]
+
+#Describe the running pod
+kubectl describe pod <pod name> --kubeconfig [kubeconfig file]
+
+#check logs of running pods
+kubectl logs <pod name> -c jenkins --kubeconfig [kubeconfig file]
+
+```
+
+<br>
+
+<img width="1381" alt="helm_kubeconfig" src="https://user-images.githubusercontent.com/92983658/225638382-20ada17b-877a-423d-b312-da9b1c384d22.png">
+
+<br>
+
+
