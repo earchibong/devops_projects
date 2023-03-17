@@ -651,7 +651,8 @@ helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 
 
 <img width="1470" alt="jfrog_helm" src="https://user-images.githubusercontent.com/92983658/225927674-957cec74-e010-482f-a2c9-1e2458b0e6e5.png">
 
-<br>
+<br>  
+
 
 ### Deploying Hashicorp Vault With Helm
 
