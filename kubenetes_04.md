@@ -620,7 +620,6 @@ kubectl --namespace default port-forward svc/pbl24-jenkins 8080:8080
 
 <img width="1227" alt="jenkins_helm" src="https://user-images.githubusercontent.com/92983658/225646744-bcfa7204-49eb-4727-8f17-0d7c84bbfba1.png">
 
-<br>
 
 ## Deploying Multiple Helm Charts
 This section will be setting up the following tools using helm
@@ -632,86 +631,153 @@ This section will be setting up the following tools using helm
 
 <br>
 
-- install `helmfile`
-```
-brew install helmfile
-
-```
-
-or download helmfile release:  https://github.com/roboll/helmfile/releases
-
-<br>
-
-- use a docker container:
-```
-
-docker run --rm --net=host -v "${HOME}/.kube:/root/.kube" -v "${HOME}/.config/helm:/root/.config/helm" -v "${PWD}:/data" --workdir /data quay.io/roboll/helmfile:helm3-v0.135.0 helmfile 
-
-```
-
 ### Deploying Artifactory With Helm
 
-- create a file named `helmfile.yaml` to represent the desired state of helm releases:
-```
-
-repositories:
-- name: jfrog
-  url: https://charts.jfrog.io
-
-releases:
-- name: artifactory
-  namespace: jfrog-platform 
-  chart: jfrog/jfrog-platform
-  
-    
- ```
- 
-<br>
- 
-<img width="940" alt="jfrog_helmfile" src="https://user-images.githubusercontent.com/92983658/225906486-0e1dfb5b-b648-434b-802e-2d38ff0c804d.png">
-
-<br>
-
-- apply chart release: 
-```
-
-helmfile apply
-
-```
- 
-- 
-- ## Deploying Artifactory With Helm
-- Adding the Artifactory's repository to helm
+- Add Artifactory's repository to helm
+- create a namespace `tools` where all the tools will be deployed
 - update the repo
 - install the chart
 
 ```
 helm repo add jfrog https://charts.jfrog.io
+kubectl create ns tools
 helm repo update
-helm upgrade --install jfrog-platform jfrog/jfrog-platform
+# Click on the install menu on the repository page to see the installation commands.
+helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 -n tools
 
 ```
 
 <br>
 
-<img width="1468" alt="jfrog_helm" src="https://user-images.githubusercontent.com/92983658/225653473-334f65ee-d27f-4f69-ad0d-2346ea8cb139.png">
+<img width="1470" alt="jfrog_helm" src="https://user-images.githubusercontent.com/92983658/225927674-957cec74-e010-482f-a2c9-1e2458b0e6e5.png">
 
 <br>
 
-## Deploying Hashicorp Vault With Helm
+### Deploying Hashicorp Vault With Helm
 
 - add the Hashicorp helm repository and check that you have access to the chart
 - update the repo
-- install the chart
+- install the chart in `tools` namespace
 
 ```
 helm repo add hashicorp https://helm.releases.hashicorp.com
 helm search repo hashicorp/vault
 helm repo update
-helm upgrade ReleaseName Chart --values OverrideValuesFile --values NewOverrideValuesFile -n Namespace 
-helm upgrade --install vault hashicorp/vault
+helm upgrade --install my-vault hashicorp/vault --version 0.23.0 -n tools
 
 ```
 
 <br>
+
+<img width="1362" alt="vault_helm" src="https://user-images.githubusercontent.com/92983658/225928943-828d8f5c-ac46-4e09-b3c7-0a99448064a7.png">
+
+<br>
+
+
+### Deploying Prometheus With Helm
+```
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm upgrade --install my-prometheus prometheus-community/prometheus --version 19.7.2 -n tools
+
+```
+
+<br>
+
+<img width="1440" alt="helm_promotheus" src="https://user-images.githubusercontent.com/92983658/225930354-ee42ebbc-801c-4cbb-ac4f-29511620e6f0.png">
+
+<br>
+
+- Port forward to access prometheus from the UI:
+From the instructions given during installation...
+
+```
+
+#Get the Prometheus server URL by running these commands
+export POD_NAME=$(kubectl get pods --kubeconfig kubeconfig --namespace tools -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+
+
+kubectl --namespace tools port-forward $POD_NAME 9090 --kubeconfig kubeconfig
+  
+
+```
+
+<br>
+
+<img width="1385" alt="prometheus_port" src="https://user-images.githubusercontent.com/92983658/225938933-5d47da89-f01b-4d27-9b4e-50ace7c1c9b0.png">
+
+<br>
+
+
+
+### Deploying Grafana With Helm
+
+```
+
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm upgrade --install my-grafana grafana/grafana --version 6.52.4 -n tools
+
+```
+
+<br>
+
+<img width="1470" alt="grafana_helm" src="https://user-images.githubusercontent.com/92983658/225931214-3916472f-36cd-462e-b51a-0fde41ff98f1.png">
+
+<br>
+
+- Port forward to access grafana from the UI:
+From the instructions given during installation...
+
+```
+export POD_NAME=$(kubectl get pods --kubeconfig kubeconfig --namespace tools -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=my-grafana" -o jsonpath="{.items[0].metadata.name}")
+
+kubectl --namespace tools port-forward $POD_NAME 3000 --kubeconfig kubeconfig
+
+```
+
+<br>
+
+<img width="1201" alt="grafana_3000" src="https://user-images.githubusercontent.com/92983658/225936421-9bc07358-ef1b-47db-ad8e-b4881230b6d6.png">
+
+<br>
+
+<img width="1228" alt="grafana_2" src="https://user-images.githubusercontent.com/92983658/225936875-cfc0d8ce-e601-4c3a-968f-91ae34162b83.png">
+
+<br>
+
+```
+
+# get grafana password:
+
+kubectl get secret --kubeconfig kubeconfig --namespace tools my-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+#username: admin
+
+```
+
+<br>
+
+<img width="1231" alt="grafana_3" src="https://user-images.githubusercontent.com/92983658/225937696-b51fa09e-a046-4057-8d5c-460421645f4a.png">
+
+<br>
+
+
+### Deploying Elasticsearch ELK With Helm
+
+```
+
+helm repo add elastic https://helm.elastic.co
+helm repo update
+helm upgrade --install my-elasticsearch elastic/elasticsearch --version 8.5.1 -n tools
+
+```
+
+<br>
+
+<img width="1386" alt="elastisearch_helm" src="https://user-images.githubusercontent.com/92983658/225932932-9b6e1b85-50ee-48a5-b70c-bd47f0ae6e3d.png">
+
+<br>
+
 
