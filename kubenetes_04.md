@@ -622,7 +622,65 @@ kubectl --namespace default port-forward svc/pbl24-jenkins 8080:8080
 
 <br>
 
-## Deploying Artifactory With Helm
+## Deploying Multiple Helm Charts
+This section will be setting up the following tools using helm
+- Artifactory
+- Hashicorp Vault
+- Prometheus
+- Grafana
+- Elasticsearch ELK using ECK
+
+<br>
+
+- install `helmfile`
+```
+brew install helmfile
+
+```
+
+or download helmfile release:  https://github.com/roboll/helmfile/releases
+
+<br>
+
+- use a docker container:
+```
+
+docker run --rm --net=host -v "${HOME}/.kube:/root/.kube" -v "${HOME}/.config/helm:/root/.config/helm" -v "${PWD}:/data" --workdir /data quay.io/roboll/helmfile:helm3-v0.135.0 helmfile 
+
+```
+
+### Deploying Artifactory With Helm
+
+- create a file named `helmfile.yaml` to represent the desired state of helm releases:
+```
+
+repositories:
+- name: jfrog
+  url: https://charts.jfrog.io
+
+releases:
+- name: artifactory
+  namespace: jfrog-platform 
+  chart: jfrog/jfrog-platform
+  
+    
+ ```
+ 
+<br>
+ 
+<img width="940" alt="jfrog_helmfile" src="https://user-images.githubusercontent.com/92983658/225906486-0e1dfb5b-b648-434b-802e-2d38ff0c804d.png">
+
+<br>
+
+- apply chart release: 
+```
+
+helmfile apply
+
+```
+ 
+- 
+- ## Deploying Artifactory With Helm
 - Adding the Artifactory's repository to helm
 - update the repo
 - install the chart
