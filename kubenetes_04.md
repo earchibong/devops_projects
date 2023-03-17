@@ -10,6 +10,8 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#building-eks-with-terraform">Building EKS With Terraform</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#deploy-applications-with-helm">Deploy Applications With Helm</a>
+- <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#configuring-kubeconfig-file--kubeconfig">Configuring Kube Config File</a> 
+- <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-devops-tools-helm-charts">Deploying DevOps Tools With Helm</a>
 - 
 
 ## Building EKS with Terraform
@@ -621,7 +623,7 @@ kubectl --namespace default port-forward svc/pbl24-jenkins 8080:8080
 <img width="1227" alt="jenkins_helm" src="https://user-images.githubusercontent.com/92983658/225646744-bcfa7204-49eb-4727-8f17-0d7c84bbfba1.png">
 
 
-## Deploying Multiple Helm Charts
+## Deploying DevOps Tools Helm Charts
 This section will be setting up the following tools using helm
 - Artifactory
 - Hashicorp Vault
