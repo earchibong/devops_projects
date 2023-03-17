@@ -717,7 +717,9 @@ kubectl --namespace tools port-forward $POD_NAME 9090 --kubeconfig kubeconfig
 
 <br>
 
+<img width="1229" alt="prometheus_1" src="https://user-images.githubusercontent.com/92983658/225946019-e6de55bd-ab69-4e09-a09d-3d3d00ca3396.png">
 
+<br>
 
 ### Deploying Grafana With Helm
 
