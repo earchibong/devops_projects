@@ -126,11 +126,11 @@ An **aws Elastic Block Store** volume mounts an **Amazon Web Services (AWS) EBS 
 
 <br>
 
-<img width="1225" alt="csi_driver" src="https://user-images.githubusercontent.com/92983658/224299782-335bb3e7-0fde-4c32-94af-ee5d83120039.png">
+<img width="1227" alt="driver_1b" src="https://user-images.githubusercontent.com/92983658/226338286-4ba6fdd0-9aa9-4b6f-852f-544711d8e220.png">
 
 <br>
 
-<img width="1227" alt="driver_1b" src="https://user-images.githubusercontent.com/92983658/226338286-4ba6fdd0-9aa9-4b6f-852f-544711d8e220.png">
+<img width="1225" alt="csi_driver" src="https://user-images.githubusercontent.com/92983658/224299782-335bb3e7-0fde-4c32-94af-ee5d83120039.png">
 
 <br>
 
