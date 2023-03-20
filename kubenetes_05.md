@@ -1,6 +1,6 @@
 # Deploying And PAckaging Applications Into Kubenetes With Helm
 
-In <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md"Project 24</a>,  we experienced helm as a tool 
+In <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md">Project 24</a>,  we experienced helm as a tool 
 used to deploy an application into Kubernetes. We installed several tools apart from Jenkins.
 
 In this project, we will:
@@ -14,8 +14,6 @@ how they fit into the entire ecosystem.
 
 <br>
 
-## Artifactory
-
 In this project, the requirement is to use Jfrog Artifactory as a private registry for the organisation’s Docker images and 
 Helm charts. This requirement will satisfy part of the company’s corporate security policies to never download artifacts 
 directly from the public into production systems. 
@@ -24,9 +22,13 @@ We will eventually have a CI pipeline that initially pulls public docker images 
 store in artifactory and scan the artifacts for security vulnerabilities before deploying into the corporate infrastructure. 
 Any found vulnerabilities will immediately trigger an action to quarantine such artifacts.
 
+<br>
+
 ## Labs
 - <a href=" ">
 
+<br>
+  
 ## Deploy Jfrog Artifactory into Kubernetes
 
 - Provision and EKS cluster with terraform
