@@ -1,4 +1,4 @@
-# Deploying And PAckaging Applications Into Kubenetes With Helm
+# Deploying And Packaging Applications Into Kubenetes With Helm
 
 In <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md">Project 24</a>,  we experienced helm as a tool 
 used to deploy an application into Kubernetes. We installed several tools apart from Jenkins.
@@ -25,7 +25,8 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 <br>
 
 ## Labs
-- <a href=" ">
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">Deploy Jfrog Artifactory into Kubernetes</a>
+- 
 
 <br>
   
@@ -46,3 +47,22 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 
 <br>
   
+- Add the jfrog remote repository on your laptop/computer
+```
+helm repo add jfrog https://charts.jfrog.io
+
+```
+
+- Create a namespace called tools where all the tools for DevOps will be deployed.
+```
+kubectl create ns tools
+
+```
+
+- Update the helm repo index on your laptop/computer
+```
+helm repo update
+
+```
+
+
