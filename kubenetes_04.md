@@ -10,6 +10,7 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/main/kubenetes_04.md#building-eks-with-terraform">Building EKS With Terraform</a>
 - <a href="https://github.com/earchibong/devops_training/blob/edit/main/kubenetes_04.md#deploy-applications-with-helm">Deploy Applications With Helm</a>
+- <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploy-jenkins-with-helm">Deploy Jenkins With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#configuring-kubeconfig-file--kubeconfig">Configuring Kube Config File</a> 
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-devops-tools-helm-charts">Deploying DevOps Tools With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-artifactory-with-helm">Deploying Artifactory With Helm</a>
