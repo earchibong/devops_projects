@@ -323,11 +323,24 @@ kubectl get pods
 
 <br>
 
-<img width="1209" alt="volume_1g" src="https://user-images.githubusercontent.com/92983658/223119485-545175fc-8d20-470b-b4fc-d5707f58dfbf.png">
+<img width="1231" alt="volume_persist" src="https://user-images.githubusercontent.com/92983658/226342806-cb1fd955-a53e-4239-a3e8-4670aff56222.png">
 
 <br>
 
 *note: the old pod is being terminated and the new pod is being created. The new pod has a volume attached to it, and can now be used to run a container for statefuleness*
+
+- port forward the pod and ensure that the "Welcome to nginx" page poersisted and is still visible
+
+```
+
+kubectl get pods
+kubectl port-forward pods/<pod name> 8080:80
+
+## on browser
+localhost:8080
+
+```
+
 
 *The value provided to name in `volumeMounts` must be the same value used in the `volumes` section. It basically means mount the volume with the name provided, to the provided mountpath*
 
