@@ -55,13 +55,85 @@ At its core, a volume is a directory, possibly with some data in it, which is ac
 ### Static Provisioning With AWS Elastic Block Store Volume
 An **aws Elastic Block Store** volume mounts an **Amazon Web Services (AWS) EBS volume** into a pod. The contents of an EBS volume are persisted and the volume is only unmmounted when the pod crashes, or terminates. This means that an EBS volume can be pre-populated with data, and that data can be shared between pods.
 
+- on `IAM` consolse, add identity provider for eks cluster
+  - on eks cluster info page, make a note of the `OpenID Connect provider URL`
+  - on `iam console`, select  `identity provider` -> `add provider`
+  - select `OpenID Connect` as provider type and insert `OpenID Connect provider URL` ->  get `thumb print`
+  - for `audience` : `sts.amazonaws.com`
+
+<br>
+
+<img width="1230" alt="open_id_connect_url" src="https://user-images.githubusercontent.com/92983658/226332728-f8cb5bdc-69a8-456e-99f5-f70a1d1e5c0b.png">
+
+<br>
+
+<img width="1230" alt="identity_provider" src="https://user-images.githubusercontent.com/92983658/226332763-f918e114-e839-4d68-b812-cec7c96057a8.png">
+
+<br>
+
+<img width="1230" alt="identty_provder_2" src="https://user-images.githubusercontent.com/92983658/226332984-4708e336-c86f-44fe-b17c-1622ff178ef7.png">
+
+<br>
+
+- on `IAM` console, create a role to attach to the identity provider
+  - on `iam` console, choose `roles` and `create role`
+  - for **Trusted entity type** -> select `web identity`
+  - for **identity provider** -> `<your created identity provider>`
+  - for **audience** -> `sts.amazonaws.com`
+  - for **permissions** -> filter and select `AmazonEBSCSIDriverPolicy`
+  - name, review and create role
+
+<br>
+
+<img width="1228" alt="role_1a" src="https://user-images.githubusercontent.com/92983658/226334814-a4e67b3b-7f85-4a8f-96be-a69033a1f188.png">
+
+<br>
+
+<img width="1228" alt="role_1b" src="https://user-images.githubusercontent.com/92983658/226334832-83a6d3f6-51c5-40cc-b354-000d5d98f59d.png">
+
+<br>
+
+<img width="1227" alt="role_3" src="https://user-images.githubusercontent.com/92983658/226334852-74d59854-1ef5-4de7-9621-31fbb6d81bb0.png">
+
+<br>
+
+- open the newly created role for editing
+  - under   trust relationships` tab -> select  `edit trust policy`
+  - Find the line that looks similar to the following line:
+  ```
+  "oidc.eks.region-code.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE:aud": "sts.amazonaws.com"
+  
+  ```
+  - Add a comma to the end of the previous line, and then add the following line after the previous line. 
+  Replace region-code with the AWS Region that your cluster is in. Replace EXAMPLED539D4633E53DE1B71EXAMPLE with your 
+  cluster's OIDC provider ID.
+  ```
+  "oidc.eks.region-code.amazonaws.com/id/EXAMPLED539D4633E53DE1B71EXAMPLE:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+  
+  ```
+
+<br>
+
+<img width="1230" alt="update_policy" src="https://user-images.githubusercontent.com/92983658/226336959-2afd6e99-6c0e-4f51-83a2-a3c9ade8463e.png">
+
+<br>
+
 - on EKS dashboard, ensure that `aws-ebs-csi-driver` add-on is enabled on cluster.
+  - on cluster infor page, select `add-ons` -> `get more add-ons` -> `aws-ebs-csi-driver`
+  - configure `aws-ebs-csi-driver`:
+   - select driver version and newly cfreated `IAM role`
+   - review and add
 
 <br>
 
 <img width="1225" alt="csi_driver" src="https://user-images.githubusercontent.com/92983658/224299782-335bb3e7-0fde-4c32-94af-ee5d83120039.png">
 
 <br>
+
+<img width="1227" alt="driver_1b" src="https://user-images.githubusercontent.com/92983658/226338286-4ba6fdd0-9aa9-4b6f-852f-544711d8e220.png">
+
+<br>
+
 
 
 - update `Nginx` pod manifest
