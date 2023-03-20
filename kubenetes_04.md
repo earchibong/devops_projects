@@ -16,7 +16,7 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-hashicorp-vault-with-helm">Deploying Vault With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-prometheus-with-helm">Deploying Premetheus With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-grafana-with-helm">Deploying Grafana With Helm</a>
-- < a href="<a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-elasticsearch-elk-with-helm">Deploying Elastisearch With Helm</a>
+- <a href="<a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_04.md#deploying-elasticsearch-elk-with-helm">Deploying Elastisearch With Helm</a>
 
 
 ## Building EKS with Terraform
