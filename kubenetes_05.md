@@ -75,14 +75,14 @@ helm repo update
 - install artifactory
 ```
 
-helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 -n tools --kubeconfig <kubeconfig file name>
+helm upgrade --install my-artifactory jfrog/artifactory --version 107.55.8 -n tools --kubeconfig kubeconfig
 
 
 ```
 
 <br>
 
-<img width="1240" alt="artifactory_helm_1b" src="https://user-images.githubusercontent.com/92983658/226586249-148a4279-661a-4e2e-8f67-5b0c133d3a61.png">
+<img width="1382" alt="artifactory_install" src="https://user-images.githubusercontent.com/92983658/226602621-e502fc85-4794-4130-b933-74591163126b.png">
 
 <br>
 
@@ -110,7 +110,7 @@ kubectl get po -n tools
 ```
 <br>
 
-<img width="722" alt="tools_po" src="https://user-images.githubusercontent.com/92983658/226588428-30d6fffd-7f87-42e3-84b6-15779ebe5b6d.png">
+<img width="1272" alt="pods_artifactory" src="https://user-images.githubusercontent.com/92983658/226603555-57c722fb-67ec-438c-a0b4-a36b64cfcc6c.png">
 
 <br>
 
