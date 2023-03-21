@@ -65,4 +65,39 @@ helm repo update
 
 ```
 
+<br>
+
+<img width="898" alt="artifactory_helm_1a" src="https://user-images.githubusercontent.com/92983658/226585527-1c09e039-c707-4017-ac59-29d866ac8847.png">
+
+<br>
+
+- install artifactory
+```
+
+helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 -n tools
+
+```
+
+<br>
+
+<img width="1240" alt="artifactory_helm_1b" src="https://user-images.githubusercontent.com/92983658/226586249-148a4279-661a-4e2e-8f67-5b0c133d3a61.png">
+
+<br>
+
+*note: `upgrade --install` is used flag here instead of `helm install artifactory jfrog/artifactory`. This is a better practice, especially when developing CI pipelines for helm deployments. It ensures that helm does an upgrade if there is an existing installation. But if there isn’t, it does the initial install. With this strategy, the command will never fail. It will be smart enough to determine if an upgrade or fresh installation is required. *
+
+*The helm chart version to install is very important to specify. So, the version at the time of writing may be different from what you will see from Artifact Hub. So, replace the version number to the desired. You can see all the versions by clicking on "see all" as shown in the image below.*
+
+<br>
+
+<img width="1230" alt="application-varsion" src="https://user-images.githubusercontent.com/92983658/226587124-7108527b-84df-4353-944f-c6902a53fccb.png">
+
+<br>
+
+<img width="1225" alt="application_version_2" src="https://user-images.githubusercontent.com/92983658/226587289-931033fa-cae0-4629-b912-088501624666.png">
+
+<br>
+
+### Getting the Artifactory URL
+
 
