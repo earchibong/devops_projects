@@ -44,7 +44,7 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 
 <br>
   
-<img width="1226" alt="jfrog_artifact_1b" src="https://user-images.githubusercontent.com/92983658/226358080-69dcf7e5-6f3b-4c79-9a8c-c079c34b6df6.png">
+<img width="1219" alt="artifactory_1b" src="https://user-images.githubusercontent.com/92983658/226611084-a04a43e5-e4c4-44d2-ab82-fa744c655e1f.png">
 
 <br>
   
@@ -56,7 +56,7 @@ helm repo add jfrog https://charts.jfrog.io
 
 - Create a namespace called tools where all the tools for DevOps will be deployed.
 ```
-kubectl create ns tools
+kubectl create ns tools 
 
 ```
 
@@ -68,27 +68,31 @@ helm repo update
 
 <br>
 
-<img width="898" alt="artifactory_helm_1a" src="https://user-images.githubusercontent.com/92983658/226585527-1c09e039-c707-4017-ac59-29d866ac8847.png">
+<img width="1386" alt="helm_repo_update" src="https://user-images.githubusercontent.com/92983658/226611464-c7b4dbe6-5058-4cac-aabb-b3751957cb73.png">
 
 <br>
 
 - install artifactory
 ```
 
-helm upgrade --install my-artifactory jfrog/artifactory --version 107.55.8 -n tools --kubeconfig kubeconfig
-
+helm upgrade --install my-artifactory jfrog/artifactory --version 107.38.10 \ 
+--namespace tools \ 
+--kubeconfig kubeconfig \
+--set volume=20GB
 
 ```
 
 <br>
 
-<img width="1382" alt="artifactory_install" src="https://user-images.githubusercontent.com/92983658/226602621-e502fc85-4794-4130-b933-74591163126b.png">
+<img width="1386" alt="artifactory_install" src="https://user-images.githubusercontent.com/92983658/226611820-79ad6919-99cc-4e84-b724-cf6fb07441d1.png">
 
 <br>
 
 *note: `upgrade --install` is used flag here instead of `helm install artifactory jfrog/artifactory`. This is a better practice, especially when developing CI pipelines for helm deployments. It ensures that helm does an upgrade if there is an existing installation. But if there isn’t, it does the initial install. With this strategy, the command will never fail. It will be smart enough to determine if an upgrade or fresh installation is required.*
 
 *The helm chart version to install is very important to specify. So, the version at the time of writing may be different from what you will see from Artifact Hub. So, replace the version number to the desired. You can see all the versions by clicking on "see all" as shown in the image below.*
+
+*`--set` flag is used to modify the volume value because the required volume for artifactory is around 2OOGB and by default the volume provisioned by the cluster is 20GB, so we can either edit the value for helm chart or bootstrap another cluster with 200GB capacity...we're editing the value in this instance*
 
 <br>
 
