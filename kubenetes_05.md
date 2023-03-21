@@ -26,6 +26,7 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">Deploy Jfrog Artifactory into Kubernetes</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#getting-the-artifactory-url">Getting The Artifactory URL</a>
 - 
 
 <br>
@@ -74,7 +75,8 @@ helm repo update
 - install artifactory
 ```
 
-helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 -n tools
+helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 -n tools --kubeconfig <kubeconfig file name>
+
 
 ```
 
@@ -84,7 +86,7 @@ helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 
 
 <br>
 
-*note: `upgrade --install` is used flag here instead of `helm install artifactory jfrog/artifactory`. This is a better practice, especially when developing CI pipelines for helm deployments. It ensures that helm does an upgrade if there is an existing installation. But if there isn’t, it does the initial install. With this strategy, the command will never fail. It will be smart enough to determine if an upgrade or fresh installation is required. *
+*note: `upgrade --install` is used flag here instead of `helm install artifactory jfrog/artifactory`. This is a better practice, especially when developing CI pipelines for helm deployments. It ensures that helm does an upgrade if there is an existing installation. But if there isn’t, it does the initial install. With this strategy, the command will never fail. It will be smart enough to determine if an upgrade or fresh installation is required.*
 
 *The helm chart version to install is very important to specify. So, the version at the time of writing may be different from what you will see from Artifact Hub. So, replace the version number to the desired. You can see all the versions by clicking on "see all" as shown in the image below.*
 
@@ -100,4 +102,43 @@ helm upgrade --install my-jfrog-platform jfrog/jfrog-platform --version 10.12.0 
 
 ### Getting the Artifactory URL
 
+The artifactory helm chart comes bundled with the Artifactory software, a PostgreSQL database and an Nginx proxy which it uses to configure routes to the different capabilities of Artifactory. 
+- Getting the pods after some time, you should see something like the below.
+```
+kubectl get po -n tools
 
+```
+<br>
+
+<img width="722" alt="tools_po" src="https://user-images.githubusercontent.com/92983658/226588428-30d6fffd-7f87-42e3-84b6-15779ebe5b6d.png">
+
+<br>
+
+Each of the deployed application have their respective services.
+
+```
+kubectl get svc -n tools --kubeconfig <kubeconfig file name>
+
+```
+
+<br>
+
+<img width="1076" alt="svc_tools" src="https://user-images.githubusercontent.com/92983658/226588950-f0c5994d-5a1c-40d5-bd7f-531cb33ae2f5.png">
+
+<br>
+
+**note:** Notice that, the Nginx Proxy has been configured to use the service type of LoadBalancer. Therefore, to reach Artifactory, we will need to go through the Nginx proxy’s service... Which happens to be a load balancer created in the cloud provider. 
+
+- Run the kubectl command to retrieve the Load Balancer URL.
+```
+ kubectl get svc my-jfrog-platform-artifactory-nginx -n tools --kubeconfig kubeconfig
+
+```
+
+<br>
+
+<img width="1080" alt="loadbalancer_url" src="https://user-images.githubusercontent.com/92983658/226591964-f8c13fea-d7e8-4979-b46e-6d00e68c785c.png">
+
+<br>
+
+- Copy the URL and paste in the browser
