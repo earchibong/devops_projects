@@ -136,7 +136,7 @@ Each of the deployed application have their respective services.
 kubectl get svc -n tools --kubeconfig <kubeconfig file name>
 
 ```
-
+ 
 <br>
 
 <img width="1076" alt="svc_tools" src="https://user-images.githubusercontent.com/92983658/226588950-f0c5994d-5a1c-40d5-bd7f-531cb33ae2f5.png">
