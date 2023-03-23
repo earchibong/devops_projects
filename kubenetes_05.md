@@ -33,7 +33,23 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
   
 ## Deploy Jfrog Artifactory into Kubernetes
 
-- Provision and EKS cluster with terraform
+- Provision and EKS cluster with `eksctl`..ensure volume size is set to `200GB`
+```
+
+eksctl create cluster \
+--name PBL25-cluster \
+--tags Key=Name,Value=PBL23-cluster \
+--nodegroup-name PBL25-nodes \
+--node-type t2.medium \
+--node-volume-size=200 \
+--nodes-min=3 \
+--nodes-max=5
+
+```
+
+<br>
+
+
 - Search for an official helm chart for Artifactory on <a href="https://artifacthub.io/">Artifact Hub</a>
 - Review the Artifactory page
 - Click on the install menu on the right to see the installation commands.
@@ -75,10 +91,7 @@ helm repo update
 - install artifactory
 ```
 
-helm upgrade --install my-artifactory jfrog/artifactory --version 107.38.10 \ 
---namespace tools \ 
---kubeconfig kubeconfig \
---set volume=20GB
+helm upgrade --install my-artifactory jfrog/artifactory --version 107.55.8 -n tools
 
 ```
 
@@ -92,7 +105,6 @@ helm upgrade --install my-artifactory jfrog/artifactory --version 107.38.10 \
 
 *The helm chart version to install is very important to specify. So, the version at the time of writing may be different from what you will see from Artifact Hub. So, replace the version number to the desired. You can see all the versions by clicking on "see all" as shown in the image below.*
 
-*`--set` flag is used to modify the volume value because the required volume for artifactory is around 2OOGB and by default the volume provisioned by the cluster is 20GB, so we can either edit the value for helm chart or bootstrap another cluster with 200GB capacity...we're editing the value in this instance*
 
 <br>
 
