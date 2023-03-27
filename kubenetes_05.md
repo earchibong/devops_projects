@@ -426,7 +426,7 @@ The `archibong.link` part of the domain is the configured HOSTED ZONE in AWS. So
 
 <br>
 
-This shows that the site is indeed reachable, but insecure. This is because some browsers do not load insecure sites by default. It is insecure because it either does not have a trusted TLS/SSL certificate, or it doesn’t have any at all.
+This shows that the site is indeed reachable, but insecure. This is because some browsers (chrome) do not load insecure sites by default. It is insecure because it either does not have a trusted TLS/SSL certificate, or it doesn’t have any at all.
 
 Nginx Ingress Controller does configure a default TLS/SSL certificate. But it is not trusted because it is a self signed certificate that browsers are not aware of.
 
@@ -434,6 +434,7 @@ Nginx Ingress Controller does configure a default TLS/SSL certificate. But it is
 
 - Click on the Not Secure part of the browser.
 - Select the Certificate is not valid menu
+- You will see the details of the certificate. There you can confirm that yes indeed there is encryption configured for the traffic, the browser is just not cool with it.
 
 <br>
 
@@ -441,5 +442,10 @@ Nginx Ingress Controller does configure a default TLS/SSL certificate. But it is
 
 <br>
 
+<img width="1232" alt="certificate_1b" src="https://user-images.githubusercontent.com/92983658/227999341-1a28b0b8-3ea4-4cb4-aa85-e398f0242b1a.png">
+
+<br>
+
+- Now try another browser. For example Internet explorer or Safari
 
 
