@@ -27,7 +27,7 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">Deploy Jfrog Artifactory into Kubernetes</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#getting-the-artifactory-url">Getting The Artifactory URL</a>
-- 
+- <a href=https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-ingress-controller-and-manage-ingress-resources">Deploy Ingress Controller & Manage Ingress Resources</a>
 
 <br>
   
@@ -269,4 +269,13 @@ helm upgrade --install my-nginx-ingress ingress-nginx/ingress-nginx -n ingress-n
 
 <br>
 
+- confirm pods in the `ingress-nginx` namespace:
+```
+
+kubectl get pods --namespace=ingress-nginx
+
+  
+```
+  
+<br>
 
