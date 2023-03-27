@@ -283,3 +283,163 @@ kubectl get pods --namespace=ingress-nginx
 <img width="1197" alt="ingress_pods" src="https://user-images.githubusercontent.com/92983658/227973042-59c816e0-60fc-4a14-a4c9-06a8bd203b60.png">
 
 <br>
+
+- confirm the created load balancer in AWS
+```
+kubectl get service -n ingress-nginx
+
+```
+
+<br>
+
+<img width="1470" alt="ingress_loadbalancer_1d" src="https://user-images.githubusercontent.com/92983658/227985810-2a7b1a55-6337-472b-ace4-733f6df5a05b.png">
+
+<br>
+
+The ingress-nginx-controller service created is a type of LoadBalancer. it will be used by all applications which require external access, and is using this ingress controller.
+
+
+<br>
+
+- Check the IngressClass that identifies this ingress controller.
+```
+
+kubectl get ingressclass -n ingress-nginx
+
+```
+
+<br>
+
+<img width="925" alt="ingress_class" src="https://user-images.githubusercontent.com/92983658/227987298-9756e181-df4e-4b36-9b2b-c81441805de9.png">
+
+<br>
+
+### Deploy Artifactory Ingress
+
+- create a file `artifactory-ingress.yaml`
+```
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: artifactory
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "tooling.artifactory.<your domain name>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: artifactory
+            port:
+              number: 8082
+              
+```
+
+<br>
+
+<img width="1341" alt="artifactory_ingress_1c" src="https://user-images.githubusercontent.com/92983658/227993192-3eb50d62-f9b7-404b-9c07-d12c405adccb.png">
+
+
+<br>
+
+- apply in `tools` namespace 
+
+```
+
+kubectl apply -f artifactory_ingress.yaml -n tools
+
+
+```
+
+<br>
+
+<img width="1102" alt="artifactory_ingress_apply" src="https://user-images.githubusercontent.com/92983658/227988571-405fedda-a581-404d-955f-d37bc903aee6.png">
+
+<br>
+
+- check ingressclass
+```
+
+kubectl get ingress.networking.k8s.io/artifactory -n tools
+
+```
+
+<br>
+
+<img width="1341" alt="artifactory_ingress_1d" src="https://user-images.githubusercontent.com/92983658/227993513-10689e07-9757-43b8-a83f-ec7d6c2aef87.png">
+
+<br>
+
+Now, take note of
+
+**CLASS** – The nginx controller class name nginx
+**HOSTS** – The hostname to be used in the browser tooling.artifactory.archibong.link
+**ADDRESS** – The loadbalancer address that was created by the ingress controller
+
+<br>
+
+#### Configure DNS
+
+If anyone were to visit the tool, it would be very inconvenient sharing the long load balancer address. Ideally, a DNS record that is human readable is created and directs requests to the balancer. This is exactly what has been configured in the ingress object - host: `"tooling.artifactory.archibong.link"` but without a DNS record, there is no way that host address can reach the load balancer.
+
+The `archibong.link` part of the domain is the configured HOSTED ZONE in AWS. So you will need to configure Hosted Zone in AWS console or as part of your infrastructure as code using terraform.
+
+<br>
+
+<img width="1230" alt="route_53_hosted_zone" src="https://user-images.githubusercontent.com/92983658/227994714-ecabc941-a976-44b0-8477-a13e6dfcd2eb.png">
+
+<br>
+
+#### Create Route 53 Record
+
+- create the record to point to the ingress controller’s loadbalancer. There are 2 options. You can either use the` CNAME` or `AWS Alias`
+
+**CNAME METHOD**
+
+- Select the HOSTED ZONE you wish to use, and click on the create record button
+- Add the subdomain `tooling.artifactory`, and select the record type `CNAME`
+- Successfully created record
+- Confirm that the DNS record has been properly propergated. Visit https://dnschecker.org and check the record. Ensure to select CNAME. The search should return green ticks for each of the locations on the left.
+
+
+**ALIAS METHOD**
+- In the create record section, type in the record name, and toggle the alias button to enable an alias. An alias is of the A DNS record type which basically routes directly to the load balancer. In the choose endpoint bar, select Alias to Application and Classic Load Balancer
+- Select the region and the load balancer required. You will not need to type in the load balancer, as it will already populate.
+
+<br>
+
+<img width="1232" alt="alias" src="https://user-images.githubusercontent.com/92983658/227996894-a59f183e-6224-4ff7-a0c2-ddd0d01819b4.png">
+
+<br>
+
+#### Visiting the application from the browser
+
+- navigagte to the application with the url `tooling.artifactory.<your domain>`...it should load up the artifactory application.
+
+<br>
+
+<img width="1231" alt="app" src="https://user-images.githubusercontent.com/92983658/227998390-030b585e-7c5d-4034-a278-76f6aa941b75.png">
+
+<br>
+
+This shows that the site is indeed reachable, but insecure. This is because some browsers do not load insecure sites by default. It is insecure because it either does not have a trusted TLS/SSL certificate, or it doesn’t have any at all.
+
+Nginx Ingress Controller does configure a default TLS/SSL certificate. But it is not trusted because it is a self signed certificate that browsers are not aware of.
+
+<br>
+
+- Click on the Not Secure part of the browser.
+- Select the Certificate is not valid menu
+
+<br>
+
+<img width="1224" alt="certificate" src="https://user-images.githubusercontent.com/92983658/227998948-e0bd6a11-f7d0-407f-a321-76d3e0e590f6.png">
+
+<br>
+
+
+
