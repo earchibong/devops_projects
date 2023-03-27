@@ -33,19 +33,35 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
   
 ## Deploy Jfrog Artifactory into Kubernetes
 
-- Provision and EKS cluster with `eksctl`..ensure volume size is set to `200GB`
+- create a config file `cluster.yaml`. ensure volume size is set to `200GB`
 ```
 
-eksctl create cluster \
---name PBL25-cluster \
---tags Key=Name,Value=PBL23-cluster \
---nodegroup-name PBL25-nodes \
---node-type t2.medium \
---node-volume-size=200 \
---nodes-min=3 \
---nodes-max=5
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: PBL25-cluster
+  region: eu-west-2
+  version: "1.22"
+
+managedNodeGroups:
+  - name: primary
+    instanceType: m5.large
+    desiredCapacity: 10
+    volumeSize: 200
+    spot: true
 
 ```
+
+<br>
+
+- provision the cluster
+```
+eksctl create cluster -f cluster.yaml
+
+```
+
+*note: we're using an older version of kubernetes for this...`version 1.22` as new versions seem to create a `start probe fail` error in this exercise*
 
 <br>
 
@@ -91,7 +107,7 @@ helm repo update
 - install artifactory
 ```
 
-helm upgrade --install my-artifactory jfrog/artifactory --version 107.55.8 -n tools
+helm upgrade --install my-artifactory jfrog/artifactory --version 107.33.12 -n tools
 
 ```
 
@@ -126,20 +142,20 @@ kubectl get po -n tools
 ```
 <br>
 
-<img width="1272" alt="pods_artifactory" src="https://user-images.githubusercontent.com/92983658/226603555-57c722fb-67ec-438c-a0b4-a36b64cfcc6c.png">
+<img width="1257" alt="kubectl_po" src="https://user-images.githubusercontent.com/92983658/227951728-a9eef006-5718-4b06-bd9b-87f2821e87c4.png">
 
 <br>
 
 Each of the deployed application have their respective services.
 
 ```
-kubectl get svc -n tools --kubeconfig <kubeconfig file name>
+kubectl get svc -n tools 
 
 ```
  
 <br>
 
-<img width="1076" alt="svc_tools" src="https://user-images.githubusercontent.com/92983658/226588950-f0c5994d-5a1c-40d5-bd7f-531cb33ae2f5.png">
+<img width="1384" alt="svc_kube" src="https://user-images.githubusercontent.com/92983658/227955620-32f3ef85-d0e3-4ab1-b40e-a7ac59308e6b.png">
 
 <br>
 
@@ -147,14 +163,110 @@ kubectl get svc -n tools --kubeconfig <kubeconfig file name>
 
 - Run the kubectl command to retrieve the Load Balancer URL.
 ```
- kubectl get svc my-jfrog-platform-artifactory-nginx -n tools --kubeconfig kubeconfig
+ kubectl get svc my-artifactory-artifactory-nginx -n tools
 
 ```
 
 <br>
 
-<img width="1080" alt="loadbalancer_url" src="https://user-images.githubusercontent.com/92983658/226591964-f8c13fea-d7e8-4979-b46e-6d00e68c785c.png">
+<img width="1387" alt="artifactory_svc" src="https://user-images.githubusercontent.com/92983658/227956250-35b74591-f02b-419f-b6ae-d7fc3d44fc9a.png">
 
 <br>
 
-- Copy the URL and paste in the browser
+- Copy the URL and paste in the browser. The default username is `admin` and The default password is `password`
+
+<br>
+
+<img width="1231" alt="jfrog_1a" src="https://user-images.githubusercontent.com/92983658/227957245-25e18a0a-9d8b-4162-93a2-478e770237c7.png">
+
+<br>
+
+<img width="1230" alt="jfrog_1b" src="https://user-images.githubusercontent.com/92983658/227958816-965f5bf7-4390-4692-b4bf-9b2a4b788e7e.png">
+
+<br>
+
+**Side note:** Helm uses the `values.yaml` file to set every single configuration that the chart has the capability to configure. THe best place to get started with an off the shelve chart from `artifacthub.io` is to get familiar with the `DEFAULT VALUES`
+
+- click on the `DEFAULT VALUES` section on Artifact hub. Here, you can search for key and value pairs. When `nginx` is typed in the search bar, it shows all the configured options for the nginx proxy. selecting `nginx.enabled` from the list will take you directly to the configuration in the YAML file.
+
+<br>
+
+<img width="1229" alt="default_values" src="https://user-images.githubusercontent.com/92983658/227960914-201a5d91-2f80-4357-895e-f78239f0b46a.png">
+
+<br>
+
+<img width="1229" alt="nginx" src="https://user-images.githubusercontent.com/92983658/227961322-edd2cabd-7be5-4d06-8639-9a6fb07bfd00.png">
+
+<br>
+
+<img width="1228" alt="nginx_enabled" src="https://user-images.githubusercontent.com/92983658/227961434-2aec1e45-190a-4ba3-8285-9a336efaaff7.png">
+
+<br>
+
+- Search for `nginx.service` and select `nginx.service.type`...You will see the confired type of Kubernetes service for Nginx. As you can see, it is LoadBalancer by default
+
+<br>
+
+<img width="1224" alt="loadbalancer" src="https://user-images.githubusercontent.com/92983658/227962008-86347513-db51-41bd-99b4-8d5889c90179.png">
+
+<br>
+
+*To work directly with the `values.yaml` file, you can download the file locally by clicking on the download icon. Setting the service type to Load Balancer is the easiest way to get started with exposing applications running in kubernetes externally. But provissioning load balancers for each application can become very expensive over time, and more difficult to manage. Especially when tens or even hundreds of applications are deployed.*
+
+*The best approach is to use `Kubernetes Ingress` instead. But to do that, an `Ingress Controller` will have to be deployed.
+A huge benefit of using the ingress controller is a single load balancer can be used for different applications deployed. Therefore, Artifactory and any other tools can reuse the same load balancer.*
+
+<br>
+
+## Deploy Ingress Controller And Manage Ingress Resources
+
+An ingress is an API object that manages external access to the services in a kubernetes cluster. It is capable to provide load balancing, SSL termination and name-based virtual hosting. In otherwords, Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+In order for the Ingress resource to work, the cluster must have an ingress controller running.
+
+Unlike other types of controllers which run as part of the kube-controller-manager. Such as the Node Controller, Replica Controller, Deployment Controller, Job Controller, or Cloud Controller. Ingress controllers are not started automatically with the cluster.
+
+It is possible to deploy any number of ingress controllers in the same cluster. That is the essence of an ingress class. By specifying the spec `ingressClassName` field on the ingress object, the appropriate ingress controller will be used by the ingress resource.
+
+### Deploy Nginx Ingress Controller
+
+- Using the Helm approach, according to the official guide, install Nginx Ingress Controller in the `ingress-nginx` namespace
+```
+
+helm upgrade --install ingress-nginx ingress-nginx \
+--repo https://kubernetes.github.io/ingress-nginx \
+--namespace ingress-nginx --create-namespace
+
+```
+
+<br>
+
+<img width="1298" alt="nginx_ingress" src="https://user-images.githubusercontent.com/92983658/227966874-34716171-ed6f-413e-b0af-693fc7a7db25.png">
+
+<br>
+
+**side note:** Delete the installation after running above command. Then try to re-install it using a slightly different method you are already familiar with.
+
+```
+
+# delete installation:
+helm delete ingress-nginx -n ingress-nginx
+
+# add repo
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx -n ingress-nginx
+helm repo update
+helm upgrade --install my-nginx-ingress ingress-nginx/ingress-nginx -n ingress-nginx
+
+```
+
+<br>
+
+<img width="1142" alt="helm_repo_ingress_nginx" src="https://user-images.githubusercontent.com/92983658/227969299-80cf32a0-bfff-4fa2-ba56-17b354fb6418.png">
+
+<br>
+
+<img width="1331" alt="my_nginx_ingress" src="https://user-images.githubusercontent.com/92983658/227971673-482624f0-0718-4841-9832-63e1590ce043.png">
+
+<br>
+
+
