@@ -28,6 +28,7 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">Deploy Jfrog Artifactory into Kubernetes</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#getting-the-artifactory-url">Getting The Artifactory URL</a>
 - <a href=https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-ingress-controller-and-manage-ingress-resources">Deploy Ingress Controller & Manage Ingress Resources</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-nginx-ingress-controller">Deploy Nginx Ingress Controller</a>
 
 <br>
   
@@ -279,3 +280,6 @@ kubectl get pods --namespace=ingress-nginx
   
 <br>
 
+<img width="1197" alt="ingress_pods" src="https://user-images.githubusercontent.com/92983658/227973042-59c816e0-60fc-4a14-a4c9-06a8bd203b60.png">
+
+<br>
