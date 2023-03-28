@@ -41,7 +41,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: PBL25-cluster
+  name: PBL25
   region: eu-west-2
   version: "1.22"
 
