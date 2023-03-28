@@ -396,7 +396,7 @@ The `archibong.link` part of the domain is the configured HOSTED ZONE in AWS. So
 
 #### Create Route 53 Record
 
-- create the record to point to the ingress controller’s loadbalancer. There are 2 options. You can either use the` CNAME` or `AWS Alias`
+Create the record to point to the ingress controller’s loadbalancer. There are 2 options. You can either use the` CNAME` or `AWS Alias`
 
 **CNAME METHOD**
 
@@ -405,6 +405,7 @@ The `archibong.link` part of the domain is the configured HOSTED ZONE in AWS. So
 - Successfully created record
 - Confirm that the DNS record has been properly propergated. Visit https://dnschecker.org and check the record. Ensure to select CNAME. The search should return green ticks for each of the locations on the left.
 
+<br>
 
 **ALIAS METHOD**
 - In the create record section, type in the record name, and toggle the alias button to enable an alias. An alias is of the A DNS record type which basically routes directly to the load balancer. In the choose endpoint bar, select Alias to Application and Classic Load Balancer
