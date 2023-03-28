@@ -374,11 +374,11 @@ kubectl get ingress.networking.k8s.io/artifactory -n tools
 
 <br>
 
-Now, take note of
+Now, take note of:
 
-**CLASS** – The nginx controller class name nginx
-**HOSTS** – The hostname to be used in the browser tooling.artifactory.archibong.link
-**ADDRESS** – The loadbalancer address that was created by the ingress controller
+- **CLASS:** The nginx controller class name nginx, 
+- **HOSTS:** The hostname to be used in the browser tooling.artifactory.archibong.link, 
+- **ADDRES:S** The loadbalancer address that was created by the ingress controller
 
 <br>
 
