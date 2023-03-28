@@ -31,6 +31,8 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-nginx-ingress-controller">Deploy Nginx Ingress Controller</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-artifactory-ingress">Deploy Artifactory Ingress</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploying-cert-manager-and-managing-tlsssl-for-ingress">Deploying Cert Manager And Managing TSL/SSL For Ingress</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#manageing-certificates-in-kubenetes">Managing Certificaes In Kubernetes</a>
+- 
 <br>
   
 ## Deploy Jfrog Artifactory into Kubernetes
@@ -474,7 +476,7 @@ To see the list of trusted root Certification Authorities (CA) and their certifi
 
 <br>
 
-### Manageing Certificates In Kubenetes
+### Managing Certificates In Kubenetes
 
 Similar to how Ingress Controllers are able to enable the creation of Ingress resource in the cluster, so also `cert-manager` enables the possibility to create certificate resource, and a few other resources that makes certificate management seamless.
 
