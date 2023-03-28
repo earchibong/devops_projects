@@ -498,7 +498,7 @@ Find `ISRG Root X1` in the list of certificates already installed in the browser
 
 <br>
 
-<img width="1229" alt="ceet_manager_1c" src="https://user-images.githubusercontent.com/92983658/228217865-7971f75b-9708-487a-ba68-4d1651142273.png">
+<img width="1230" alt="cert_manager_1d" src="https://user-images.githubusercontent.com/92983658/228222669-63a0cda2-f8b7-46d3-be5d-5626cb657f47.png">
 
 <br>
 
@@ -508,6 +508,66 @@ Find `ISRG Root X1` in the list of certificates already installed in the browser
 
 helm repo add cert-manager https://charts.jetstack.io
 helm repo update
-helm upgrade --install my-cert-manager cert-manager/cert-manager --version 1.11.0 -n tools
+kubectl create ns cert-manager
+helm upgrade --install my-cert-manager bitnami/cert-manager --version 0.9.3 -n cert-manager
 
 ```
+
+<br>
+
+<img width="1148" alt="install_cert_manager_helm" src="https://user-images.githubusercontent.com/92983658/228222776-93ab8997-bb5b-4504-ad45-8a1c1c88fc0d.png">
+
+<br>
+
+### Create A Certificate Issuer
+A `Cluster Issuer` will be used so that it can be scoped globally.
+
+- Update the `cert_manager.yaml` file and deploy with kubectl. 
+
+```
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  namespace: "cert-manager"
+  name: "letsencrypt-prod"
+spec:
+  acme:
+    server: "https://acme-v02.api.letsencrypt.org/directory"
+    email: "infradev@oldcowboyshop.com"
+    privateKeySecretRef:
+      name: "letsencrypt-prod"
+    solvers:
+    - selector:
+        dnsZones:
+          - "<your domain>"
+      dns01:
+        route53:
+          region: "<your hosted zone region>"
+          hostedZoneID: "<your hosted zone id>"
+
+```
+
+<br>
+
+<img width="1027" alt="cert_manager_yaml" src="https://user-images.githubusercontent.com/92983658/228224254-d0fb284e-137e-43a0-a7b8-66c8d94f5d8c.png">
+
+<br>
+
+apply configuration
+
+```
+
+kubectl apply -f cert_manager.yaml
+
+```
+
+<br>
+
+
+
+
+
+
+
+
