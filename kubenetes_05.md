@@ -48,7 +48,7 @@ metadata:
 managedNodeGroups:
   - name: primary
     instanceType: m5.large
-    desiredCapacity: 10
+    desiredCapacity: 3
     volumeSize: 200
     spot: true
 
