@@ -420,7 +420,7 @@ Create the record to point to the ingress controller’s loadbalancer. There are
 
 #### Visiting the application from the browser
 
-- navigagte to the application with the url `tooling.artifactory.<your domain>`...it should load up the artifactory application.
+- navigagte to the application with the url `https://tooling.artifactory.<your domain>`...it should load up the artifactory application.
 
 <br>
 
