@@ -451,3 +451,61 @@ Nginx Ingress Controller does configure a default TLS/SSL certificate. But it is
 - Now try another browser. For example Internet explorer or Safari
 
 
+## Deploying Cert Manager and Managing TLS/SSL For Ingress
+Transport Layer Security (TLS), the successor of the now-deprecated Secure Sockets Layer (SSL). The TLS protocol aims primarily to provide cryptography, including privacy (confidentiality), integrity, and authenticity through the use of certificates, between two or more communicating computer applications.
+
+The certificates required to implement TLS must be issued by a trusted Certificate Authority (CA).
+
+To see the list of trusted root Certification Authorities (CA) and their certificates used by Google Chrome, you need to use the Certificate Manager built inside Google Chrome as shown below:
+
+- Open the settings section of google chrome and search for `security`
+
+<br>
+
+<img width="1227" alt="chrome_security" src="https://user-images.githubusercontent.com/92983658/228215942-ae6aeb84-f155-4f44-90e1-f788022f55f0.png">
+
+<br>
+
+- selelct `manage certificates` and view the installed certificates in the browser
+
+<br>
+
+- <img width="1225" alt="chrome_manage_certificaates" src="https://user-images.githubusercontent.com/92983658/228216521-c7b876cb-3ea3-47d4-a674-a9afce2b9461.png">
+
+<br>
+
+### Manageing Certificates In Kubenetes
+
+Similar to how Ingress Controllers are able to enable the creation of Ingress resource in the cluster, so also `cert-manager` enables the possibility to create certificate resource, and a few other resources that makes certificate management seamless.
+
+It can issue certificates from a variety of supported sources, including Let’s Encrypt, HashiCorp Vault, and Venafi as well as private PKI. The issued certificates get stored as kubernetes secret which holds both the private key and public certificate.
+
+In this project, `Let’s Encrypt with cert-manager` will be used. The certificates issued by Let’s Encrypt will work with most browsers because the root certificate that validates all it’s certificates is called “ISRG Root X1” which is already trusted by most browsers and servers.
+
+Find `ISRG Root X1` in the list of certificates already installed in the browser
+
+<br>
+
+<img width="1223" alt="isrg_root_x1" src="https://user-images.githubusercontent.com/92983658/228217470-1d6e3fa5-45d0-4058-810f-5126fef1a6aa.png">
+
+<br>
+
+### Deploying Cert Manager
+
+- Find cert-manager helm chart in Artifact Hub
+
+<br>
+
+<img width="1229" alt="ceet_manager_1c" src="https://user-images.githubusercontent.com/92983658/228217865-7971f75b-9708-487a-ba68-4d1651142273.png">
+
+<br>
+
+- install cert manager
+
+```
+
+helm repo add cert-manager https://charts.jetstack.io
+helm repo update
+helm upgrade --install my-cert-manager cert-manager/cert-manager --version 1.11.0 -n tools
+
+```
