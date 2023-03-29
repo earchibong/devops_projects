@@ -476,7 +476,7 @@ To see the list of trusted root Certification Authorities (CA) and their certifi
 
 <br>
 
-- selelct `manage certificates` and view the installed certificates in the browser
+- select `manage certificates` and view the installed certificates in the browser
 
 <br>
 
@@ -561,7 +561,7 @@ spec:
 
 <br>
 
-<img width="1027" alt="cert_manager_yaml" src="https://user-images.githubusercontent.com/92983658/228224254-d0fb284e-137e-43a0-a7b8-66c8d94f5d8c.png">
+<img width="1027" alt="cert_issuer" src="https://user-images.githubusercontent.com/92983658/228602155-33bae249-316e-47c1-afd2-f4f5b7b95d64.png">
 
 <br>
 
@@ -575,10 +575,72 @@ kubectl apply -f cert_manager.yaml
 
 <br>
 
+<img width="937" alt="cert_issuer_created" src="https://user-images.githubusercontent.com/92983658/228602663-72172008-563b-4e4b-9699-5ab006c8d40c.png">
+
+<br>
+
+### Configuring Ingress For TLS
+
+To ensure that every created ingress also has TLS configured, the ingress manifest will have to be updated with with TLS specific configurations.
+
+- update `artifactory_ingress.yaml` manifest with the following
+```
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: nginx
+  name: artifactory
+spec:
+  tls:
+  - hosts:
+    - "tooling.artifactory.<your domain>"
+    secretName: "tooling.artifactory.<your domain>"
+  rules:
+  - host: "tooling.artifactory.<your domain>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-artifactory
+            port:
+              number: 8082
 
 
+```
 
+<br>
 
+<img width="936" alt="tls_ingress" src="https://user-images.githubusercontent.com/92983658/228608400-b1e19fc9-7223-47eb-af31-b8ae045b3579.png">
+
+<br>
+
+The most significant updates to the ingress definition is the `annotations` and `tls` sections.
+
+<br>
+
+- Redeploy the newly updated ingress
+```
+
+kubectl apply -f artifactory_ingress.yaml -n tools
+
+```
+
+<br>
+
+- run the following commands in the `tools` namespace:
+```
+
+kubectl get certificaterequest -n tools
+kubectl get order -n tools
+kubectl get challenge -n tools
+kubectl get certificate -n tools
+
+```
 
 
 
