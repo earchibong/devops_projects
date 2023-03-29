@@ -344,8 +344,7 @@ spec:
 
 <br>
 
-<img width="1341" alt="artifactory_ingress_1c" src="https://user-images.githubusercontent.com/92983658/227993192-3eb50d62-f9b7-404b-9c07-d12c405adccb.png">
-
+<img width="1089" alt="artifactory_ingress_1a" src="https://user-images.githubusercontent.com/92983658/228537418-72857e1c-5d32-4bf0-9788-691b12ae750f.png">
 
 <br>
 
