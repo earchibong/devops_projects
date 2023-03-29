@@ -449,8 +449,17 @@ Nginx Ingress Controller does configure a default TLS/SSL certificate. But it is
 
 <br>
 
-- Now try another browser. For example Internet explorer or Safari
+- for now, ignore the warning on chrome, click the `advanded button` and `proceed to the domain` link
 
+<br>
+
+<img width="1228" alt="chrome_advanced" src="https://user-images.githubusercontent.com/92983658/228539004-86448821-3e5b-4c39-a8ed-0478a67d1e73.png">
+
+<br>
+
+<img width="1230" alt="chrome_advanced_1b" src="https://user-images.githubusercontent.com/92983658/228539031-86e94288-0662-4050-b435-d2b3280381a1.png">
+
+<br>
 
 ## Deploying Cert Manager and Managing TLS/SSL For Ingress
 Transport Layer Security (TLS), the successor of the now-deprecated Secure Sockets Layer (SSL). The TLS protocol aims primarily to provide cryptography, including privacy (confidentiality), integrity, and authenticity through the use of certificates, between two or more communicating computer applications.
