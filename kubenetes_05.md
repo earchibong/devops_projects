@@ -336,7 +336,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: artifactory
+            name: my-artifactory
             port:
               number: 8082
               
