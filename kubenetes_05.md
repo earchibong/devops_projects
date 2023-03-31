@@ -679,7 +679,7 @@ kubectl apply -f artifactory_ingress.yaml -n tools
 
 <br>
 
-- modify `clusterissuer` with `accesskeyID` and `aws `secret access key`
+- modify `clusterissuer` with `accesskeyID`
 
 ```
 
