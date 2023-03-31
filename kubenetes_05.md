@@ -545,8 +545,9 @@ metadata:
 spec:
   acme:
     server: "https://acme-v02.api.letsencrypt.org/directory"
-    email: "infradev@oldcowboyshop.com"
+    email: "infradev@oldcowboyshop.com" # replace with your own email
     privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
       name: "letsencrypt-prod"
     solvers:
     - selector:
