@@ -649,7 +649,7 @@ kubectl apply -f artifactory_ingress.yaml -n tools
         "route53:ChangeResourceRecordSets",
         "route53:ListResourceRecordSets"
       ],
-      "Resource": "arn:aws:route53:::hostedzone/*"
+      "Resource": "arn:aws:route53:::hostedzone/<your hosted zone id>"
     },
     {
       "Effect": "Allow",
