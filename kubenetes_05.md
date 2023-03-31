@@ -718,5 +718,102 @@ kubectl get certificate -n tools
 
 ```
 
+<br>
+
+<img width="1386" alt="certificate" src="https://user-images.githubusercontent.com/92983658/229155484-4a7af184-a782-4c63-b623-202fad6db16b.png">
+
+<br>
+
+- head over to the browser, you should see the padlock sign without warnings of untrusted certificates.
+
+<br>
+
+<img width="1228" alt="padlock" src="https://user-images.githubusercontent.com/92983658/229156287-f6329184-04f7-429a-97e6-f8c11fce7f51.png">
+
+<br>
+
+## PRACTICE TASKS:
+
+**1. ensure that the LoadBalancer created for artifactory is destroyed**
+
+- run a get service kubectl 
+```
+kubectl get service -n tools
+
+```
+
+<br>
+
+<img width="1383" alt="get_Service_1a" src="https://user-images.githubusercontent.com/92983658/229156995-3e6c2688-3d3c-4240-9a88-90081ae9f8e8.png">
+
+<br>
+
+notice that the loadbalancer service still exits. To delete this service take the following steps:
+
+- update the helm values file for artifactory, and ensure that the artifactory-artifactory-nginx service uses ClusterIP
+
+```
+
+KUBE_EDITOR="nano" kubectl edit svc/my-artifactory-artifactory-nginx -n tools
+
+```
+
+<br>
+
+<img width="1057" alt="type_change" src="https://user-images.githubusercontent.com/92983658/229159893-e02ef5fe-d631-4cfb-9ab4-ed3a79949043.png">
+
+<br>
+
+- confirm service type change
+```
+
+kubectl get service -n tools
 
 
+```
+
+<br>
+
+<img width="1289" alt="type_change_2b" src="https://user-images.githubusercontent.com/92983658/229160149-b4e0dddb-b253-441c-8aa7-95b3e6089962.png">
+
+<br>
+
+**2. update the ingress to use artifactory-artifactory-nginx as the backend service instead of using artifactory. Remember to update the port number as well.**
+
+-open up ingress file:`artifactory_ingress.yaml` and update the `service name` and `port number` as follows:
+
+```
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: nginx
+  name: artifactory
+spec:
+  tls:
+  - hosts:
+    - "tooling.artifactory.<your domain>"
+    secretName: "tooling.artifactory.<your domain>"
+  rules:
+  - host: "tooling.artifactory.<your domain>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-artifactory-artifactory-nginx
+            port:
+              number: 443
+              
+ ```
+ 
+ - apply configuration
+ ```
+ 
+ kubectl apply -f artifactory_ingress.yaml -n tools
+ 
+ ```
+ 
