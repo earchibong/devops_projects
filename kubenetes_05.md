@@ -517,16 +517,14 @@ Find `ISRG Root X1` in the list of certificates already installed in the browser
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
 
 #chart
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add jetstack https://charts.jetstack.io
 helm repo update
-kubectl create ns cert-manager
-helm upgrade --install my-cert-manager bitnami/cert-manager --version 0.9.3 -n cert-manager
-
+helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --create-namespace
 ```
 
 <br>
 
-<img width="1266" alt="helm_cert_manager" src="https://user-images.githubusercontent.com/92983658/228541562-11b21aa4-5899-4b19-bb62-9172721487f2.png">
+<img width="1179" alt="cert_manager" src="https://user-images.githubusercontent.com/92983658/229124591-431aecba-57c1-4a2a-a7fc-2c165b9118b1.png">
 
 <br>
 
