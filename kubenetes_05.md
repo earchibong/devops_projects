@@ -631,6 +631,57 @@ kubectl apply -f artifactory_ingress.yaml -n tools
 
 <br>
 
+- create an `IAM` policy that enables `cert-manager` to add records to `Route53` in order to solve the DNS01 challenge
+  - in `IAM` dashboard, create a policy with the follwing permissions:
+```
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "route53:GetChange",
+      "Resource": "arn:aws:route53:::change/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ChangeResourceRecordSets",
+        "route53:ListResourceRecordSets"
+      ],
+      "Resource": "arn:aws:route53:::hostedzone/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "route53:ListHostedZonesByName",
+      "Resource": "*"
+    }
+  ]
+}
+
+```
+
+<br>
+
+<img width="1229" alt="policy" src="https://user-images.githubusercontent.com/92983658/229139580-12acf222-954e-49d2-b7fc-7f5492d7072e.png">
+
+<br>
+
+- attach the policy to your cluster (select it from the menu)
+
+<br>
+
+<img width="1230" alt="attach_1a" src="https://user-images.githubusercontent.com/92983658/229141330-850dc5fb-b854-45ea-9942-e890757194ca.png">
+
+<br>
+
+<img width="1230" alt="attach_1b" src="https://user-images.githubusercontent.com/92983658/229141366-545b68c1-edc5-4ab7-9c82-0245ee5d50de.png">
+
+<br>
+
+
+
+
 - run the following commands in the `tools` namespace:
 ```
 
