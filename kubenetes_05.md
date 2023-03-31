@@ -679,8 +679,35 @@ kubectl apply -f artifactory_ingress.yaml -n tools
 
 <br>
 
+- modify `clusterissuer` with `accesskeyID` and `aws `secret access key`
 
+```
 
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  namespace: "cert-manager"
+  name: "letsencrypt-prod"
+spec:
+  acme:
+    server: "https://acme-v02.api.letsencrypt.org/directory"
+    email: "infradev@oldcowboyshop.com"
+    privateKeySecretRef:
+      name: "letsencrypt-prod"
+    solvers:
+    - selector:
+        dnsZones:
+          - "darey.io"
+      dns01:
+        route53:
+          region: "eu-west-2"
+          hostedZoneID: "<your hosted zone id>"
+          accessKeyID: "<YOUR ACCESS KEY ID>"
+          secretAccessKey: "<YOUR SECRET ACCESS KEY>"
+          
+```
+
+<br>
 
 - run the following commands in the `tools` namespace:
 ```
