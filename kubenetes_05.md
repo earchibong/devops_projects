@@ -703,7 +703,6 @@ spec:
           region: "eu-west-2"
           hostedZoneID: "<your hosted zone id>"
           accessKeyID: "<YOUR ACCESS KEY ID>"
-          secretAccessKey: "<YOUR SECRET ACCESS KEY>"
           
 ```
 
