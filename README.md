@@ -27,5 +27,6 @@ Projects include:
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubernetes_02.md"> PROJECT TWENTY-TWO: Deploying An App Into Kubernetes Cluster</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md"> PROJECT TWENTY-THREE: Persisting Data In Kubernetes</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md"> PROJECT TWENTY-FOUR: Provision An EKS Cluster With Terraform</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md"> PROJECT TWENTY-FIVE: Deploying And Packaging Applications Into Kubenetes</a></li>
 </ul>
 
