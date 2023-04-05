@@ -34,6 +34,7 @@ Any found vulnerabilities will immediately trigger an action to quarantine such 
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#managing-certificates-in-kubenetes">Managing Certificates In Kubernetes</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#configuring-ingress-for-tls">Configuring Ingress For TLS</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#practice-tasks">Practice Tasks</a>
+
 <br>
   
 ## Deploy Jfrog Artifactory into Kubernetes
@@ -817,4 +818,7 @@ spec:
  kubectl apply -f artifactory_ingress.yaml -n tools
  
  ```
+ 
+ <br>
+ 
  
