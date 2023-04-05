@@ -23,5 +23,12 @@ This repository contains all local and remote repositories.
 
 ## Labs
 
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-local-repository-for-docker">Create A Local Repository For Docker</a>
+- 
+
+<br>
+
 
 ## Create A Local Repository For Docker
+
+- <a href="https://jfrog.com/artifactory/install/">install artifactory</a> on an EC2 instance
