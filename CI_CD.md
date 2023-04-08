@@ -4,6 +4,7 @@ In this project, the concept of CI/CD is implemented where a php application fro
 
 
 ## Labs
+- <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-two-setting-up-the-artifactory-server"> Set UP Artifactory Server</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-four--integrate-artifactory-repository-with-jenkins">Configure Jenkins Server</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-four--integrate-artifactory-repository-with-jenkins">Integrate Artifactory With Jenkins</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-five--structuring-jenkins-file-code-quality-analysis">Structuring Jenkinsfile - Code Quality Analysis</a>
