@@ -24,7 +24,7 @@ This repository contains all local and remote repositories.
 ## Labs
 
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-local-repository-for-docker">Create A Local Repository For Docker</a>
-- 
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-virtual-repository">Create A Virtual Repository</a>
 
 <br>
 
@@ -56,7 +56,19 @@ This repository contains all local and remote repositories.
 
 <br>
 
-### Create A Virtual Repository
+- create a second Local repository for `jenkins`. Use `generic` package if Jenkins is not available.
+
+<br>
+
+<img width="1229" alt="jenkins_local" src="https://user-images.githubusercontent.com/92983658/230721737-3a2eece7-d327-4d76-9808-3e6ddc51e13a.png">
+
+<br>
+
+<img width="1228" alt="local_repos" src="https://user-images.githubusercontent.com/92983658/230721743-79cbee7a-b2d6-4e3c-99ab-345db0cff7f0.png">
+
+<br>
+
+## Create A Virtual Repository
 A virtual repository aggregates several repositories under a common URL. You can get artifacts from it but you cannot deploy anything to it.
 
 - Select virtual Repository 
@@ -89,4 +101,47 @@ A virtual repository aggregates several repositories under a common URL. You can
 
 <br>
 
+## Push Docker Images To the Repository
+You can either pull and push docker images to the local repository for each application, or simply pull from the virtual repository
 
+### get docker images from docker hub and push to the private registry.
+- login to the docker registry.
+- enter jfrog username and password
+
+```
+
+docker login <artifactory url>
+
+## example: docker login mintedcreative.jfrog.io
+
+```
+
+<br>
+
+<img width="866" alt="docker_frog" src="https://user-images.githubusercontent.com/92983658/230721274-8ff31628-2154-425c-a003-d350bde5825e.png">
+
+<br>
+
+- A successful login will create a file here  `~/.docker/config.json`
+```
+cat .docker/config.json
+
+```
+
+<br>
+
+<img width="1008" alt="docker_config" src="https://user-images.githubusercontent.com/92983658/230721412-08d27818-97cc-47d9-8de8-cabf7b3ce8c1.png">
+
+<br>
+
+- Pull the Jenkins image from Docker hub
+- Tag the image so that it can pushed to Artifactory. The image below shows how to get the repository URL address. 
+- Push the docker image to Artifactory
+
+```
+
+docker pull jenkins/jenkins:jdk11
+docker tag jenkins/jenkins:jdk11 <artifactory virtual repo url>/jenkins/jenkins:jdk11
+docker push <artifactory jenkins repo url>/jenkins/jenkins:jdk11
+
+```
