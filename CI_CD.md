@@ -4,6 +4,7 @@ In this project, the concept of CI/CD is implemented where a php application fro
 
 
 ## Labs
+- <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#configure-sonarqube-and-jenkins-for-quality-gate">Configure Jenkins & Sonarqube For Quality Gate</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#introduce-jenkins-agentsslaves">Instroduce Jenkins Agents/slaves</a>
 
 <br>
