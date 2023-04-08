@@ -822,3 +822,42 @@ spec:
  <br>
  
  
+## Configuring Artifactory
+- Insert the username and password to load the Get Started page
+
+<br>
+
+<img width="1230" alt="get_started" src="https://user-images.githubusercontent.com/92983658/230718690-147c1c30-891d-4189-9e12-d51599ad175b.png">
+
+<br>
+
+- Reset the admin password
+
+<br>
+
+<img width="1225" alt="reset_admin" src="https://user-images.githubusercontent.com/92983658/230718752-fcc8c58b-9a49-4755-8c34-bc5615966f02.png">
+
+<br>
+
+- Activate the Artifactory License. To use Artifactory enterprise features a license will need to be purchased. For learning purposes, a  get a free by <a href="https://jfrog.com/platform/free-trial/">filling in this form</a> and a free license will be sent to your email.
+- Skip creation of repositories for now and finish the setup.
+
+<br>
+
+<img width="1228" alt="license" src="https://user-images.githubusercontent.com/92983658/230719014-4996efd6-dd83-4f87-88ef-408bc4db9347.png">
+
+<br>
+
+<img width="1226" alt="self_hosted" src="https://user-images.githubusercontent.com/92983658/230719407-effc4d0d-cec0-4533-a8e0-8b42efbd98bd.png">
+
+<br>
+
+<img width="1229" alt="trial_environment" src="https://user-images.githubusercontent.com/92983658/230719468-2a098e9b-bda3-4660-983c-3b76c8258117.png">
+
+<br>
+
+<img width="1232" alt="repo" src="https://user-images.githubusercontent.com/92983658/230719161-795c6e3e-41f2-4f5d-954d-1e5c013e685b.png">
+
+<br>
+
+
