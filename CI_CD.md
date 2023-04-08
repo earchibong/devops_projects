@@ -2,8 +2,10 @@
 
 In this project, the concept of CI/CD is implemented where a php application from github is pushed to Jenkins to run a multi-branch pipeline job(build job is run on each branches of a repository simultaneously) which is better viewed from Blue Ocean plugin. This is done in order to achieve continuous integration of codes from different developers. After which, the artifacts from the build job is packaged and pushed to sonarqube server for testing before it is deployed to artifactory from which ansible job is triggered to deploy the application to production environment.
 
+<br>
 
 ## Labs
+- <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-one-configuring-ansible-for-jenkins-deployment">Configure Ansible For Jenkins Deployment</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-two-setting-up-the-artifactory-server"> Set UP Artifactory Server</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-four--integrate-artifactory-repository-with-jenkins">Configure Jenkins Server</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/CI_CD.md#step-four--integrate-artifactory-repository-with-jenkins">Integrate Artifactory With Jenkins</a>
