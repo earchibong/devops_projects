@@ -1,4 +1,4 @@
-# Setting up private repositories and Preparing CI pipelines with Jenkins
+# Setting Up Private Repositories And Preparing CI Pipelines With Jenkins
 
 In Artifactory, either local, remote or virtual repositories can be set up. It doesn’t matter if it is for docker, helm, or standard software binaries.
 
@@ -105,7 +105,7 @@ A virtual repository aggregates several repositories under a common URL. You can
 You can either pull and push docker images to the local repository for each application, or simply pull from the virtual repository
 
 ### get docker images from docker hub and push to the private registry.
-- login to the docker registry.
+- login to the artifactory repository
 - enter jfrog username and password
 
 ```
