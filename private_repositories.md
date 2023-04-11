@@ -148,4 +148,13 @@ docker push <artifactory docker repo url>/jenkins:jdk11
 
 <br>
 
+<img width="936" alt="jdk" src="https://user-images.githubusercontent.com/92983658/231186302-40fc0d83-6cb9-4f82-8d40-d6a822097c51.png">
+
+<br>
+
+<img width="1227" alt="artifactory_jdk" src="https://user-images.githubusercontent.com/92983658/231186574-d707a4b0-71ac-437e-a404-127a51eaf1bb.png">
+
+<br>
+
+## Jenkins Pipeline For Business Applications
 
