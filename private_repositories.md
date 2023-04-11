@@ -136,12 +136,16 @@ cat .docker/config.json
 
 - Pull the Jenkins image from Docker hub
 - Tag the image so that it can pushed to Artifactory. The image below shows how to get the repository URL address. 
-- Push the docker image to Artifactory
+- Push the docker image to Docker Artifactory Repo
 
 ```
 
 docker pull jenkins/jenkins:jdk11
-docker tag jenkins/jenkins:jdk11 <artifactory virtual repo url>/jenkins/jenkins:jdk11
-docker push <artifactory jenkins repo url>/jenkins/jenkins:jdk11
+docker tag jenkins/jenkins:jdk11 <artifatory docker repo url>/jenkins:jdk11
+docker push <artifactory docker repo url>/jenkins:jdk11
 
 ```
+
+<br>
+
+
