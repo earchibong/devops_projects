@@ -25,6 +25,7 @@ This repository contains all local and remote repositories.
 
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-local-repository-for-docker">Create A Local Repository For Docker</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-virtual-repository">Create A Virtual Repository</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#push-docker-images-to-the-repository">Push Docker Images To Artifactory Repository</a>
 
 <br>
 
@@ -158,3 +159,18 @@ docker push <artifactory docker repo url>/jenkins:jdk11
 
 ## Jenkins Pipeline For Business Applications
 
+In earlier projects, pipeline for the Tooling app was based on Ansible. This time, the same application will be containerised. Since the app will be running inside a kubernetes cluster within a Pod container, then the approach to CI/CD will be different.
+
+- The Dockerfile used to build the tooling app’s docker image will have its own CI/CD pipeline
+- The helm charts used to deploy the application into kubernetes will require its own CI/CD pipeline
+
+<br>
+
+### Deploy Jenkins With Helm
+**-Deploy without any custom configuration to the Helm Values:**
+Without any custom configuration, get the Jenkins Helm chart from `artifacthub.io`, and deploy using the default values.
+Configure DNS for jenkins and route traffic to the ingress controller load balancer
+Deploy an ingress without TLS
+Ensure that you are able to access the configured URL
+Ensure that you are able to logon to Jenkiins.
+Update the Ingress and configure TLS for the URL
