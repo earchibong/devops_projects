@@ -391,9 +391,10 @@ helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --crea
 
 <br>
 
+- create an IAM policy that enables cert-manager to add records to Route53 in order to solve the DNS01 challenge
+
 ```
 
-# create an IAM policy that enables cert-manager to add records to Route53 in order to solve the DNS01 challenge
 # in IAM dashboard, create a policy with the follwing permissions:
 
 
@@ -435,10 +436,22 @@ helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --crea
 
 <br>
 
+- create route53 secret crediatials for cert-manager
+```
+
+kubectl --namespace cert-manager \
+create secret generic route53-credentials \
+--from-literal="secret-access-key=<YOUR-AWS-SECRET-ACCESS-KEY>"
 
 ```
 
-# create a certificate issuer
+<br>
+
+- create a certificate issuer
+
+```
+
+
 # create a file named cert_manager.yaml and deploy with kubectl
 
 apiVersion: cert-manager.io/v1
@@ -461,7 +474,9 @@ spec:
           region: "eu-west-2"
           hostedZoneID: "<your route 53 hosted zone id>"
           accessKeyID: "<YOUR AWS ACCESS KEY ID>"
-
+          secretAccessKeySecretRef:
+              key: secret-access-key
+              name: route53-credentials
 
 # apply configuration
 kubectl apply -f cert_manager.yaml
@@ -471,9 +486,10 @@ kubectl apply -f cert_manager.yaml
 
 <br>
 
+- configure ingress for TLS
+
 ```
 
-# configure ingress for TLS
 # update ingress.yaml file
 
 
@@ -540,6 +556,34 @@ kubectl apply -f ingress.yaml -n tools
 <br>
 
 <img width="1133" alt="ingress_redeploy" src="https://user-images.githubusercontent.com/92983658/231464929-02429731-6a80-46f2-a670-2f5cf2c002a9.png">
+
+<br>
+
+- run the following to confirm certificate issued
+```
+
+kubectl get certificaterequest -n tools
+kubectl get order -n tools
+kubectl get challenge -n tools
+kubectl get certificate -n tools
+
+```
+
+<br>
+
+<img width="1020" alt="confirm" src="https://user-images.githubusercontent.com/92983658/231471533-937988ef-83e6-4c52-b414-d212d202d186.png">
+
+<br>
+
+- head over to the browser, you should see the padlock sign without warnings of untrusted certificates.
+
+<br>
+
+<img width="1227" alt="jenkins_tls" src="https://user-images.githubusercontent.com/92983658/231471976-507eb090-ceb6-4d98-8498-c2a8a5dfadc7.png">
+
+<br>
+
+<img width="1229" alt="sonar_tls" src="https://user-images.githubusercontent.com/92983658/231471997-6a78dc63-e458-4ee6-b6e2-88c981951ab0.png">
 
 <br>
 
