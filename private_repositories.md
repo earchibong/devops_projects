@@ -26,6 +26,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-local-repository-for-docker">Create A Local Repository For Docker</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-virtual-repository">Create A Virtual Repository</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#push-docker-images-to-the-repository">Push Docker Images To Artifactory Repository</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#jenkins-pipeline-for-business-applications">Jenkins Pipeline For Business Applications</a>
 
 <br>
 
@@ -167,8 +168,44 @@ In earlier projects, pipeline for the Tooling app was based on Ansible. This tim
 <br>
 
 ### Deploy Jenkins With Helm
-**-Deploy without any custom configuration to the Helm Values:**
-Without any custom configuration, get the Jenkins Helm chart from `artifacthub.io`, and deploy using the default values.
+**- Deploy without any custom configuration to the Helm Values:**
+
+- Launch an eks cluster with 3 instances. (see <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">project 25</a> for how to do this and the rest of this section)
+
+```
+# create a config file `cluster.yaml`
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: PBL26
+  region: eu-west-2
+  version: "1.22"
+
+managedNodeGroups:
+  - name: primary
+    instanceType: t2.medium
+    desiredCapacity: 2
+    volumeSize: 20
+    spot: true
+
+```
+
+- provision the cluster
+```
+
+eksctl create cluster -f cluster.yaml
+
+```
+
+<br>
+
+- Without any custom configuration, get the Jenkins Helm chart from `artifacthub.io`, and deploy using the default values.
+
+<br>
+
+
 Configure DNS for jenkins and route traffic to the ingress controller load balancer
 Deploy an ingress without TLS
 Ensure that you are able to access the configured URL
