@@ -174,7 +174,7 @@ In earlier projects, pipeline for the Tooling app was based on Ansible. This tim
 - Launch an eks cluster with 3 instances. (see <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">project 25</a> for how to do this and the rest of this section)
 
 ```
-# create a config file `cluster.yaml`
+# create a config file : cluster.yaml
 
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
@@ -202,8 +202,10 @@ eksctl create cluster -f cluster.yaml
 
 <br>
 
-- Without any custom configuration, get the Jenkins and Sonqube Helm charts from `artifacthub.io`, and deploy using the default values.
+- Without any custom configuration, get the Jenkins and Sonqube Helm charts from <a href="https://artifacthub.io/">artifacthub.io</a>, and deploy using the default values.
+
 ```
+
 # add repository to desktop
 helm repo add jenkinsci https://charts.jenkins.io/
 helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
@@ -256,7 +258,7 @@ kubectl get ingressclass -n ingress-nginx
 
 ```
 
-# **deploy jenkins and sonarqube ingress**
+# deploy jenkins and sonarqube ingress
 # create a file ingress.yaml
 
 
@@ -323,15 +325,223 @@ kubectl get ingress.networking.k8s.io -n tools
 
 <br>
 
+configure DNS : create Alias records.
+
 <img width="1395" alt="record_1" src="https://user-images.githubusercontent.com/92983658/231453286-cc882a1b-3505-4cb8-891d-cd27383782fc.png">
 
 <img width="1388" alt="record_2" src="https://user-images.githubusercontent.com/92983658/231453191-53199640-5b10-4839-8369-c848fa63a644.png">
 
 <br>
 
+- access the configured URL: `tooling.jenkins.<your domain>` and `tooling.sonarqube.<your domain>`
+
+<br>
+
+<img width="1231" alt="tooling_jenkins" src="https://user-images.githubusercontent.com/92983658/231455415-624cb2cc-c082-46aa-9e93-416f60cf5da7.png">
+
+<br>
+
+<img width="1230" alt="tooling_soqnarqube" src="https://user-images.githubusercontent.com/92983658/231455449-f5abf3b0-253e-449a-a1d2-a74d3cb73f3b.png">
+
+<br>
+
+- Ensure that you are able to logon to Jenkins and sonarqube
+
+```
+
+# get jenkins admin password
+kubectl exec --namespace tools -it svc/my-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+
+# sonarqube details
+user: admin
+password: admin
+
+```
+
+<br>
+
+<img width="1230" alt="jenkins_logon" src="https://user-images.githubusercontent.com/92983658/231457254-f6dce1ac-8ec6-4e90-b942-8570a6d7bb96.png">
+
+<br>
+
+<img width="1231" alt="sonar_logon" src="https://user-images.githubusercontent.com/92983658/231457291-9f1dc33e-7059-4fea-ac10-85d6066366d6.png">
+
+<br>
+
+- Update the Ingress and configure TLS for the URL
+
+```
+
+# deploy cert manager
+# install cert manager CustomResourceDefinition (CRD) and chart
+
+#CustomResourceDefinition 
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+
+#chart
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --create-namespace
+
+```
+
+<br>
+
+<img width="1415" alt="cert_manager" src="https://user-images.githubusercontent.com/92983658/231459021-fc934aa8-57ca-4f67-80f5-b7bfce3f1e71.png">
+
+<br>
+
+```
+
+# create an IAM policy that enables cert-manager to add records to Route53 in order to solve the DNS01 challenge
+# in IAM dashboard, create a policy with the follwing permissions:
 
 
-Deploy an ingress without TLS
-Ensure that you are able to access the configured URL
-Ensure that you are able to logon to Jenkiins.
-Update the Ingress and configure TLS for the URL
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "route53:GetChange",
+      "Resource": "arn:aws:route53:::change/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ChangeResourceRecordSets",
+        "route53:ListResourceRecordSets"
+      ],
+      "Resource": "arn:aws:route53:::hostedzone/<your hosted zone id>"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "route53:ListHostedZonesByName",
+      "Resource": "*"
+    }
+  ]
+}
+
+# once created, attach the policy to your cluster (select it from the menu)
+
+```
+
+<br>
+
+<img width="1470" alt="cert_manager_policy" src="https://user-images.githubusercontent.com/92983658/231461220-50f99aa8-a6c7-4e24-a244-a38b2b1ef71b.png">
+
+<br>
+
+<img width="1227" alt="attach_poliocy" src="https://user-images.githubusercontent.com/92983658/231460777-cf0d3b6c-d833-4976-8230-e939ab0df8ad.png">
+
+<br>
+
+
+```
+
+# create a certificate issuer
+# create a file named cert_manager.yaml and deploy with kubectl
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  namespace: "cert-manager"
+  name: "letsencrypt-prod"
+spec:
+  acme:
+    server: "https://acme-v02.api.letsencrypt.org/directory"
+    email: "infradev@oldcowboyshop.com"
+    privateKeySecretRef:
+      name: "letsencrypt-prod"
+    solvers:
+    - selector:
+        dnsZones:
+          - "archibong.link"
+      dns01:
+        route53:
+          region: "eu-west-2"
+          hostedZoneID: "<your route 53 hosted zone id>"
+          accessKeyID: "<YOUR AWS ACCESS KEY ID>"
+
+
+# apply configuration
+kubectl apply -f cert_manager.yaml
+
+
+```
+
+<br>
+
+```
+
+# configure ingress for TLS
+# update ingress.yaml file
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: nginx
+  name: jenkins
+spec:
+  tls:
+  - hosts:
+    - "tooling.jenkins.<your domain>"
+    secretName: "tooling.jenkins.<your domain>"
+  rules:
+  - host: "tooling.jenkins.<your domain>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-jenkins
+            port:
+              number: 8080
+
+---
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: nginx
+  name: sonarqube
+spec:
+  tls:
+  - hosts:
+    - "tooling.sonarqube.<your domain>"
+    secretName: "tooling.sonarqube.<your domain>"
+  rules:
+  - host: "tooling.sonarqube.<your domain>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-sonarqube-sonarqube
+            port:
+              number: 9000
+
+# redeploy update:
+kubectl apply -f ingress.yaml -n tools
+
+```
+
+<br>
+
+<img width="1063" alt="ingress_tls" src="https://user-images.githubusercontent.com/92983658/231464446-e9cc27f8-dd42-4ca7-83e3-4dc4e14da93f.png">
+
+<br>
+
+<img width="1133" alt="ingress_redeploy" src="https://user-images.githubusercontent.com/92983658/231464929-02429731-6a80-46f2-a670-2f5cf2c002a9.png">
+
+<br>
+
+
+
