@@ -29,6 +29,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#jenkins-pipeline-for-business-applications">Jenkins Pipeline For Business Applications</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#deploy-jenkins-with-helm">Deploy Jenkins And Sonarqube With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#use-an-override-values-file-to-customize-jenkins-deployment">Use An Overide Values File To Customize Jenkins Deployment</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automate-jenkins-plugin-installation">Automate Jenkins Plugin Installation</a>
 
 <br>
 
