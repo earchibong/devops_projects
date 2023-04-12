@@ -27,6 +27,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-virtual-repository">Create A Virtual Repository</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#push-docker-images-to-the-repository">Push Docker Images To Artifactory Repository</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#jenkins-pipeline-for-business-applications">Jenkins Pipeline For Business Applications</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#deploy-jenkins-with-helm">Deploy Jenkins With Helm</a>
 
 <br>
 
@@ -168,7 +169,7 @@ In earlier projects, pipeline for the Tooling app was based on Ansible. This tim
 <br>
 
 ### Deploy Jenkins With Helm
-**- Deploy without any custom configuration to the Helm Values:**
+#### Deploy without any custom configuration to the Helm Values:
 
 - Launch an eks cluster with 3 instances. (see <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md#deploy-jfrog-artifactory-into-kubernetes">project 25</a> for how to do this and the rest of this section)
 
@@ -186,7 +187,7 @@ metadata:
 managedNodeGroups:
   - name: primary
     instanceType: t2.medium
-    desiredCapacity: 2
+    desiredCapacity: 3
     volumeSize: 20
     spot: true
 
@@ -201,12 +202,35 @@ eksctl create cluster -f cluster.yaml
 
 <br>
 
-- Without any custom configuration, get the Jenkins Helm chart from `artifacthub.io`, and deploy using the default values.
+- Without any custom configuration, get the Jenkins and Sonqube Helm charts from `artifacthub.io`, and deploy using the default values.
+```
+# add repository to desktop
+helm repo add jenkinsci https://charts.jenkins.io/
+helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
+
+# Create a namespace called tools where all the tools for DevOps will be deployed.
+kubectl create ns tools 
+
+# Update the helm repo index
+helm repo update
+
+# install jenkins & sonarqube into the `tools` namespace
+helm upgrade --install my-jenkins jenkinsci/jenkins --version 4.3.20 -n tools
+helm upgrade --install my-sonarqube sonarqube/sonarqube --version 10.0.0+521 -n tools
+
+```
 
 <br>
 
+<img width="1469" alt="helm_jenkins" src="https://user-images.githubusercontent.com/92983658/231441382-7146f9bb-e2cd-4532-9060-c95046a45669.png">
 
-Configure DNS for jenkins and route traffic to the ingress controller load balancer
+<br>
+
+<img width="1303" alt="helm_sonarqube" src="https://user-images.githubusercontent.com/92983658/231441574-71a3a47e-99a7-4ff1-b451-a0263b917829.png">
+
+<br>
+
+- Configure DNS for jenkins and route traffic to the ingress controller load balancer
 Deploy an ingress without TLS
 Ensure that you are able to access the configured URL
 Ensure that you are able to logon to Jenkiins.
