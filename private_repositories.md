@@ -27,7 +27,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#create-a-virtual-repository">Create A Virtual Repository</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#push-docker-images-to-the-repository">Push Docker Images To Artifactory Repository</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#jenkins-pipeline-for-business-applications">Jenkins Pipeline For Business Applications</a>
-- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#deploy-jenkins-with-helm">Deploy Jenkins With Helm</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#deploy-jenkins-with-helm">Deploy Jenkins And Sonarqube With Helm</a>
 
 <br>
 
@@ -587,5 +587,203 @@ kubectl get certificate -n tools
 
 <br>
 
+### Use an override values file to customize Jenkins deployment
+#### Configure Jenkins Ingress using Helm Values
+
+- delete the previous jenkins ingress
+- Create a new file and name it `jenkins-values-overide.yaml`
+- on `artifacthub.io` search for the term `controller` find the below section in the default values file. Copy and paste it exactly in the `jenkins-values-overide.yaml`
+```
+
+controller:
+ # Used for label app.kubernetes.io/component
+componentName: "jenkins-controller"
+image: "jenkins/jenkins"
+ # tag: "2.332.3-jdk11"
+tagLabel: jdk11
+imagePullPolicy: "Always"
+
+```
+
+<br>
+
+<img width="1231" alt="controller" src="https://user-images.githubusercontent.com/92983658/231479067-7ebfe497-1a70-42ef-8031-3b28f127b6b3.png">
+
+<br>
+
+<img width="1036" alt="controller_2" src="https://user-images.githubusercontent.com/92983658/231479892-4ab02da6-f974-4d58-a778-950d72e072b3.png">
+
+<br>
+
+- upgrade the `jenkins-values-overide.yaml` file with helm
+```
+
+helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
+
+```
+
+<br>
+
+<img width="1382" alt="jenkins_upgraded" src="https://user-images.githubusercontent.com/92983658/231481292-896348ea-71ea-4eb1-a760-82f4a50a0af9.png">
+
+<br>
+
+*note: The above upgrade has been done, but without any specific changes to the existing deployment. That's because no configuration change has occured. All we now have is a shortened values file that can be easily read without too many options. With this file, you can now start making configuration updates.*
+
+<br>
+
+- To configure Jenkins ingress directly from the helm values, simply search for the `ingress:` section in the default values file and copy the entire section to the override values file. The default one should look similar to this:
+```
+
+ingress:
+enabled: false
+   # Override for the default paths that map requests to the backend
+paths: []
+   # - backend:
+   # serviceName: ssl-redirect
+   # servicePort: use-annotation
+   # - backend:
+   # serviceName: >-
+   # {{ template "jenkins.fullname" . }}
+   # # Don't use string here, use only integer value!
+   # servicePort: 8080
+   # For Kubernetes v1.14+, use 'networking.k8s.io/v1beta1'
+   # For Kubernetes v1.19+, use 'networking.k8s.io/v1'
+apiVersion: "extensions/v1beta1"
+labels: {}
+annotations: {}
+   # kubernetes.io/ingress.class: nginx
+   # kubernetes.io/tls-acme: "true"
+   # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+   # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+   # ingressClassName: nginx
+   # Set this path to jenkinsUriPrefix above or use annotations to rewrite path
+   # path: "/jenkins"
+   # configures the hostname e.g. jenkins.example.com
+hostName:
+tls:
+   # - secretName: jenkins.cluster.local
+   # hosts:
+   # - jenkins.cluster.local
+   
+```
+
+<br>
+
+<img width="1225" alt="jenkins_default_ingress" src="https://user-images.githubusercontent.com/92983658/231482644-3b2e1650-bef2-416d-a531-a3f46c166b0b.png">
+
+<br>
+
+- update the file with values similar to the previously deleted jenkins file. The final output should be similar to this:
+```
+
+ingress:
+  enabled: true
+  apiVersion: "extensions/v1beta1"
+  annotations: 
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    kubernetes.io/ingress.class: nginx
+  hostName: tooling.jenkins.<your domain>
+  tls:
+  - secretName: tooling.jenkins.<your domain>
+    hosts:
+      - tooling.jenkins.<your domain>
+
+```
+
+<br>
+
+<img width="1113" alt="ingress_override" src="https://user-images.githubusercontent.com/92983658/231492930-0fef3e5b-085f-4d9e-a541-411547db6989.png">
+
+<br>
+
+- upgrade deployment
+```
+
+helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
+
+```
+
+<br>
+
+<img width="1383" alt="jenkins_o" src="https://user-images.githubusercontent.com/92983658/231492981-f7fdce4e-0077-4b1d-ae4d-9651ab1ab47a.png">
+
+<br>
+
+#### Automate Jenkins plugin installation
+There are 2 possible options to this.
+
+- use Helm values to automate plugin installation or ...
+- package the required plugins as part of the Jenkins image.
+
+Which ever option works just fine, Its a matter of choice and unique environment setup in an organisation.
+
+**Option 1: Using Helm values to automate plugin installation**
+The easiest and most straight forward approach. But it may slow down initial deployment of Jenkins since it has to download the plugins. Also, if the kubernetes workers are completely closed from the internet, downloading plugins over the internet will not work, in this case Option 2 is the way out.
 
 
+```
+
+# List of plugins to be install during Jenkins controller start
+  installPlugins:
+    - kubernetes:3600.v144b_cd192ca_a_
+    - workflow-aggregator:581.v0c46fa_697ffd
+    - git:4.11.3
+    - configuration-as-code:1429.v09b_044a_c93de
+
+  # Set to false to download the minimum required version of all dependencies.
+  installLatestPlugins: true
+
+  # Set to true to download latest dependencies of any plugin that is requested to have the latest version.
+  installLatestSpecifiedPlugins: false
+
+  # List of plugins to install in addition to those listed in controller.installPlugins
+  additionalPlugins: []
+In the override yaml file, you can add the installPlugins: and additionalPlugins: so that your updated override values file will look like the below.
+
+controller:
+  ingress:
+    enabled: true
+    apiVersion: "extensions/v1beta1"
+    annotations: 
+      cert-manager.io/cluster-issuer: "letsencrypt-production"
+      kubernetes.io/ingress.class: nginx
+    hostName: tooling.jenkins.sandbox.svc.darey.io
+    tls:
+    - secretName: tooling.jenkins.sandbox.svc.darey.io
+      hosts:
+        - tooling.jenkins.sandbox.svc.darey.io
+
+  installPlugins:
+    - kubernetes:3600.v144b_cd192ca_a_
+    - workflow-aggregator:581.v0c46fa_697ffd
+    - git:4.11.3
+    - configuration-as-code:1429.v09b_044a_c93de
+
+  additionalPlugins: []
+  
+  ```
+  
+  <br>
+  
+  <img width="1225" alt="install_plugins" src="https://user-images.githubusercontent.com/92983658/231494985-64c80ce4-2acc-44aa-94f3-c7f13b592abc.png">
+
+<br>
+
+*note: use the `additionalPlugins: []` key. the `[]` there simply means the key has a default null value and it is a list data type. So, to start adding more plugins you simply need to update that section like below.*
+
+```
+
+additionalPlugins:
+    -blueocean:1.25.5    -credentials-binding:1.24    -git-changelog:3.0    -git-client:3.6.0    -git-server:1.9    -git:4.5.1
+
+```
+
+<br>
+
+<img width="1223" alt="additional_plugins" src="https://user-images.githubusercontent.com/92983658/231495542-5edd6577-25bb-4d35-b84d-11068e782c59.png">
+
+<br>
+
+**option 2: packaging plugins as part of the Jenkins image.**
+In the original values file, search for `installPlugins:` and you should see a section like below.
