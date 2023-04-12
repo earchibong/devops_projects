@@ -231,6 +231,106 @@ helm upgrade --install my-sonarqube sonarqube/sonarqube --version 10.0.0+521 -n 
 <br>
 
 - Configure DNS for jenkins and route traffic to the ingress controller load balancer
+```
+# deploy ingress controller in `ingress-nginx` namespace
+helm upgrade --install ingress-nginx ingress-nginx \
+--repo https://kubernetes.github.io/ingress-nginx \
+--namespace ingress-nginx --create-namespace
+
+# confirm pods in the ingress-nginx namespace
+kubectl get pods --namespace=ingress-nginx
+
+# confirm the created load balancer in AWS 
+kubectl get service -n ingress-nginx
+
+# Check the IngressClass that identifies this ingress controller.
+kubectl get ingressclass -n ingress-nginx
+
+```
+
+<br>
+
+<img width="1467" alt="ingress_deploy" src="https://user-images.githubusercontent.com/92983658/231448222-adb633da-1bf7-4e23-90ce-4e639192529d.png">
+
+<br>
+
+```
+
+# **deploy jenkins and sonarqube ingress**
+# create a file ingress.yaml
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "tooling.jenkins.<your domain name>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-jenkins
+            port:
+              number: 8080
+ 
+---
+ 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarqube
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "tooling.sonarqube.<your domain name>"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-sonarqube-sonarqube
+            port:
+              number: 9000
+              
+ ```
+ 
+ <br>
+ 
+ <img width="973" alt="ingress_file" src="https://user-images.githubusercontent.com/92983658/231450734-84c2bc6d-d44e-4738-9d91-20cd8399dba2.png">
+
+<br>
+
+```
+
+# apply in `tools` namespace
+kubectl apply -f ingress.yaml -n tools
+
+# check ingressclass
+kubectl get ingress.networking.k8s.io -n tools
+
+
+```
+
+<br>
+
+<img width="1384" alt="ingress_class" src="https://user-images.githubusercontent.com/92983658/231451857-b1014456-fc9b-4599-a38b-e6884076dacf.png">
+
+<br>
+
+<img width="1395" alt="record_1" src="https://user-images.githubusercontent.com/92983658/231453286-cc882a1b-3505-4cb8-891d-cd27383782fc.png">
+
+<img width="1388" alt="record_2" src="https://user-images.githubusercontent.com/92983658/231453191-53199640-5b10-4839-8369-c848fa63a644.png">
+
+<br>
+
+
+
 Deploy an ingress without TLS
 Ensure that you are able to access the configured URL
 Ensure that you are able to logon to Jenkiins.
