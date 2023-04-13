@@ -790,7 +790,7 @@ additionalPlugins:
 #### option 2: Packaging plugins as part of the Jenkins image
 Create a folder structure and empty files like below:
 ```
-
+PBL26
 ├── Dockerfile
 └── scripts
       └── install-plugins.sh
@@ -854,9 +854,35 @@ USER jenkins
 *note: Dockerfile summary:*
 - *`FROM jenkins/jenkins:2.354-jdk11`: this refers to the image and tag from the docker registry that will be used to build the Docker image. It is the first non-comment instruction in the Dockerfile. It can appear multiple times within a single Dockerfile in order to create multiple images.*
 - *`USER root`: this sets the user name or UID to use when running the image and for any `RUN, CMD and ENTRYPOINT` instructions that follow it in the Dockerfile. In this case, this is the root user*
-- *`COPY scripts/ /opt/scripts/`: Copies new files or directories from one location `scripts/` and adds them to the filesystem of the image at the path given `/opt/scripts/`. So in this case, files from the `script` directory will be copied to the filesystem of the image located at the path `/opt/scripts/`*
-- *`RUN  apt-get update && apt-get -y upgrade && \ chmod u+x /opt/scripts/install-plugins.sh && \ /opt/scripts/install-plugins.sh`: This runs commands using a base image that does not contain the specified shell executable. So in this case the commands include updating and upgrading the package manager `apt-get` , changing file permission to make the file `/opt/scripts/install-plugins.sh` executable to the current `user` only and then to run the script in the ` /opt/scripts/install-plugins.sh`*
-- *`USER jenkins`: makes `jenkins` the user *
+- *`COPY scripts/ /opt/scripts/`: Copies local files `scripts/` and adds them to the filesystem of the image at the path given `/opt/scripts/`. So in this case, files from the `script` directory will be copied to the filesystem of the image located at the path `/opt/scripts/`*
+- *`RUN  apt-get update && apt-get -y upgrade && \ chmod u+x /opt/scripts/install-plugins.sh && \ /opt/scripts/install-plugins.sh`: This executes commands during the image build process. So in this case the commands include updating and upgrading the package manager `apt-get` , changing file permission to make the file `/opt/scripts/install-plugins.sh` executable to the current `user` only and then to run the script in the ` /opt/scripts/install-plugins.sh`*
+- *`USER jenkins`: switches the user to `jenkins`*
 
 <br>
+
+- Run docker commands to build, tag and push the docker image to the artifactory Docker registry created at the start of the project.
+```
+
+docker build -t jenkins:0.0.1 .
+docker login <artifactory url>
+docker login mintedcreative.jfrog.io
+docker tag jenkins:0.0.1 <artifatory docker repo url>/jenkins:0.0.1
+docker push <artifactory docker repo url>/jenkins:0.0.1
+
+````
+
+<br>
+
+*Docker build:*
+- *`-t` is for tagging the image.*
+- *`jenkins` is the name of the image.*
+- *`1.0` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
+- *`.` means, we are referring to the Dockerfile location as the docker build context.*
+
+<br>
+
+<img width="1386" alt="docker_build" src="https://user-images.githubusercontent.com/92983658/231767263-75cc59da-561e-4ae9-9cbc-3a6cf31c9023.png">
+
+<br>
+
 
