@@ -852,11 +852,11 @@ USER jenkins
 <br>
 
 *note: Dockerfile summary:*
-*- `FROM jenkins/jenkins:2.354-jdk11`: this refers to the image and tag from the docker registry that will be used to build the Docker image. It is the first non-comment instruction in the Dockerfile. It can appear multiple times within a single Dockerfile in order to create multiple images.*
-*- `USER root`: this sets the user name or UID to use when running the image and for any `RUN, CMD and ENTRYPOINT` instructions that follow it in the Dockerfile. In this case, this is the root user*
-*- `COPY scripts/ /opt/scripts/`: Copies new files or directories from one location `scripts/` and adds them to the filesystem of the image at the path given `/opt/scripts/`. So in this case, files from the `script` directory will be copied to the filesystem of the image located at the path `/opt/scripts/`*
-*- `RUN  apt-get update && apt-get -y upgrade && \ chmod u+x /opt/scripts/install-plugins.sh && \ /opt/scripts/install-plugins.sh`: This runs commands using a base image that does not contain the specified shell executable. So in this case the commands include updating and upgrading the package manager `apt-get` , changing file permission to make the file `/opt/scripts/install-plugins.sh` executable to the current `user` only and then to run the script in the ` /opt/scripts/install-plugins.sh`*
-*- `USER jenkins`: makes `jenkins` the user *
+- *`FROM jenkins/jenkins:2.354-jdk11`: this refers to the image and tag from the docker registry that will be used to build the Docker image. It is the first non-comment instruction in the Dockerfile. It can appear multiple times within a single Dockerfile in order to create multiple images.*
+- *`USER root`: this sets the user name or UID to use when running the image and for any `RUN, CMD and ENTRYPOINT` instructions that follow it in the Dockerfile. In this case, this is the root user*
+- *`COPY scripts/ /opt/scripts/`: Copies new files or directories from one location `scripts/` and adds them to the filesystem of the image at the path given `/opt/scripts/`. So in this case, files from the `script` directory will be copied to the filesystem of the image located at the path `/opt/scripts/`*
+- *`RUN  apt-get update && apt-get -y upgrade && \ chmod u+x /opt/scripts/install-plugins.sh && \ /opt/scripts/install-plugins.sh`: This runs commands using a base image that does not contain the specified shell executable. So in this case the commands include updating and upgrading the package manager `apt-get` , changing file permission to make the file `/opt/scripts/install-plugins.sh` executable to the current `user` only and then to run the script in the ` /opt/scripts/install-plugins.sh`*
+- *`USER jenkins`: makes `jenkins` the user *
 
 <br>
 
