@@ -712,7 +712,7 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 <br>
 
-#### Automate Jenkins plugin installation
+### Automate Jenkins plugin installation
 There are 2 possible options to this.
 
 - use Helm values to automate plugin installation or ...
@@ -720,7 +720,7 @@ There are 2 possible options to this.
 
 Which ever option works just fine, Its a matter of choice and unique environment setup in an organisation.
 
-**Option 1: Using Helm values to automate plugin installation**
+#### Option 1: Using Helm values to automate plugin installation
 The easiest and most straight forward approach. But it may slow down initial deployment of Jenkins since it has to download the plugins. Also, if the kubernetes workers are completely closed from the internet, downloading plugins over the internet will not work, in this case Option 2 is the way out.
 
 
@@ -787,5 +787,67 @@ additionalPlugins:
 
 <br>
 
-**option 2: packaging plugins as part of the Jenkins image.**
-In the original values file, search for `installPlugins:` and you should see a section like below.
+#### option 2: Packaging plugins as part of the Jenkins image
+Create a folder structure and empty files like below:
+```
+
+├── Dockerfile
+└── scripts
+      └── install-plugins.sh
+         
+```
+
+<br>
+
+- update `install-plugins.sh` file with the bash script below.
+```
+
+#!/bin/bash
+
+     # A variable to hold an array of all the plugins to be installed
+
+     plugins=(
+     workflow-basic-steps:948.v2c72a_091b_b_68
+     blueocean:1.25.5
+     credentials-binding:1.24
+     git-changelog:3.0
+     git-client:3.6.0
+     git-server:1.9
+     git:4.5.1
+     )
+
+     # A for loop to iterate over the plugins array, and execute the jenkins-plugin-cli command to instal each plugin.
+
+     for plugin in "${plugins[@]}"
+     do
+       echo "Installing ${plugin}"
+       jenkins-plugin-cli --plugins ${plugin}
+     done
+     
+```
+
+<br>
+
+<img width="1196" alt="install_plugins" src="https://user-images.githubusercontent.com/92983658/231748630-201a2d75-a240-4730-8485-6164cee4824b.png">
+
+<br>
+
+- update `Dockerfile` with the following:
+```
+
+FROM jenkins/jenkins:2.354-jdk11
+
+USER root
+
+COPY scripts/ /opt/scripts/
+RUN  apt-get update && apt-get -y upgrade && \ chmod u+x /opt/scripts/install-plugins.sh && \ /opt/scripts/install-plugins.sh
+USER jenkins
+
+```
+
+<br>
+
+<img width="1265" alt="dockerfile" src="https://user-images.githubusercontent.com/92983658/231750186-76663ce5-f575-4f31-9386-83abb6e07f8b.png">
+
+<br>
+
