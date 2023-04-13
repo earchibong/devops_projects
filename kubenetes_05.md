@@ -681,7 +681,19 @@ kubectl apply -f artifactory_ingress.yaml -n tools
 
 <br>
 
-- modify `clusterissuer` with `accesskeyID`
+- create route53 secret crediatials for cert-manager
+```
+
+
+kubectl --namespace cert-manager \
+create secret generic route53-credentials \
+--from-literal="secret-access-key=<YOUR-AWS-SECRET-ACCESS-KEY>"
+
+```
+
+<br>
+
+- modify `clusterissuer` with `accesskeyID` and `Secret Key`
 
 ```
 
@@ -705,7 +717,11 @@ spec:
           region: "eu-west-2"
           hostedZoneID: "<your hosted zone id>"
           accessKeyID: "<YOUR ACCESS KEY ID>"
-          
+          secretAccessKeySecretRef:
+              key: secret-access-key
+              name: route53-credentials
+              
+              
 ```
 
 <br>
