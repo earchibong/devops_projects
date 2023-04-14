@@ -439,6 +439,24 @@ helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --crea
 
 <br>
 
+- alternatively, attahed role with AWS CLI as follows:
+The `attach-role-policy` command can be used to attach an `IAM policy to an IAM role`. The arguments for the command are:
+
+`role-name`: Name of the IAM role
+`policy-arn`: ARN of the IAM policy you want to attach
+
+```
+aws iam attach-role-policy --role-name <your IAM role> --policy-arn <cert manager policy arn>
+
+```
+
+<br>
+
+<img width="1470" alt="iam_policy_aatach" src="https://user-images.githubusercontent.com/92983658/232032392-d5def8c9-24c9-40b2-ab08-4cb3d6671153.png">
+
+<br>
+
+
 - create route53 secret crediatials for cert-manager
 ```
 
