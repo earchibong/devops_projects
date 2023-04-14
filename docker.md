@@ -7,6 +7,10 @@ AWS Elastic Container Registry using a CI/CD tool known as Jenkins and Docker Co
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#part-one-install-docker-and-prepare-for-migration-to-the-cloud">Install Docker And Prepare For Migration To The Cloud</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#part-two-migrate-the-tooling-web-application-from-a-vm-based-solution-into-a-containerized-one">Migrate A Web Application From A VM-based solution To A Containerized One</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#create-mysql-container-for-tooling-app-backend">Create Mysql Container For App Backend</a>
+
+<br>
+
 ## Part One: Install Docker and prepare for migration to the Cloud
 
 Docker allocates not the whole guest OS for an application, but only isolates a minimal part of it – this isolated container has all that the application needs and at the same time is lighter, faster, and can be shipped as a Docker image to multiple physical or virtual environments, as long as this environment can run Docker engine. This approach also solves the environment incompatibility issue. If the application is shipped as a container, it has its own environment isolated from the rest of the world, and it will always work the same way on any server that has Docker engine.
