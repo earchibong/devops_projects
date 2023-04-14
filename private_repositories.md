@@ -902,19 +902,19 @@ docker push <artifactory docker repo url>/jenkins:0.0.1
 
 <br>
 
-- create a secret to story artifactory credentials used to pull image from private registry
+- create a secret to store artifactory credentials used to pull image from private registry... we will name the secret: `regcred`
 ```
 
-kubectl create secret docker-registry mintedcreative-jfrog \
-  --docker-server=DOCKER_REGISTRY_SERVER \
-  --docker-username=DOCKER_USER \
-  --docker-password=DOCKER_PASSWORD \
-  --docker-email=DOCKER_EMAIL
-    
+kubectl create secret docker-registry regcred \
+  --docker-server=<YOUR ARTIFACTORY URL> \
+  --docker-username=<YOUR ARTIFACTORY USERNAME> \
+  --docker-password=<YOUR ARTIFACTORY PASSWORD> \
+  --docker-email=<YOUR ARTIFACTORY EMAIL>
+
     
 ```
 
-
+<br>
 
 - update the `image:` value in `jenkins-values-overide.yaml` file
 ```
@@ -925,10 +925,11 @@ controller:
   componentName: "jenkins-controller"
   image: "<artifactory registry>/<jenkins image name>"
   tag: "0.0.1"
+  imagePullSecretName: regcred #the name of the secret created above
   imagePullPolicy: "Always"
 
 # ensure the following keys are set to null ([]) to disable default plugin installation and only use plugins from custom jenkins image.
-installPlugins: []
+installPlugins: false
 additionalPlugins: []
 
 
