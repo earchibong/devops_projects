@@ -4,6 +4,8 @@ In this project, the frontend and the backend(MySQL) of tooling application is b
 is pushed to Docker registry. And further in the project, the php-todo application is also built into a container and pushed into the 
 AWS Elastic Container Registry using a CI/CD tool known as Jenkins and Docker Compose is also implemented.
 
+## Labs
+-<a href="">Install Docker And Prepare For Migration To The Cloud</a>
 ## Part One: Install Docker and prepare for migration to the Cloud
 
 Docker allocates not the whole guest OS for an application, but only isolates a minimal part of it – this isolated container has all that the application needs and at the same time is lighter, faster, and can be shipped as a Docker image to multiple physical or virtual environments, as long as this environment can run Docker engine. This approach also solves the environment incompatibility issue. If the application is shipped as a container, it has its own environment isolated from the rest of the world, and it will always work the same way on any server that has Docker engine.
