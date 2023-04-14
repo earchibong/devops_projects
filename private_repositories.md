@@ -734,7 +734,7 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 <br>
 
-### Automate Jenkins plugin installation
+## Automate Jenkins plugin installation
 There are 2 possible options to this.
 
 - use Helm values to automate plugin installation or ...
@@ -742,7 +742,7 @@ There are 2 possible options to this.
 
 Which ever option works just fine, Its a matter of choice and unique environment setup in an organisation.
 
-#### Option 1: Using Helm values to automate plugin installation
+### Option 1: Using Helm values to automate plugin installation
 The easiest and most straight forward approach. But it may slow down initial deployment of Jenkins since it has to download the plugins. Also, if the kubernetes workers are completely closed from the internet, downloading plugins over the internet will not work, in this case Option 2 is the way out.
 
 
@@ -809,26 +809,21 @@ additionalPlugins:
 
 <br>
 
-#### option 2: Packaging plugins as part of the Jenkins image
+### option 2: Packaging plugins as part of the Jenkins image
 Create a folder structure and empty files like below:
 ```
 PBL26
 ├── Dockerfile
-└── scripts
-      └── install-plugins.sh
+└── jenkins-plugins
+      
          
 ```
 
 <br>
 
-- update `install-plugins.sh` file with the bash script below.
+- update each line of that `jenkins-plugins` file with the official Plugin ID of eah plugin, you can find the official Plugin Ids from https://plugins.jenkins.io/ .For Example: `Git client` Plugin has an official ID as : `git-client`
 ```
 
-#!/bin/bash
-
-     # A variable to hold an array of all the plugins to be installed
-
-     plugins=(
      workflow-basic-steps:948.v2c72a_091b_b_68
      blueocean:1.25.5
      credentials-binding:1.24
@@ -836,21 +831,13 @@ PBL26
      git-client:3.6.0
      git-server:1.9
      git:4.5.1
-     )
-
-     # A for loop to iterate over the plugins array, and execute the jenkins-plugin-cli command to instal each plugin.
-
-     for plugin in "${plugins[@]}"
-     do
-       echo "Installing ${plugin}"
-       jenkins-plugin-cli --plugins ${plugin}
-     done
+    
      
 ```
 
 <br>
 
-<img width="1196" alt="install_plugins" src="https://user-images.githubusercontent.com/92983658/231748630-201a2d75-a240-4730-8485-6164cee4824b.png">
+<img width="965" alt="jenkins_plugins" src="https://user-images.githubusercontent.com/92983658/232041864-55f5bfc6-4f0d-4e2d-8a41-e26dc9814148.png">
 
 <br>
 
@@ -861,10 +848,11 @@ FROM jenkins/jenkins:2.354-jdk11
 
 USER root
 
-COPY scripts/install-plugins.sh /opt/scripts/
 RUN  apt-get update && apt-get -y upgrade
-RUN  chmod u+x /opt/scripts/install-plugins.sh
-RUN  \ /opt/scripts/install-plugins.sh
+COPY ./jenkins-plugins /usr/share/jenkins/plugins
+RUN  while read i ; \
+                  do /usr/local/bin/install-plugins.sh $i ; \
+          done < /usr/share/jenkins/plugins
 USER jenkins
 
 
@@ -872,15 +860,15 @@ USER jenkins
 
 <br>
 
-<img width="1265" alt="dockerfile" src="https://user-images.githubusercontent.com/92983658/231750186-76663ce5-f575-4f31-9386-83abb6e07f8b.png">
+<img width="1017" alt="docker_file" src="https://user-images.githubusercontent.com/92983658/232042982-b6dcdfb6-3c64-4c12-ae37-712c1b2dd239.png">
 
 <br>
 
 *note: Dockerfile summary:*
 - *`FROM jenkins/jenkins:2.354-jdk11`: this refers to the image and tag from the docker registry that will be used to build the Docker image. It is the first non-comment instruction in the Dockerfile. It can appear multiple times within a single Dockerfile in order to create multiple images.*
 - *`USER root`: this sets the user name or UID to use when running the image and for any `RUN, CMD and ENTRYPOINT` instructions that follow it in the Dockerfile. In this case, this is the root user*
-- *`COPY scripts/ /opt/scripts/`: Copies local files `scripts/` and adds them to the filesystem of the image at the path given `/opt/scripts/`. So in this case, files from the `script` directory will be copied to the filesystem of the image located at the path `/opt/scripts/`*
-- *`RUN  apt-get update && apt-get -y upgrade && \ chmod u+x /opt/scripts/install-plugins.sh && \ /opt/scripts/install-plugins.sh`: This executes commands during the image build process. So in this case the commands include updating and upgrading the package manager `apt-get` , changing file permission to make the file `/opt/scripts/install-plugins.sh` executable to the current `user` only and then to run the script in the ` /opt/scripts/install-plugins.sh`*
+- *`COPY ./jenkins-plugins /usr/share/jenkins/plugins`: Copies local files `jenkins-plugins` and adds them to the filesystem of the image at the path given `/usr/share/jenkins/plugins`.*
+- *`RUN  apt-get update && apt-get -y upgrade & RUN while read i ;   do /usr/local/bin/install-plugins.sh $i ; done < /usr/share/jenkins/plugins`: This executes commands during the image build process. So in this case the commands include updating and upgrading the package manager `apt-get` , and then install the plugins in jenkins/plugin*
 - *`USER jenkins`: switches the user to `jenkins`*
 
 <br>
@@ -890,8 +878,8 @@ USER jenkins
 
 docker build -t jenkins:0.0.1 .
 docker login <artifactory url>
-docker login mintedcreative.jfrog.io
-docker tag jenkins:0.0.1 <artifatory docker repo url>/jenkins:0.0.1
+docker push mintedcreative.jfrog.io/docker-local/jenkins:0.0.1
+docker tag jenkins:0.0.1 <artifactory docker repo url>/jenkins:0.0.1
 docker push <artifactory docker repo url>/jenkins:0.0.1
 
 ````
@@ -906,8 +894,65 @@ docker push <artifactory docker repo url>/jenkins:0.0.1
 
 <br>
 
-<img width="1386" alt="docker_build" src="https://user-images.githubusercontent.com/92983658/231767263-75cc59da-561e-4ae9-9cbc-3a6cf31c9023.png">
+<img width="1387" alt="docker_build" src="https://user-images.githubusercontent.com/92983658/232045433-c96e8ec4-d30e-4511-b306-c2e4bd4a37e2.png">
 
 <br>
 
+<img width="1230" alt="jenkins_custom_push" src="https://user-images.githubusercontent.com/92983658/232048306-0c0f2041-c397-4f97-a4be-cac3a5b01b19.png">
+
+<br>
+
+- create a secret to story artifactory credentials used to pull image from private registry
+```
+
+kubectl create secret docker-registry mintedcreative-jfrog \
+  --docker-server=DOCKER_REGISTRY_SERVER \
+  --docker-username=DOCKER_USER \
+  --docker-password=DOCKER_PASSWORD \
+  --docker-email=DOCKER_EMAIL
+    
+    
+```
+
+
+
+- update the `image:` value in `jenkins-values-overide.yaml` file
+```
+
+# Once you built the image and pushed it to your registry you can specify it in your values file like this:
+
+controller:
+  componentName: "jenkins-controller"
+  image: "<artifactory registry>/<jenkins image name>"
+  tag: "0.0.1"
+  imagePullPolicy: "Always"
+
+# ensure the following keys are set to null ([]) to disable default plugin installation and only use plugins from custom jenkins image.
+installPlugins: []
+additionalPlugins: []
+
+
+#upgrade deployment
+helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
+
+
+```
+
+<br>
+
+<img width="1195" alt="jenkins_overide_1c" src="https://user-images.githubusercontent.com/92983658/232055501-433169ea-7c10-4919-9028-7975d3cfa074.png">
+
+<br>
+
+- verify the installation of the plugins ... exec into the pod container and check the filesystem
+
+```
+kubectl exec -it container_name bash
+ls -ltr /var/jenkins_home/plugins/ | grep blueocean
+
+```
+
+The above should return files relating to the plugin. If it returns empty, then the plugin has not been installed.
+
+<br>
 
