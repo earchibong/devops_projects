@@ -8,6 +8,7 @@ AWS Elastic Container Registry using a CI/CD tool known as Jenkins and Docker Co
 - <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#part-one-install-docker-and-prepare-for-migration-to-the-cloud">Install Docker And Prepare For Migration To The Cloud</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#part-two-migrate-the-tooling-web-application-from-a-vm-based-solution-into-a-containerized-one">Migrate A Web Application From A VM-based solution To A Containerized One</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#create-mysql-container-for-tooling-app-backend">Create Mysql Container For App Backend</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/docker.md#part-four-prepare-database-schema">Prepare Database Schema</a>
 
 <br>
 
