@@ -763,7 +763,13 @@ The easiest and most straight forward approach. But it may slow down initial dep
 
   # List of plugins to install in addition to those listed in controller.installPlugins
   additionalPlugins: []
-In the override yaml file, you can add the installPlugins: and additionalPlugins: so that your updated override values file will look like the below.
+  
+```
+<br>
+
+In the override yaml file, you can add the `installPlugins:` and `additionalPlugins:` so that your updated override values file will look like the below.
+
+```
 
 controller:
   ingress:
