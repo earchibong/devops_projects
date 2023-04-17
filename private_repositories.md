@@ -805,7 +805,7 @@ controller:
 ```
 
 additionalPlugins:
-    -blueocean:1.25.5    -credentials-binding:1.24    -git-changelog:3.0    -git-client:3.6.0    -git-server:1.9    -git:4.5.1
+    -blueocean:1.27.3    -credentials-binding:1.24    -git-changelog:3.29    -git-client:3.6.0    -git-server:1.9    -git:4.5.1
 
 ```
 
@@ -814,6 +814,35 @@ additionalPlugins:
 <img width="1223" alt="additional_plugins" src="https://user-images.githubusercontent.com/92983658/231495542-5edd6577-25bb-4d35-b84d-11068e782c59.png">
 
 <br>
+
+<img width="1029" alt="install_plugins_1d" src="https://user-images.githubusercontent.com/92983658/232479125-213ab4cb-8e4a-47f2-95c2-f19cbb61a6a9.png">
+
+<br>
+
+- upgrade deployment
+```
+
+helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
+
+```
+
+<br>
+
+- verify plugins have been installed
+```
+
+#  exec into the pod container and check the filesystem
+kubectl exec <pod name> -n tools -it -- bash 
+ls -ltr /var/jenkins_home/plugins/ | grep blueocean::1.27.3 # insert any plugin name after grep to confirm install
+
+
+```
+
+<br>
+
+
+
+
 
 ### option 2: Packaging plugins as part of the Jenkins image
 Create a folder structure and empty files like below:
@@ -827,66 +856,63 @@ PBL26
 
 <br>
 
-- update each line of that `jenkins-plugins` file with the official Plugin ID of eah plugin, you can find the official Plugin Ids from https://plugins.jenkins.io/ .For Example: `Git client` Plugin has an official ID as : `git-client`
+- update each line of that `plugins.txt` file with the official Plugin ID of eah plugin, you can find the official Plugin Ids from https://plugins.jenkins.io/ .For Example: `Git client` Plugin has an official ID as : `git-client`
 ```
 
-     workflow-basic-steps:948.v2c72a_091b_b_68
-     blueocean:1.25.5
-     credentials-binding:1.24
-     git-changelog:3.0
-     git-client:3.6.0
-     git-server:1.9
-     git:4.5.1
+workflow-basic-steps:1010.vf7a_b_98e847c1
+blueocean:1.27.3
+credentials-binding:604.vb_64480b_c56ca_
+git-changelog:3.29
+git-client:4.2.0
+git-server:99.va_0826a_b_cdfa_d
+git:5.0.0
     
      
 ```
 
 <br>
 
-<img width="965" alt="jenkins_plugins" src="https://user-images.githubusercontent.com/92983658/232041864-55f5bfc6-4f0d-4e2d-8a41-e26dc9814148.png">
+<img width="1055" alt="plugins_txt" src="https://user-images.githubusercontent.com/92983658/232489242-8372bcba-a4f7-4f55-8682-320ce37be559.png">
 
 <br>
 
 - update `Dockerfile` with the following:
 ```
 
-FROM jenkins/jenkins:2.354-jdk11
+FROM jenkins/jenkins:lts-jdk11
 
+# if we want to install via apt...switch to root user
 USER root
 
-RUN  apt-get update && apt-get -y upgrade
-COPY ./jenkins-plugins /usr/share/jenkins/plugins
-RUN  while read i ; \
-                  do /usr/local/bin/install-plugins.sh $i ; \
-          done < /usr/share/jenkins/plugins
-USER jenkins
+# update and upgrade apt package manager
+RUN apt-get update && apt-get upgrade -y 
 
+#install pre-built plugins by copying the plugin HPI file into /usr/share/jenkins/ref/plugins/
+# without plugin HPI file, you can install directly using RUN jenkins-plugin-cli --plugins plugin1 plugin2 plugin3...
+
+COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+
+
+# drop back to the regular jenkins user
+USER jenkins
 
 ```
 
 <br>
 
-<img width="1017" alt="docker_file" src="https://user-images.githubusercontent.com/92983658/232042982-b6dcdfb6-3c64-4c12-ae37-712c1b2dd239.png">
-
-<br>
-
-*note: Dockerfile summary:*
-- *`FROM jenkins/jenkins:2.354-jdk11`: this refers to the image and tag from the docker registry that will be used to build the Docker image. It is the first non-comment instruction in the Dockerfile. It can appear multiple times within a single Dockerfile in order to create multiple images.*
-- *`USER root`: this sets the user name or UID to use when running the image and for any `RUN, CMD and ENTRYPOINT` instructions that follow it in the Dockerfile. In this case, this is the root user*
-- *`COPY ./jenkins-plugins /usr/share/jenkins/plugins`: Copies local files `jenkins-plugins` and adds them to the filesystem of the image at the path given `/usr/share/jenkins/plugins`.*
-- *`RUN  apt-get update && apt-get -y upgrade & RUN while read i ;   do /usr/local/bin/install-plugins.sh $i ; done < /usr/share/jenkins/plugins`: This executes commands during the image build process. So in this case the commands include updating and upgrading the package manager `apt-get` , and then install the plugins in jenkins/plugin*
-- *`USER jenkins`: switches the user to `jenkins`*
+<img width="1298" alt="dockerfile_1b" src="https://user-images.githubusercontent.com/92983658/232490315-78222ef0-386b-4ec8-b9d6-67a1634ccf4b.png">
 
 <br>
 
 - Run docker commands to build, tag and push the docker image to the artifactory Docker registry created at the start of the project.
 ```
 
-docker build -t jenkins:0.0.1 .
+docker build -t jenkins:1.2.1 .
 docker login <artifactory url>
-docker push mintedcreative.jfrog.io/docker-local/jenkins:0.0.1
-docker tag jenkins:0.0.1 <artifactory docker repo url>/jenkins:0.0.1
-docker push <artifactory docker repo url>/jenkins:0.0.1
+docker push mintedcreative.jfrog.io/docker-local/jenkins:1.2.1
+docker tag jenkins:0.0.1 <artifactory docker repo url>/jenkins:1.2.1
+docker push <artifactory docker repo url>/jenkins:1.2.1
 
 ````
 
@@ -895,7 +921,7 @@ docker push <artifactory docker repo url>/jenkins:0.0.1
 *Docker build:*
 - *`-t` is for tagging the image.*
 - *`jenkins` is the name of the image.*
-- *`1.0` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
+- *`1.2.1` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
 - *`.` means, we are referring to the Dockerfile location as the docker build context.*
 
 <br>
@@ -930,7 +956,7 @@ kubectl create secret docker-registry regcred \
 controller:
   componentName: "jenkins-controller"
   image: "<artifactory registry>/<jenkins image name>"
-  tag: "0.0.1"
+  tag: "1.2.1"
   imagePullSecretName: regcred #the name of the secret created above
   imagePullPolicy: "Always"
 
