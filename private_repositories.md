@@ -909,10 +909,6 @@ USER jenkins
 ```
 
 docker build -t jenkins:1.2.1 .
-docker login <artifactory url>
-docker push mintedcreative.jfrog.io/docker-local/jenkins:1.2.1
-docker tag jenkins:0.0.1 <artifactory docker repo url>/jenkins:1.2.1
-docker push <artifactory docker repo url>/jenkins:1.2.1
 
 ````
 
@@ -926,11 +922,21 @@ docker push <artifactory docker repo url>/jenkins:1.2.1
 
 <br>
 
-<img width="1387" alt="docker_build" src="https://user-images.githubusercontent.com/92983658/232045433-c96e8ec4-d30e-4511-b306-c2e4bd4a37e2.png">
+<img width="1446" alt="docker_build" src="https://user-images.githubusercontent.com/92983658/232501481-17c3498a-4b91-4080-b089-c70927a7ef84.png">
 
 <br>
 
-<img width="1230" alt="jenkins_custom_push" src="https://user-images.githubusercontent.com/92983658/232048306-0c0f2041-c397-4f97-a4be-cac3a5b01b19.png">
+```
+
+docker login <artifactory url>
+docker tag jenkins:1.2.1 <artifactory docker repo url>/jenkins:1.2.1
+docker push <artifactory docker repo url>/jenkins:1.2.1
+
+```
+
+<br>
+
+<img width="1364" alt="jenkins_push_custom" src="https://user-images.githubusercontent.com/92983658/232504395-71897717-59cd-45bf-8e78-0fc4fa3a6f41.png">
 
 <br>
 
@@ -954,15 +960,12 @@ kubectl create secret docker-registry regcred \
 # Once you built the image and pushed it to your registry you can specify it in your values file like this:
 
 controller:
-  componentName: "jenkins-controller"
-  image: "<artifactory registry>/<jenkins image name>"
+  image: "mintedcreative.jfrog.io/docker-local/jenkins"
   tag: "1.2.1"
-  imagePullSecretName: regcred #the name of the secret created above
-  imagePullPolicy: "Always"
+  imagePullSecretName: regcred
+  installPlugins: false
+  imagePullPolicy: "Never"
 
-# ensure the following keys are set to null ([]) to disable default plugin installation and only use plugins from custom jenkins image.
-installPlugins: false
-additionalPlugins: []
 
 
 #upgrade deployment
@@ -973,19 +976,83 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 <br>
 
-<img width="1195" alt="jenkins_overide_1c" src="https://user-images.githubusercontent.com/92983658/232055501-433169ea-7c10-4919-9028-7975d3cfa074.png">
+<img width="1180" alt="install_plugin_false" src="https://user-images.githubusercontent.com/92983658/232511293-4d4c6a05-d321-4bbe-b5e1-4a9f55130854.png">
 
 <br>
 
-- verify the installation of the plugins ... exec into the pod container and check the filesystem
+<img width="1137" alt="custom_jenkins+2b" src="https://user-images.githubusercontent.com/92983658/232514526-4d55c2e8-a5c5-4fbd-b09c-ad0e60bb4a4e.png">
+
+<br>
+
+
+- verify the installation of the plugins 
 
 ```
-kubectl exec -it container_name bash
-ls -ltr /var/jenkins_home/plugins/ | grep blueocean
+JENKINS_HOST=username:password@myhost.com:port #username: admin and password: jenkins secret password
+curl -sSL "http://$JENKINS_HOST/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
 
 ```
 
 The above should return files relating to the plugin. If it returns empty, then the plugin has not been installed.
 
 <br>
+
+### Automating Jenkins Configuration As Code (JCasC)
+Manually updating configs from the Jenkins user interface (UI) is not sustainable. Imagine creating a lot of folders to manage multiple projects and pipelines from the Jenkins UI and losing the Jenkins installation afterwards. You will have to manually recreate all the folders again. With Jenkins Configuration As Code (JCasC), this process can be automated and all configurations in Jenkins can now be represented as “code”
+
+*note:Ensure that all the installed plugins are using the latest version. Visit `https://plugins.jenkins.io/`, then search for the plugin to get the latest version number.*
+
+- To start managing Jenkins as code, search for `JCasC:` within the default yaml values file
+- Copy that section out of the default and put it in the override yaml file.
+```
+
+JCasC:
+defaultConfig: true
+configScripts: {}
+    # welcome-message: |
+    # jenkins:
+    # systemMessage: Welcome to our CI\CD server. This Jenkins is configured and managed 'as code'.
+    # Ignored if securityRealm is defined in controller.JCasC.configScripts and
+securityRealm: |-
+local:
+allowsSignup: false
+enableCaptcha: false
+users:
+- id: "${chart-admin-username}"
+name: "Jenkins Admin"
+password: "${chart-admin-password}"
+    # Ignored if authorizationStrategy is defined in controller.JCasC.configScripts
+authorizationStrategy: |-
+loggedInUsersCanDoAnything:
+allowAnonymousRead: false
+
+```
+
+<br>
+
+The `configScripts: {}` key shows that it is empty. The curly brackets `{}` indicates that it is configured to hold a dictionary type of data. This means that it can hold sub-keys with their own respective key and values. As you can see in the example below it.
+
+```
+
+configScripts: {}
+    #  welcome-message: |
+    #    jenkins:
+    #      systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    
+```
+
+<br>
+
+To enable the section, simply remove the `{}` and uncomment the first key welcome-message. You can write whatever you want in the `systemMessage`. For example:
+
+```
+
+configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to archibong.link Multi-tenant CI\CD server.  This Jenkins is configured and managed strictly 'as code'. Please do not update Manually
+          
+```
+
+
 
