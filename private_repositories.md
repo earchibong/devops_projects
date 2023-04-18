@@ -31,6 +31,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#use-an-override-values-file-to-customize-jenkins-deployment">Use An Overide Values File To Customize Jenkins Deployment</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automate-jenkins-plugin-installation">Automate Jenkins Plugin Installation</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#option-2-packaging-plugins-as-part-of-the-jenkins-image">Custom Jenkins Image: Pre-Install Plugins</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automating-jenkins-configuration-as-code-jcasc">Automating Jenkins Configuration As Code (JASC)</a>
 
 <br>
 
