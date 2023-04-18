@@ -31,7 +31,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#use-an-override-values-file-to-customize-jenkins-deployment">Use An Overide Values File To Customize Jenkins Deployment</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automate-jenkins-plugin-installation">Automate Jenkins Plugin Installation</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#option-2-packaging-plugins-as-part-of-the-jenkins-image">Custom Jenkins Image: Pre-Install Plugins</a>
-- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automating-jenkins-configuration-as-code-jcasc">Automating Jenkins Configuration As Code (JASC)</a>
+- <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automating-jenkins-configuration-as-code-jcasc">Automating Jenkins Configuration As Code (JCasC)</a>
 
 <br>
 
@@ -850,7 +850,7 @@ Create a folder structure and empty files like below:
 ```
 PBL26
 ├── Dockerfile
-└── jenkins-plugins
+└── plugins.txt
       
          
 ```
@@ -900,6 +900,7 @@ USER jenkins
 
 ```
 
+*note: get more information customer jenkins images with pre-installed tools <a href="https://github.com/jenkinsci/docker#installing-more-tools">here</a> and <a ref="https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/README.md#consider-using-a-custom-image">here</a>
 <br>
 
 <img width="1298" alt="dockerfile_1b" src="https://user-images.githubusercontent.com/92983658/232490315-78222ef0-386b-4ec8-b9d6-67a1634ccf4b.png">
@@ -981,10 +982,6 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 <br>
 
-<img width="1137" alt="custom_jenkins+2b" src="https://user-images.githubusercontent.com/92983658/232514526-4d55c2e8-a5c5-4fbd-b09c-ad0e60bb4a4e.png">
-
-<br>
-
 
 - verify the installation of the plugins 
 
@@ -998,7 +995,7 @@ The above should return files relating to the plugin. If it returns empty, then 
 
 <br>
 
-### Automating Jenkins Configuration As Code (JCasC)
+## Automating Jenkins Configuration As Code (JCasC)
 Manually updating configs from the Jenkins user interface (UI) is not sustainable. Imagine creating a lot of folders to manage multiple projects and pipelines from the Jenkins UI and losing the Jenkins installation afterwards. You will have to manually recreate all the folders again. With Jenkins Configuration As Code (JCasC), this process can be automated and all configurations in Jenkins can now be represented as “code”
 
 *note:Ensure that all the installed plugins are using the latest version. Visit `https://plugins.jenkins.io/`, then search for the plugin to get the latest version number.*
@@ -1051,9 +1048,72 @@ To enable the section, simply remove the `{}` and uncomment the first key welcom
 configScripts:
       welcome-message: |
         jenkins:
-          systemMessage: Welcome to archibong.link Multi-tenant CI\CD server.  This Jenkins is configured and managed strictly 'as code'. Please do not update Manually
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed strictly 'as code'. Please do not update Manually
           
 ```
+
+<br>
+
+<img width="1386" alt="jasc_msg" src="https://user-images.githubusercontent.com/92983658/232764830-ccedba6a-8bb5-4480-801c-a045b6ef514a.png">
+
+<br>
+
+- Upgrade Jenkins with the latest update and you should see the system message
+```
+
+helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
+
+```
+
+<br>
+
+<img width="1398" alt="jacs_1b" src="https://user-images.githubusercontent.com/92983658/232766094-2fcfe280-be9f-4d8d-8ece-686a17ee3dec.png">
+
+<br>
+
+### Latest Configurations Applied To Jenkins Through JCasC And Helm
+
+- Navigate to `Configuration as code` section in Jenkins UI. 
+  - Click on `Configuration as Code`
+  - view the updated code here
+
+<br>
+
+<img width="1399" alt="jcasc_1c" src="https://user-images.githubusercontent.com/92983658/232768617-1de93c8f-8c8f-4d80-9340-364df9ee333d.png">
+
+<br>
+  
+
+## Automate The Creation Of The Tooling Application’s Pipeline.
+
+- Create an access token from GitHub so that Jenkins canm use it to connect to the Github account. https://github.com/settings/tokens
+
+<br>
+
+<img width="1391" alt="access_token" src="https://user-images.githubusercontent.com/92983658/232772138-520ddfb1-1bc9-4679-a70f-da4d814b05a4.png">
+
+<br>
+
+- Using <a href"https://www.base64decode.org/">base64<a/>, encode the generated token
+- Create a secret in the same namespace where Jenkins is installed. Name the key `github_token` or whatever you wish
+```
+
+kubectl --namespace tools \
+create secret generic github-credentials \
+--from-literal="github_token=<YOUR-BASE64-TOKEN>"
+
+```
+
+<br>
+
+<img width="801" alt="secret_1" src="https://user-images.githubusercontent.com/92983658/232775507-785f1447-f8cf-4095-8aa0-42b777e1eea5.png">
+
+<br>
+
+<img width="1093" alt="secret_2" src="https://user-images.githubusercontent.com/92983658/232775554-ad8ac807-a6fb-44d6-9e41-798454ac77a8.png">
+
+<br>
+
 
 
 
