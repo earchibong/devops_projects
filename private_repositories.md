@@ -1100,19 +1100,78 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 kubectl --namespace tools \
 create secret generic github-credentials \
---from-literal="github_token=<YOUR-BASE64-TOKEN>"
+--from-literal=github_token='<YOUR-BASE64-TOKEN>'
 
+# You must use single quotes '' to escape special characters such as $, \, *, =, and ! in your strings. 
+#If you don't, your shell will interpret these characters.
+
+#inspect secret
+kubectl get secret <your secret name> --output=yaml -n tools
 ```
 
 <br>
 
-<img width="801" alt="secret_1" src="https://user-images.githubusercontent.com/92983658/232775507-785f1447-f8cf-4095-8aa0-42b777e1eea5.png">
+<img width="1079" alt="secret" src="https://user-images.githubusercontent.com/92983658/232780621-b38fe221-5028-4283-81fc-7ee9726dc13b.png">
 
 <br>
 
-<img width="1093" alt="secret_2" src="https://user-images.githubusercontent.com/92983658/232775554-ad8ac807-a6fb-44d6-9e41-798454ac77a8.png">
+- In the Jenkins values file, set the values correctly so that the secret created above can be used
+```
+# in values-overide file, add the following in the controller section:
+
+controller:
+  # the 'name' and 'keyName' are concatenated with a '-' in between, so for example:
+  # an existing secret "secret-credentials" and a key inside it named "github-password" should be used in Jcasc as ${secret-credentials-github-password}
+  # 'name' and 'keyName' must be lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-',
+  # and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
+  # existingSecret existing secret "secret-credentials" and a key inside it named "github-username" should be used in Jcasc as ${github-username}
+  # When using existingSecret no need to specify the keyName under additionalExistingSecrets.
+  existingSecret: secret-credentials
+
+  additionalExistingSecrets:
+    - name: github-credentials
+      keyName: github-token
+   
+ ```
 
 <br>
+ 
+<img width="1377" alt="secret_1f" src="https://user-images.githubusercontent.com/92983658/232783508-5c9e3049-79fb-445d-935a-f28f25ef360e.png">
+
+<br>
+
+- create a folder to hold your pipelines
+
+```
+
+JCasC:
+    enabled: true
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed strictly 'as code'. Please do not update Manually
+      pipeline: |
+        jobs:
+          - script: >
+              folder('PBL26') {
+                displayName('PBL26')
+                description('Contains PBL26 Jenkins Pipelines')
+              }
+              
+              
+  ```
+  
+<br>
+
+<img width="1382" alt="pipeline" src="https://user-images.githubusercontent.com/92983658/232785227-3e6c711e-6d69-46ab-b00a-adf6dc9f5f41.png">
+
+<br>
+
+- apply the latest changes, you should be able to see the folder created as shown below. But it doesn’t have any pipline.
+```
+helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
+
+```
 
 
 
