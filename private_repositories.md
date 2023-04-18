@@ -945,13 +945,17 @@ docker push <artifactory docker repo url>/jenkins:1.2.1
 - create a secret to store artifactory credentials used to pull image from private registry... we will name the secret: `regcred`
 ```
 
-kubectl create secret docker-registry regcred \
-  --docker-server=<YOUR ARTIFACTORY URL> \
-  --docker-username=<YOUR ARTIFACTORY USERNAME> \
-  --docker-password=<YOUR ARTIFACTORY PASSWORD> \
-  --docker-email=<YOUR ARTIFACTORY EMAIL>
+kubectl create secret docker-registry regcred2 \
+  --docker-server=<artifactory url> \
+  --docker-username=<artifactory-username> \
+  --docker-password=<artifactory-password>
 
-    
+# alternative...
+kubectl create secret generic regcred4 \
+ --namespace tools \
+ --from-file=.dockerconfigjson=.docker/config.json \
+ --type=kubernetes.io/dockerconfigjson
+
 ```
 
 <br>
@@ -966,7 +970,7 @@ controller:
   tag: "1.2.1"
   imagePullSecretName: regcred
   installPlugins: false
-  imagePullPolicy: "Never"
+  imagePullPolicy: "Always"
 
 
 
