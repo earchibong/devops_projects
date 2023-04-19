@@ -900,7 +900,7 @@ USER jenkins
 
 ```
 
-*note: get more information customer jenkins images with pre-installed tools <a href="https://github.com/jenkinsci/docker#installing-more-tools">here</a> and <a ref="https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/README.md#consider-using-a-custom-image">here</a>
+*note: get more information custom jenkins images with pre-installed tools <a href="https://github.com/jenkinsci/docker#installing-more-tools">here</a> and <a href="https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/README.md#consider-using-a-custom-image">here</a>
 <br>
 
 <img width="1298" alt="dockerfile_1b" src="https://user-images.githubusercontent.com/92983658/232490315-78222ef0-386b-4ec8-b9d6-67a1634ccf4b.png">
