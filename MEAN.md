@@ -1,5 +1,13 @@
 # MEAN STACK INSTALLATION ON UBUNTU
 
+MEAN Stack is a combination of following components:
+- **MongoDB** (Document database) – Stores and allows to retrieve data.
+- **Express** (Back-end application framework) – Makes requests to Database for Reads and Writes.
+- **Angular** (Front-end application framework) – Handles Client and Server Requests
+- **Node.js** (JavaScript runtime environment) – Accepts requests and displays results to end user
+
+<br>
+
 ## Labs:
 - <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-one-install-node-js--node-package-manager-npm-with-apt-using-nodesource-ppa">Install Node JS & Node Package Manager (npm) with Apt Using NodeSource PPA</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-two-install-mongodb-and-dependencies">Install MongoDB And Dependencies</a>
