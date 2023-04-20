@@ -1,4 +1,13 @@
-## MEAN STACK INSTALLATION ON UBUNTU
+# MEAN STACK INSTALLATION ON UBUNTU
+
+## Labs:
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-one-install-node-js--node-package-manager-npm-with-apt-using-nodesource-ppa">Install Node JS & Node Package Manager (npm) with Apt Using NodeSource PPA</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-two-install-mongodb-and-dependencies">Install MongoDB And Dependencies</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-three-build-server-side-application">Build Server Side Application</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-four-create-server-routes">Create Server Routes</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MEAN.md#step-five-connect-to-routes-with-angular-js">Connect To Routes With Angular JS</a>
+
+<br>
 
 ## Step One: Install Node JS & Node Package Manager (npm) with Apt Using NodeSource PPA
 
@@ -9,7 +18,9 @@ The NodeSource nodejs package contains both the node binary and npm, so no need 
   - run script to add PPA: `sudo bash /tmp/nodesource_setup.sh`
   - add certificates: `sudo apt -y install curl dirmngr apt-transport-https lsb-release ca-certificates`
   - install `Node.js` package: `sudo apt install nodejs`
- 
+
+<br>
+  
 ## Step Two: Install MongoDB And Dependencies
 
 - install certificates:
@@ -27,6 +38,7 @@ The NodeSource nodejs package contains both the node binary and npm, so no need 
 - install body parser: `sudo npm install body-parser`
 - install `Express` and `mongoose`: `sudo npm install express mongoose`
 
+<br>
 
 # Step Three: Build Server Side Application
 
@@ -56,6 +68,7 @@ app.listen(app.get('port'), function() {
 
 ![SERVER](https://user-images.githubusercontent.com/92983658/178773398-246968fa-3607-4fc0-b6f2-89c88c60643e.png)
 
+<br>
 
 ## Step Four: Create Server Routes
 
@@ -136,6 +149,7 @@ module.exports = mongoose.model('Book', bookSchema);
 
 ![BOOKJS](https://user-images.githubusercontent.com/92983658/178777124-601287c4-8ac9-44db-83a8-4ec30efa0e4e.png)
 
+<br>
 
 ## Step Five: Connect To Routes With Angular JS
 
