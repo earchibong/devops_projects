@@ -1,7 +1,7 @@
-# devops_training
-devops learning projects
+# Devops Projects
+In this repository I will upload my projects on DevOps and also Integration of DevOps technology with other technologies like Machine Learning, Git/Github, etc.
 
-Projects include:
+## Projects include:
 <ul>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">PROJECT ONE: LAMP stack installation</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/LEMP.md">PROJECT TWO: LEMP stack installation</a></li>
