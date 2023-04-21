@@ -10,6 +10,15 @@ In this project the following components will be used for the solution:
 - **Programming Language:** PHP
 - **Code Repository:** GitHub
 
+<br>
+
+## Labs
+- <a href="https://github.com/earchibong/devops_projects/blob/main/tooling_website.md#part-one-prepare-nfs-server">Prepare NFS Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/tooling_website.md#part-two-set-up-database-server">Set Up Database Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/tooling_website.md#part-three-configure-web-server">Configure Web Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/tooling_website.md#add-data-to-database">Add Data To Database</a>
+
+<br>
 
 ## Part One: Prepare NFS Server
 ### Requirements:
@@ -17,6 +26,8 @@ In this project the following components will be used for the solution:
 - attach 3 additional volumes in the same availability zone each with 10GB storage
 
 ![rhel](https://user-images.githubusercontent.com/92983658/182121870-99f13101-81fa-472f-a09f-78de6e180e9c.png)
+
+<br>
 
 ### Step One: Configure The NFS Server
 
@@ -104,6 +115,8 @@ sudo mkfs -t xfs /dev/webdata-vg/lv-logs
    - `sudo mkdir -p /mnt/opt`
    - `sudo mount /dev/webdata-vg/lv-opt /mnt/opt`
   
+  <br>
+  
   ### Step Two: Update /ETC/FSTAB File
   
   - `sudo blkid`
@@ -122,6 +135,8 @@ sudo systemctl daemon-reload
 - Verify setup : `df -h`
 
 ![setup_verify](https://user-images.githubusercontent.com/92983658/182141415-7e5c92a9-81d2-44f9-95cd-1fcc44077a0b.png)
+
+<br>
 
 ### Step Three: Install NFS
 
@@ -185,9 +200,12 @@ sudo exportfs -arv
    - `UDP 111 subnet CIDR`
    - `UDP 2049 subnet CIDR`
  
+ <br>
  
  ## Part Two: Set Up Database Server
  - Launch Ubuntu EC2 instance with named `DB_server`
+ 
+ <br>
  
  ### Step One: Install MySQL server on database server
  ```
@@ -206,6 +224,7 @@ sudo systemctl enable mysql
 ```
 ![mysql](https://user-images.githubusercontent.com/92983658/182589074-c57d9e75-2d8e-47a6-abcb-589110c150d0.png)
 
+<br>
 
 ### Step Two: Configure Database
 ```
@@ -239,7 +258,7 @@ exit
 *note: confirm IP allowed to connect to DB_server: SELECT host FROM mysql.user WHERE User = 'insert usernname here'; only users from IP addresses shown can connect to this database if the following error comes up : “ERROR 1130 (HY000): Host ‘10.120.152.137’ is not allowed to connect to this MySQL server”..then the above will usually tell you which hosts are allowed to connect*
 
 
-
+<br>
 
 ## Part Three: Configure Web Server
 
@@ -349,6 +368,8 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
   - change permissions on `var/www/html/ directory: `sudo chown -R apache:apache /var/www/html && sudo chmod -R 777 /var/www/html`
   
+  <br>
+  
   ### Install Mysql Client on all webservers
   `sudo yum install mysql`
  
@@ -370,6 +391,8 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
   example: mysql -h 172.31.8.127 -u webaccess -p pass tooling < /var/www/html/tooling-db.sql
   
   ```
+  
+  <br>
   
   ## Add Data To Database
   - log-in to database server: 
@@ -447,3 +470,5 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/lo
 
 ![website](https://user-images.githubusercontent.com/92983658/184146967-5ca601e9-6967-4da4-ad67-ea032ed6c1e8.png)
 
+
+<br>
