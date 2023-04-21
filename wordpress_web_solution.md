@@ -1,11 +1,29 @@
 ## Deploy a Three-Tier Solution with Wordpress Content Management 
 
+<br>
+
+## Labs
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-one-launch-web-server">Launch Web Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-two-configure-server">Configure Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-three-update-etcfstab-file">Update ETC/FSTAB file</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-four-create-database-server">create Database Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-five-install-wordpress-on-web-server">Install Wordpress</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-six-install-mysql-on-database-server">Install MySQL on Database Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-seven-configure-database-server-to-work-with-wordpress">Configure Database Server To Work With Wordpress</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-eight-configure-wordpress-to-connect-to-remote-database">Configure Wordpress To Connect To Remote Database</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/wordpress_web_solution.md#step-nine-configure-apache-for-wordpress">Configure Wordpress</a>
+
+<br>
+
+
 ## Step One: Launch Web Server
 
 - Launch an EC2 instance with 3 additional volumes in the same availability zone each with 10GB storage
 
 ![WEB](https://user-images.githubusercontent.com/92983658/180609006-7764b76d-4760-4e84-9a76-b395431e49cf.png)
 
+
+<br>
 
 ## Step Two: Configure Server
 
@@ -96,7 +114,8 @@ sudo mkfs -t ext4 /dev/webdata-vg/logs-lv
 
 ![varwww](https://user-images.githubusercontent.com/92983658/180612044-93220e45-3ae2-4772-ab63-14af1c74b854.png)
 
-
+<br>
+  
 ## Step Three: Update `/ETC/FSTAB` File
 
 -  `sudo blkid`
@@ -116,7 +135,8 @@ sudo systemctl daemon-reload
 
 ![verify_setup](https://user-images.githubusercontent.com/92983658/180612888-e62e08c5-6ab3-479d-9646-0619b76d91b5.png)
 
-
+<br>
+  
 ## Step Four: Create Database Server
 - Launch redhat EC2 instance with named `DB server`
 - repeat the above. But,
@@ -124,6 +144,8 @@ sudo systemctl daemon-reload
   - mount `db-lv` to `/db` instead of `/var/www/html` 
 
 ![DB_logical_volume](https://user-images.githubusercontent.com/92983658/180644300-705ac101-d80e-45a6-ab23-6938c29d49d2.png)
+
+<br>
 
 ## Step Five: Install Wordpress on Web Server
 
@@ -199,6 +221,7 @@ sudo chown -R apache:apache /var/www/html/wordpress
 
 ![SELinux](https://user-images.githubusercontent.com/92983658/180645137-9d03bd3a-c7a3-4a9a-9614-56de420b6bf3.png)
 
+<br>
 
 ## Step Six: Install Mysql on Database Server
 ```
@@ -218,6 +241,7 @@ sudo systemctl enable mysqld
 ![mysql_restart_enable_status](https://user-images.githubusercontent.com/92983658/180645620-83cccafd-7536-4fae-9654-df3b03c28a08.png)
 
 
+<br>
 
 ## Step Seven: Configure Database Server To Work With Wordpress
 
@@ -246,6 +270,7 @@ exit
 *only users from IP addresses shown can connect to this database*
 *if the following error comes up : “ERROR 1130 (HY000): Host ‘10.120.152.137’ is not allowed to connect to this MySQL server”..then the above will usually tell you which hosts are allowed to connect*
 
+<br>
 
 ## Step Eight: Configure Wordpress To Connect To Remote Database
 
@@ -265,6 +290,7 @@ exit
  
   ![wp_config](https://user-images.githubusercontent.com/92983658/181012820-7f5e34fc-597a-4f15-9e1e-8ecf750b74e6.png)
 
+<br>
 
 ## Step Nine: Configure Apache For Wordpress
 
@@ -280,3 +306,4 @@ exit
 ![wordpress_3](https://user-images.githubusercontent.com/92983658/181014603-0e52fb83-af61-4ebf-b278-ac01e083b59e.png)
 
 
+<br>
