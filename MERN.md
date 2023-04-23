@@ -1,4 +1,49 @@
 ## DEPLOYING AN APP ON MERN STACK
+To deploy a simple To-Do application that creates To-Do lists like this:
+
+<br>
+
+![image](https://user-images.githubusercontent.com/92983658/233834129-affd9348-15de-456d-b17c-de2309a0db2c.png)
+
+<br>
+
+In this project, we will use a MERN stack in AWS Cloud to implement the web solution above.
+
+MERN Web stack consists of following components:
+
+- **MongoDB**: A document-based, No-SQL database used to store application data in a form of documents.
+- **ExpressJS**: A server side Web Application framework for Node.js.
+- **ReactJS**: A frontend framework developed by Facebook. It is based on JavaScript, used to build User Interface (UI) components.
+- **Node.js**: A JavaScript runtime environment. It is used to run JavaScript on a machine rather than in a browser.
+
+<br>
+
+![image](https://user-images.githubusercontent.com/92983658/233833961-3051c9dd-8b95-45b3-9054-2baea69f54b7.png)
+
+<br>
+
+As shown on the illustration above, a user interacts with the ReactJS UI components at the application front-end residing in the browser. This frontend is served by the application backend residing in a server, through ExpressJS running on top of NodeJS.
+
+Any interaction that causes a data change request is sent to the NodeJS based Express server, which grabs data from the MongoDB database if required, and returns the data to the frontend of the application, which is then presented to the user.
+
+<br>
+
+## Pre-requisites:
+- an AWS account and a virtual server with Ubuntu Server OS.
+
+<br>
+
+## Project Steps:
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-one-install-node">Install Node</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-two-set-up-the-project">Project Set-up</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-three-create-models">Create Models</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-four-connect-to-database">Connect To Database</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-five-server-api-endpoints">Create Server API Endpoints</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-six-test-api-endpoints">Test API Endpoints</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-seven-setting-up-react-app">Set Up React App</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/MERN.md#step-eight-create-react-components">Create React Components</a>
+
+<br>
 
 ## Step one: Install Node
 
@@ -8,7 +53,9 @@
   - install node.js and npm: `sudo apt-get install -y nodejs` 
   - verify node version: `node -v`
   - verify npm version: `npm -v` 
- 
+
+<br>
+
 ## Step two: Set Up The Project
 
   - create an empty directory called `Todo`: `mkdir Todo`   
@@ -62,6 +109,7 @@ console.log(`Server running on port ${port}`)
 
 ![browser](https://user-images.githubusercontent.com/92983658/178307348-02de6ff6-f8ef-4d02-93eb-675485c66baf.png)
 
+<br>
 
 ## Step Three: Create Models
 
@@ -94,6 +142,8 @@ module.exports = Todo;
 
 ![Screenshot 2022-07-11 at 17 35 21](https://user-images.githubusercontent.com/92983658/178313903-5ffc9254-6039-46e2-a847-336d8601dfae.png)
 
+<br>
+
 ## Step Four: Connect To Database
 
 - locate Database connection string
@@ -106,9 +156,13 @@ module.exports = Todo;
  DB=mongodb+srv://<username>:<password>@sandbox.jadwj.mongodb.net/employees?retryWrites=true&w=majority
   
 ```
+ 
+  <br>
   
   ![paste_dbstring_port](https://user-images.githubusercontent.com/92983658/178277257-a67d858d-45f1-424d-a098-e5daf37a3f6f.png)
 
+  <br>
+  
 - update `index.js` file
   - `vim index.js`
   - inside `index.js` paste the following:
@@ -153,11 +207,14 @@ console.log(`Server running on port ${port}`)
 });
   
 ~~~
- 
+
+<br>
+  
 - confirm database is connected : `node index.js`
   
   ![Screenshot 2022-07-11 at 17 50 07](https://user-images.githubusercontent.com/92983658/178316576-126a3f93-a070-4f37-bd4e-ed81bf4b23c9.png)
 
+<br>
   
 ## Step Five: Server API Endpoints
 
@@ -206,6 +263,9 @@ module.exports = router;
   ![api_js](https://user-images.githubusercontent.com/92983658/178309460-be6da90f-1cdf-427f-960a-12387373b715.png)
   
 
+ <br>
+  
+  
 ## Step Six Test API Endpoints
   
   - open server : `node index.js`
@@ -213,19 +273,24 @@ module.exports = router;
   - create a `POST` request and navigate to `http://localhost:5000/api/todos`
   - set header key to `content-type` and value to `application/json`
   - confirm there are no errors.
+ 
+<br>
   
   ![POST](https://user-images.githubusercontent.com/92983658/178525916-770ccfce-b497-4075-938c-e64317e0f4ae.png)
 
+<br>
   
 - create a `GET `request to `http://localhost:5000/api/todos`
 
  ![GET](https://user-images.githubusercontent.com/92983658/178527588-3546e0b2-e141-421e-a427-609b2f750207.png)
 
+ <br>
+
 - create a `DELETE` request
   
   ![DELETE](https://user-images.githubusercontent.com/92983658/178528180-6ab93dc7-08e2-4466-a2eb-abcff57c3a4f.png)
   
-
+<br>
   
 ## Step Seven: Setting Up React App
   
@@ -249,20 +314,26 @@ module.exports = router;
 
 ~~~
 
+ <br>
   
   - change directory to client: `cd client`
   - open `package.json` : `vim package.json`
   - add in the key-value pair : `"proxy": "http://localhost:5000"`
+
+  <br>
   
   ![key-value-add](https://user-images.githubusercontent.com/92983658/178489768-255aff1c-1b63-4155-9b49-49515f8b255e.png)
 
+  <br>
+  
   - go back to `Todo` directory: `cd ..`
   - confirm that server is running on `localhost:3000` : `npm run dev`
   
   ![run_dev](https://user-images.githubusercontent.com/92983658/178541530-4562d10b-9243-4640-8032-c14c90520140.png)
 
   - open TCP port 3000 in EC2 
-
+  
+<br>
   
 ## Step Eight: Create React Components
 
@@ -322,7 +393,9 @@ return (
 export default Input
 
 ```
-  
+
+<br>
+
 - change to `client` directory : `cd ..`
 - install `axios` : `npm install axios`
 - go to `components` directory: `cd src/components`
@@ -360,6 +433,9 @@ return (
 export default ListTodo
   
 ```
+
+  <br>
+  
   
 - in `Todo.js` write the following:
 
@@ -421,7 +497,10 @@ let { todos } = this.state;
 export default Todo;
 
 ```
+
+<br>
   
+
 - in`src` directory, open `App.js` : `vi App.js`
 - paste the following:
   
@@ -443,9 +522,13 @@ export default App;
 
 ```
   
-
+<br>
+  
 ![Screenshot 2022-07-12 at 14 35 57](https://user-images.githubusercontent.com/92983658/178503321-36a93f03-ccb6-4fe8-912e-69173f42be22.png)
 
+ <br>
+  
+  
 - in src directory, open `App.css` : `vim App.css`
 - paste the following and exit
 
@@ -541,6 +624,8 @@ margin-top: 0;
   
  ```
 
+  <br>
+  
  - in `src` directory, open `index.css` : `vi index.css`
  - paste the following code and exit:
  
@@ -565,6 +650,8 @@ monospace;
 }
   
 ```
+
+<br>
   
 - go to `Todo` directory and access the app :
   - `cd ../..`
