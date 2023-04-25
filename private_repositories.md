@@ -814,13 +814,11 @@ additionalPlugins:
 
 <br>
 
-<img width="1028" alt="install_plugin" src="https://user-images.githubusercontent.com/92983658/234259640-ff7326ef-1360-4325-8bc7-6e32ecacd530.png">
-
 <img width="1223" alt="additional_plugins" src="https://user-images.githubusercontent.com/92983658/231495542-5edd6577-25bb-4d35-b84d-11068e782c59.png">
 
 <br>
 
-<img width="1029" alt="install_plugins_1d" src="https://user-images.githubusercontent.com/92983658/232479125-213ab4cb-8e4a-47f2-95c2-f19cbb61a6a9.png">
+<img width="1028" alt="install_plugin" src="https://user-images.githubusercontent.com/92983658/234259640-ff7326ef-1360-4325-8bc7-6e32ecacd530.png">
 
 <br>
 
