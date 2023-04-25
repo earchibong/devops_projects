@@ -617,6 +617,12 @@ kubectl get certificate -n tools
 ### Configure Jenkins Ingress using Helm Values
 
 - delete the previous jenkins ingress
+```
+
+kubectl delete ingress.networking.k8s.io/jenkins -n tools
+
+```
+
 - Create a new file and name it `jenkins-values-overide.yaml`
 - on `artifacthub.io` search for the term `controller` find the below section in the default values file. Copy and paste it exactly in the `jenkins-values-overide.yaml`
 ```
