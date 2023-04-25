@@ -613,8 +613,8 @@ kubectl get certificate -n tools
 
 <br>
 
-### Use an override values file to customize Jenkins deployment
-#### Configure Jenkins Ingress using Helm Values
+## Use an override values file to customize Jenkins deployment
+### Configure Jenkins Ingress using Helm Values
 
 - delete the previous jenkins ingress
 - Create a new file and name it `jenkins-values-overide.yaml`
