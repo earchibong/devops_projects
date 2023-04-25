@@ -7,8 +7,8 @@ To achieve statefuleness in kubernetes, we must understand how `volumes`, `persi
 ## Labs
 <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#create-a-kubernetes-eks-cluster">Create an EKS Kubenetes Cluster</a>  
 <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#volumes">Persisting Data on Volumes</a>  
-<a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_03.md#static-provisioning-with-aws-elastic-block-store-volume">Static Provisioning with AWS Elastic Block Store Volume</a>  
-<a href="https://github.com/earchibong/devops_training/edit/main/kubenetes_03.md#managing-volumes-dynamically-with-pv-and-pvcs">Managing volumes dynamically with PVs and PVCs</a>  
+<a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#static-provisioning-with-aws-elastic-block-store-volume">Static Provisioning with AWS Elastic Block Store Volume</a>  
+<a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_03.md#managing-volumes-dynamically-with-pv-and-pvcs">Managing volumes dynamically with PVs and PVCs</a>  
 <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md#config-map">Persisting data with Config Maps</a>
 
 
