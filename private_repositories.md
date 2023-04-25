@@ -373,8 +373,7 @@ password: admin
 
 <br>
 
-- Update the Ingress and configure TLS for the URL
-
+### Configure TLS/SSL For URL
 ```
 
 # deploy cert manager
