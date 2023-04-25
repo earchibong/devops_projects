@@ -1144,8 +1144,11 @@ controller:
 
 <br>
  
-<img width="1377" alt="secret_1f" src="https://user-images.githubusercontent.com/92983658/232783508-5c9e3049-79fb-445d-935a-f28f25ef360e.png">
+<img width="1177" alt="additional_secret" src="https://user-images.githubusercontent.com/92983658/234288279-98a901e5-828c-4e0d-bb48-d88f80746582.png">
 
+<br>
+
+*note:This is just to make Jenkins aware of the secret. We still need to use it in the credentials section so that Jenkins can connect to Github with it.*
 <br>
 
 - create a folder to hold your pipelines
@@ -1154,10 +1157,16 @@ controller:
 
 JCasC:
     enabled: true
+    crumbIssuer: "standard"
+
+    remotingSecurity:
+      enabled: true
+      
     configScripts:
       welcome-message: |
         jenkins:
           systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed strictly 'as code'. Please do not update Manually
+          
       pipeline: |
         jobs:
           - script: >
@@ -1171,7 +1180,7 @@ JCasC:
   
 <br>
 
-<img width="1382" alt="pipeline" src="https://user-images.githubusercontent.com/92983658/232785227-3e6c711e-6d69-46ab-b00a-adf6dc9f5f41.png">
+<img width="1467" alt="jcasc" src="https://user-images.githubusercontent.com/92983658/234290094-bea0dab8-b814-4dff-af2a-7a2efe9d9af2.png">
 
 <br>
 
@@ -1180,6 +1189,18 @@ JCasC:
 helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
 
 ```
+<br>
+
+- create a pipline that will automatically be added to the folder upon installation.
+
+```
+
+pipel;ine override
+
+```
+
+<br>
+
 
 
 
