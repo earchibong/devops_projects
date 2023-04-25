@@ -642,10 +642,6 @@ controller:
 
 <br>
 
-<img width="1036" alt="controller_2" src="https://user-images.githubusercontent.com/92983658/231479892-4ab02da6-f974-4d58-a778-950d72e072b3.png">
-
-<br>
-
 - upgrade the `jenkins-values-overide.yaml` file with helm
 ```
 
