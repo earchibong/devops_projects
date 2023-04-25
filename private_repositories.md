@@ -628,18 +628,17 @@ kubectl delete ingress.networking.k8s.io/jenkins -n tools
 ```
 
 controller:
- # Used for label app.kubernetes.io/component
-componentName: "jenkins-controller"
-image: "jenkins/jenkins"
- # tag: "2.332.3-jdk11"
-tagLabel: jdk11
-imagePullPolicy: "Always"
+  componentName: "jenkins-controller"
+  image: "jenkins/jenkins"
+  tagLabel: jdk11
+  imagePullPolicy: "Always"
+  testEnabled: true
 
 ```
 
 <br>
 
-<img width="1231" alt="controller" src="https://user-images.githubusercontent.com/92983658/231479067-7ebfe497-1a70-42ef-8031-3b28f127b6b3.png">
+<img width="972" alt="overide_1a" src="https://user-images.githubusercontent.com/92983658/234256978-fe135c94-1a98-4fb6-adef-5bc1c0fc38dc.png">
 
 <br>
 
