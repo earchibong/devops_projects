@@ -28,6 +28,7 @@ This repository contains all local and remote repositories.
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#push-docker-images-to-the-repository">Push Docker Images To Artifactory Repository</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#jenkins-pipeline-for-business-applications">Jenkins Pipeline For Business Applications</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#deploy-jenkins-with-helm">Deploy Jenkins And Sonarqube With Helm</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/private_repositories.md#configure-tlsssl-for-url">Configure TLS/SSL For URL</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#use-an-override-values-file-to-customize-jenkins-deployment">Use An Overide Values File To Customize Jenkins Deployment</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#automate-jenkins-plugin-installation">Automate Jenkins Plugin Installation</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md#option-2-packaging-plugins-as-part-of-the-jenkins-image">Custom Jenkins Image: Pre-Install Plugins</a>
