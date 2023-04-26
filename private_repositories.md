@@ -192,9 +192,8 @@ metadata:
 
 managedNodeGroups:
   - name: primary
-    instanceType: t2.medium
+    instanceType: m5.large
     desiredCapacity: 3
-    volumeSize: 20
     spot: true
 
 ```
