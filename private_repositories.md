@@ -790,7 +790,8 @@ controller:
       hosts:
         - tooling.jenkins.archibong.link
         
-  # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
+  # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. 
+  #Set ReadinessTimeout to be shorter than LivenessTimeout.
   healthProbes: true
   probes:
     startupProbe:
@@ -807,7 +808,7 @@ controller:
         port: http
       periodSeconds: 15
       timeoutSeconds: 10
-      # If Startup Probe is not supported on your Kubernetes cluster, you might want to use "initialDelaySeconds" instead.
+      # If Startup Probe is not supported on your cluster...use "initialDelaySeconds" instead.
       # It delays the initial liveness probe while Jenkins is starting
       # initialDelaySeconds: 60
     readinessProbe:
