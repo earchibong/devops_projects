@@ -658,6 +658,10 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 <br>
 
+*note 2: find out more about using the values file configuration <a href="https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos/kubernetes-helm">here</a> and <a href="https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/values.yaml">here</a>*
+
+<br>
+
 - To configure Jenkins ingress directly from the helm values, simply search for the `ingress:` section in the default values file and copy the entire section to the override values file. The default one should look similar to this:
 ```
 
