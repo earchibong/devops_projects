@@ -781,21 +781,53 @@ controller:
   ingress:
     enabled: true
     apiVersion: "extensions/v1beta1"
-    annotations: 
+    annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-production"
       kubernetes.io/ingress.class: nginx
-    hostName: tooling.jenkins.sandbox.svc.darey.io
+    hostName: tooling.jenkins.archibong.link
     tls:
-    - secretName: tooling.jenkins.sandbox.svc.darey.io
+    - secretName: tooling.jenkins.archibong.link
       hosts:
-        - tooling.jenkins.sandbox.svc.darey.io
+        - tooling.jenkins.archibong.link
+        
+  # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
+  healthProbes: true
+  probes:
+    startupProbe:
+      httpGet:
+        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+        port: http
+      periodSeconds: 150
+      timeoutSeconds: 10
+      failureThreshold: 20
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+        port: http
+      periodSeconds: 15
+      timeoutSeconds: 10
+      # If Startup Probe is not supported on your Kubernetes cluster, you might want to use "initialDelaySeconds" instead.
+      # It delays the initial liveness probe while Jenkins is starting
+      # initialDelaySeconds: 60
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: '{{ default "" .Values.controller.jenkinsUriPrefix }}/login'
+        port: http
+      periodSeconds: 10
+      timeoutSeconds: 5
+      # If Startup Probe is not supported on your Kubernetes cluster, you might want to use "initialDelaySeconds" instead.
+      # It delays the initial readyness probe while Jenkins is starting
+      # initialDelaySeconds: 60
+
 
   installPlugins:
-    - kubernetes:3600.v144b_cd192ca_a_
-    - workflow-aggregator:581.v0c46fa_697ffd
-    - git:4.11.3
-    - configuration-as-code:1429.v09b_044a_c93de
-
+    - kubernetes:latest
+    - workflow-aggregator:latest
+    - git:latest
+    - configuration-as-code:latest
+    
   additionalPlugins: []
   
   ```
@@ -811,13 +843,19 @@ controller:
 ```
 
 additionalPlugins:
-    -blueocean:1.27.3    -credentials-binding:1.24    -git-changelog:3.29    -git-client:3.6.0    -git-server:1.9    -git:4.5.1
-
+    - blueocean:latest
+    - credentials-binding:latest
+    - git-changelog:latest
+    - git-client:latest
+    
+    
 ```
 
 <br>
 
-<img width="1028" alt="install_plugin" src="https://user-images.githubusercontent.com/92983658/234259640-ff7326ef-1360-4325-8bc7-6e32ecacd530.png">
+<img width="1220" alt="install_plugin" src="https://user-images.githubusercontent.com/92983658/234789334-aa3dede5-243b-414c-8f8f-206a6d3456a7.png">
+<img width="1201" alt="install_plugin2" src="https://user-images.githubusercontent.com/92983658/234789350-53d0285f-0f37-43d3-87fd-5c9be331e717.png">
+
 
 <br>
 
@@ -835,15 +873,16 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 #  exec into the pod container and check the filesystem
 kubectl exec <pod name> -n tools -it -- bash 
-ls -ltr /var/jenkins_home/plugins/ | grep blueocean::1.27.3 # insert any plugin name after grep to confirm install
+find -name < insert any plugin name to confirm install>
 
 
 ```
 
 <br>
 
+<img width="1303" alt="find_plugin" src="https://user-images.githubusercontent.com/92983658/234787756-28398780-d41f-49a8-a8a0-db1a9d4ca993.png">
 
-
+<br>
 
 
 ### option 2: Packaging plugins as part of the Jenkins image
