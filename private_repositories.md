@@ -818,7 +818,7 @@ controller:
         port: http
       periodSeconds: 10
       timeoutSeconds: 5
-      # If Startup Probe is not supported on your Kubernetes cluster, you might want to use "initialDelaySeconds" instead.
+      # If Startup Probe is not supported on your cluster...use "initialDelaySeconds" instead.
       # It delays the initial readyness probe while Jenkins is starting
       # initialDelaySeconds: 60
 
