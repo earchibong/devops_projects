@@ -1,5 +1,5 @@
 # Devops Projects
-In this repository I will upload my projects on DevOps and also Integration of DevOps technology with other technologies like Machine Learning, Git/Github, etc.
+Documentation of all my project based learning projects so far...
 
 ## Projects include:
 <ul>
