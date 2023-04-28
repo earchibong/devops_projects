@@ -903,22 +903,24 @@ PBL26
   
 ```
 
-kubenetes:3923.v294a_d4250b_91                 
-workflow-aggregator:596.v8c21c963d92d
-git:5.0.1 
-configuration-as-code:1625.v27444588cc3d
-blueocean:1.27.3
-credentials-binding:604.vb_64480b_c56ca_
-git-changelog:3.30  
-git-client:4.2.0 
-git-server:99.va_0826a_b_cdfa_d
+kubernetes:latest
+workflow-aggregator:latest
+git:latest
+configuration-as-code:latest
+blueocean:latest
+credentials-binding:latest
+git-changelog:latest
+git-client:latest
+git-server:latest
+
+
     
      
 ```
 
 <br>
 
-<img width="991" alt="plugins_txt" src="https://user-images.githubusercontent.com/92983658/235131793-fc41c0e6-5e09-4280-ba10-ddbfb79977e8.png">
+<img width="1131" alt="plugins" src="https://user-images.githubusercontent.com/92983658/235133948-ffd446b8-476b-46ce-8f27-af42d4d4a779.png">
 
 <br>
 
