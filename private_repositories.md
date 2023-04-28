@@ -899,27 +899,26 @@ PBL26
 <br>
 
 - update each line of that `plugins.txt` file with the official Plugin ID of eah plugin, you can find the official Plugin Ids from <a href="https://plugins.jenkins.io/">plugins.jenkins.io<a>. For Example: `Git client` Plugin has an official ID as : `git-client`. 
-  - Use `latest` to ensure the latest versions are downloaded.
   - Be sure to add the default plugins as well.
   
 ```
 
-kubenetes:latest
-workflow-aggregator:latest
-git:latest 
-configuration-as-code:latest
-blueocean:latest
-credentials-binding:latest
-git-changelog:latest
-git-client:latest
-git-server:latest
+kubenetes:3923.v294a_d4250b_91                 
+workflow-aggregator:596.v8c21c963d92d
+git:5.0.1 
+configuration-as-code:1625.v27444588cc3d
+blueocean:1.27.3
+credentials-binding:604.vb_64480b_c56ca_
+git-changelog:3.30  
+git-client:4.2.0 
+git-server:99.va_0826a_b_cdfa_d
     
      
 ```
 
 <br>
 
-<img width="1176" alt="plugins" src="https://user-images.githubusercontent.com/92983658/235128048-7da2f13e-7f14-4555-a1c4-ef46a8369241.png">
+<img width="991" alt="plugins_txt" src="https://user-images.githubusercontent.com/92983658/235131793-fc41c0e6-5e09-4280-ba10-ddbfb79977e8.png">
 
 <br>
 
