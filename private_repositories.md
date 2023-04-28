@@ -898,7 +898,9 @@ PBL26
 
 <br>
 
-- update each line of that `plugins.txt` file with the official Plugin ID of eah plugin, you can find the official Plugin Ids from <a href="https://plugins.jenkins.io/">'plugins.jenkins.io<a>.For Example: `Git client` Plugin has an official ID as : `git-client`. Use `latest` to ensure the latest versions are downloaded.
+- update each line of that `plugins.txt` file with the official Plugin ID of eah plugin, you can find the official Plugin Ids from <a href="https://plugins.jenkins.io/">'plugins.jenkins.io<a>.For Example: `Git client` Plugin has an official ID as : `git-client`. 
+  - Use `latest` to ensure the latest versions are downloaded.
+  - be sure to add the default plugins as well.
   
 ```
 
