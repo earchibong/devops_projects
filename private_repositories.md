@@ -961,7 +961,7 @@ USER jenkins
 - Run docker commands to build, tag and push the docker image to the artifactory Docker registry created at the start of the project.
 ```
 
-docker build -t jenkins:1.2.1 .
+docker build -t jenkins:jdk11-1.2.1 .
 
 ````
 
@@ -970,12 +970,12 @@ docker build -t jenkins:1.2.1 .
 *Docker build:*
 - *`-t` is for tagging the image.*
 - *`jenkins` is the name of the image.*
-- *`1.2.1` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
+- *`jdk11-1.2.1` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
 - *`.` means, we are referring to the Dockerfile location as the docker build context.*
 
 <br>
 
-<img width="1446" alt="docker_build" src="https://user-images.githubusercontent.com/92983658/232501481-17c3498a-4b91-4080-b089-c70927a7ef84.png">
+<img width="1385" alt="docker" src="https://user-images.githubusercontent.com/92983658/235134734-6d688358-f9b6-41a4-8778-d59cb75c8253.png">
 
 <br>
 
