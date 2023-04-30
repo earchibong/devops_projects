@@ -28,5 +28,8 @@ Documentation of all my project based learning projects so far...
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_03.md"> PROJECT TWENTY-THREE: Persisting Data In Kubernetes</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md"> PROJECT TWENTY-FOUR: Provision An EKS Cluster With Terraform</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_05.md"> PROJECT TWENTY-FIVE: Deploying And Packaging Applications Into Kubenetes</a></li>
+    <li><a href="https://github.com/earchibong/devops_training/blob/main/private_repositories.md"> PROJECT TWENTY-SIX: Setting Up Private Repositories And Preparing CI Pipelines With Jenkins</a></li>
 </ul>
+
+<br>
 
