@@ -961,7 +961,12 @@ USER jenkins
 - Run docker commands to build, tag and push the docker image to the artifactory Docker registry created at the start of the project.
 ```
 
-docker build -t jenkins:jdk11-1.2.1 .
+# default build: docker build -t jenkins:jdk11-1.2.1 .
+  
+#create multi-arch image:
+docker buildx create --use
+docker buildx build --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 -t jenkins:jdk11-1.2.2 .
+
 
 ````
 
@@ -970,9 +975,17 @@ docker build -t jenkins:jdk11-1.2.1 .
 *Docker build:*
 - *`-t` is for tagging the image.*
 - *`jenkins` is the name of the image.*
-- *`jdk11-1.2.1` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
+- *`jdk11-1.2.2` is the tag name. If you don’t add any tag, it defaults to the tag named latest.*
 - *`.` means, we are referring to the Dockerfile location as the docker build context.*
 
+<br>
+
+*Note: when ising the `default build` command, an `exec format error` may occur because the binary format of the executable file inside the Docker container is not compatible with the architecture of the machine on which the container is being run. For example, if a Docker container built on a Mac is launched in a Kubernetes cluster running on Linux, the Linux machine may not be able to execute the binary file because it was built for a different architecture.To ensure that the binary format of the executable file inside the container is compatible with both Mac and Linux architectures the `docker buildx ...` option above is being used*
+
+<br>
+  
+*get more information about multi-platform builds<a href="https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/">here</a> 
+  
 <br>
 
 <img width="1385" alt="docker" src="https://user-images.githubusercontent.com/92983658/235134734-6d688358-f9b6-41a4-8778-d59cb75c8253.png">
