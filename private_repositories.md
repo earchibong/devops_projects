@@ -928,6 +928,7 @@ git-server:latest
 ```
 
 FROM jenkins/jenkins:lts-jdk11
+# use this option for docker buildx: FROM --platform=$BUILDPLATFORM jenkins/jenkins:lts-jdk11 as build
 
 # if we want to install via apt...switch to root user
 USER root
@@ -993,6 +994,7 @@ docker buildx build  --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 -
 
 ```
 
+# push image to private repository
 docker login <artifactory url>
 docker tag jenkins:1.2.1 <artifactory docker repo url>/jenkins:1.2.1
 docker push <artifactory docker repo url>/jenkins:1.2.1
