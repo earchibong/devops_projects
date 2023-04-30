@@ -1064,7 +1064,7 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 - verify the installation of the plugins 
 
 ```
-JENKINS_HOST=username:password@myhost.com:port #username: admin and password: jenkins secret password
+JENKINS_HOST=username:password@<tooling.jenkins.archibong.link>:port #username: admin and password: jenkins secret password
 curl -sSL "http://$JENKINS_HOST/pluginManager/api/xml?depth=1&xpath=/*/*/shortName|/*/*/version&wrapper=plugins" | perl -pe 's/.*?<shortName>([\w-]+).*?<version>([^<]+)()(<\/\w+>)+/\1 \2\n/g'|sed 's/ /:/'
 
 ```
@@ -1164,7 +1164,7 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 ## Automate The Creation Of The Tooling Application’s Pipeline.
 
-- Create an access token from GitHub so that Jenkins canm use it to connect to the Github account. https://github.com/settings/tokens
+- Create an access token from GitHub so that Jenkins can use it to connect to the Github account. https://github.com/settings/tokens
 
 <br>
 
@@ -1172,7 +1172,7 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 
 <br>
 
-- Using <a href"https://www.base64decode.org/">base64<a/>, encode the generated token
+- Using <a href="https://www.base64decode.org/">base64<a/>, encode the generated token
 - Create a secret in the same namespace where Jenkins is installed. Name the key `github_token` or whatever you wish
 ```
 
@@ -1199,7 +1199,7 @@ kubectl get secret <your secret name> --output=yaml -n tools
 
 controller:
   # the 'name' and 'keyName' are concatenated with a '-' in between, so for example:
-  # an existing secret "secret-credentials" and a key inside it named "github-password" should be used in Jcasc as ${secret-credentials-github-password}
+  # an existing secret "secret-credentials" and a key inside it named "github_token" should be used in Jcasc as ${secret-credentials-github_token}
   # 'name' and 'keyName' must be lowercase RFC 1123 label must consist of lower case alphanumeric characters or '-',
   # and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc')
   # existingSecret existing secret "secret-credentials" and a key inside it named "github-username" should be used in Jcasc as ${github-username}
@@ -1208,34 +1208,31 @@ controller:
 
   additionalExistingSecrets:
     - name: github-credentials
-      keyName: github-token
+      keyName: github_token
    
  ```
 
 <br>
  
-<img width="1177" alt="additional_secret" src="https://user-images.githubusercontent.com/92983658/234288279-98a901e5-828c-4e0d-bb48-d88f80746582.png">
+<img width="1267" alt="additional_secfet" src="https://user-images.githubusercontent.com/92983658/235348804-7ad60c56-0829-4c48-971d-fd4f8e354364.png">
 
 <br>
 
 *note:This is just to make Jenkins aware of the secret. We still need to use it in the credentials section so that Jenkins can connect to Github with it.*
+  
 <br>
 
-- create a folder to hold your pipelines
+- create a folder to hold your pipelines and pipeline that will automatically be added to the folder upon installation.
 
 ```
 
 JCasC:
     enabled: true
-    crumbIssuer: "standard"
-
-    remotingSecurity:
-      enabled: true
       
     configScripts:
       welcome-message: |
         jenkins:
-          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed strictly 'as code'. Please do not update Manually
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed strictly 'as code'. 
           
       pipeline: |
         jobs:
@@ -1244,7 +1241,25 @@ JCasC:
                 displayName('PBL26')
                 description('Contains PBL26 Jenkins Pipelines')
               }
+          - script: >
+              multibranchPipelineJob('PBL26/tooling-app') {
+                branchSources { git {
+                remote('https://github.com/earchibong/tooling.git') credentialsId('github-credentials') id('tooling-app') }
+                }
+              }
               
+      security-config: |
+        credentials:
+          system: 
+            domainCredentials:
+               - credentials:
+               - usernamePassword:
+            id: github-credentials   
+            username: earchibong
+            password:${github-credentials-github_token}
+            scope: GLOBAL
+  
+  
               
   ```
   
@@ -1261,13 +1276,10 @@ helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.
 ```
 <br>
 
-- create a pipline that will automatically be added to the folder upon installation.
-
-```
-
-pipel;ine override
-
-```
+<img width="1470" alt="j1" src="https://user-images.githubusercontent.com/92983658/235351330-4230ca98-71f4-41a9-b37d-1c50fc88fad4.png">
+<img width="1470" alt="j2" src="https://user-images.githubusercontent.com/92983658/235351346-e924f5e3-e333-4c36-a8aa-b619683ce20c.png">
+<img width="1454" alt="j3" src="https://user-images.githubusercontent.com/92983658/235351356-c8a9ef8c-cfe0-49aa-8aa7-65add290989d.png">
+<img width="1386" alt="j4" src="https://user-images.githubusercontent.com/92983658/235351362-b1de539c-f912-4602-8f81-4b7803e5f5b4.png">
 
 <br>
 
