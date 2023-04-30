@@ -1269,13 +1269,16 @@ JCasC:
 
 <br>
 
-- apply the latest changes, you should be able to see the folder created as shown below. But it doesn’t have any pipline.
+- apply the latest changes, you should be able to see the folder created.
 ```
 helm upgrade -i my-jenkins jenkinsci/jenkins -n tools -f jenkins-values-overide.yaml
 
 ```
 <br>
+- the complete override values file:
 
+<br>
+  
 <img width="1470" alt="j1" src="https://user-images.githubusercontent.com/92983658/235351330-4230ca98-71f4-41a9-b37d-1c50fc88fad4.png">
 <img width="1470" alt="j2" src="https://user-images.githubusercontent.com/92983658/235351346-e924f5e3-e333-4c36-a8aa-b619683ce20c.png">
 <img width="1454" alt="j3" src="https://user-images.githubusercontent.com/92983658/235351356-c8a9ef8c-cfe0-49aa-8aa7-65add290989d.png">
