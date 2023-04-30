@@ -965,8 +965,7 @@ USER jenkins
   
 #create multi-arch image:
 docker buildx create --use
-docker buildx build --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 -t jenkins:jdk11-1.2.2 .
-
+docker buildx build  --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 -t <repo url:jdk11-1.2.2> .
 
 ````
 
@@ -1003,6 +1002,13 @@ docker push <artifactory docker repo url>/jenkins:1.2.1
 <br>
 
 <img width="1364" alt="jenkins_push_custom" src="https://user-images.githubusercontent.com/92983658/232504395-71897717-59cd-45bf-8e78-0fc4fa3a6f41.png">
+
+<br>
+  
+*using docker buildx to build and push image to repo. note: when using buildx, both build and push are done at the same time*
+
+<img width="1467" alt="buildx" src="https://user-images.githubusercontent.com/92983658/235346901-543334f9-1ea6-48f7-9acf-f62e9c32b372.png">
+  
 
 <br>
 
