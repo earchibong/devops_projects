@@ -3,6 +3,9 @@
 # AWS CLOUD SOLUTION FOR 2 COMPANY WEBSITES USING A REVERSE PROXY TECHNOLOGY
 
 ### Introduction
+
+A reverse proxy is a server that sits in front of web servers and forwards client (e.g. web browser) requests to those web servers. In effect, it acts as a load balancer. This means different apps can be served under the same hood.
+
 This project demostrates how a secure infrastructure inside AWS VPC (Virtual Private Cloud) network is built for a particular company, 
 who uses WordPress CMS for its main business website, and a Tooling Website for their DevOps team. 
 As part of the company’s desire for improved security and performance, a decision has been made to use a reverse proxy technology 
@@ -14,7 +17,14 @@ from NGINX to achieve this. The infrastructure will look like following diagram:
 
 <br>
 
-The following outlines the steps taken:
+## Project Steps:
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#step-one-configure-aws-account-and-organisational-units">Configure AWS Account & Organisational Units</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#step-two-set-up-a-virtual-private-network-vpc">Set Up A Virtual Private Network</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#step-threesetup-compute-resources">Set Up Compute Resources</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#configure-application-load-balancer">Configure Application Load Balancer</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#elastic-file-system">AWS Elastic File System</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#set-up-rds">Set Up Database (RDS)</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/reverse_proxy.md#configuring-dns-with-route53">Configure DNS with Route 53</a>
 
 <br>
 
