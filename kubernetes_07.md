@@ -35,7 +35,11 @@ alongside Kustomize for this.
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#how-kustomize-works">How Kustomize Works</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-base-layer-files">Create base Layer Files</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-overlays-files-dev-environment">Create Overlay Files: Dev Environment</a>
-- 
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#patching-configuration-with-kustomize">Patching Configuration With Kustomize</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-overlays-files-sit-environment">Create Overlay Files: Sit Environment</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-overlays-files-prod-environment">Create Overlay Files: Prod Environment</a>
+
+<br>
 
 ## How Kustomize Works
 Kustomize relies on the following system of configuration management layering to achieve reusability:
@@ -499,3 +503,46 @@ kubectl apply -k overlays/prod
 <img width="1025" alt="prod_output" src="https://user-images.githubusercontent.com/92983658/235655277-ff910ab5-770e-4491-96c3-1f8a9b29f0a6.png">
 
 <br>
+
+## Integrate The Tooling App Aith Amazon Aurora For Dev, SIT, And PROD Environments
+The steps to do this are as follows:
+- Configure Terraform to deploy an aurora instance
+- Use the tooling.sql script to load the database schema
+- Configure environment variables for database connectivity in the deployment file and patch the each environment for the appropriate values
+
+<br>
+
+## Configure Terraform To Deploy An Aurora Instance: Integrate Vault With Kubernetes
+`helm` and `kustomize` will be used for this installation. The <a href="https://artifacthub.io/packages/helm/hashicorp/vault">Valut helm chart</a> will be used for installation. It will then be configured for <a href="https://developer.hashicorp.com/vault/docs/concepts/ha">High availability mode</a> with **integrated storage** (recommended for production-ready deployment).
+
+<br>
+
+- Create the folder structure as below:
+```
+
+vault
+├── base
+│   ├── kustomization.yaml
+│   └── namespace.yaml
+└── overlays
+    ├── dev
+    │   ├── .env
+    │   ├── kustomization.yaml
+    │   ├── namespace.yaml
+    │   └── values.yaml
+    ├── sit
+    │   ├── .env
+    │   ├── kustomization.yaml
+    │   ├── namespace.yaml
+    │   └── values.yaml
+    └── prod
+        ├── .env
+        ├── kustomization.yaml
+        ├── namespace.yaml
+        └── values.yaml
+        
+ ```
+ 
+ <br>
+ 
+ 
