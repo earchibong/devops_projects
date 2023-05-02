@@ -31,6 +31,12 @@ alongside Kustomize for this.
 
 <br>
 
+## Labs
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#how-kustomize-works">How Kustomize Works</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-base-layer-files">Create base Layer Files</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-overlays-files-dev-environment">Create Overlay Files: Dev Environment</a>
+- 
+
 ## How Kustomize Works
 Kustomize relies on the following system of configuration management layering to achieve reusability:
 
@@ -251,3 +257,245 @@ Generally, A kustomization file contains fields falling into four categories (al
 - **transformers** – what to do to the aforementioned resources. Example fields: namePrefix, nameSuffix, images, commonLabels, etc. and the more general transformers (v2.1) field.
 
 - **meta** – fields which may influence all or some of the above. Example fields: vars, namespace, apiVersion, kind, etc.
+
+<br>
+
+## Patching Configuration With Kustomize
+With Kustomize,  environmentscan be patched with extra configurations that overwrites the base setting either by
+
+- creating new resources, or
+- patching existing resources.
+
+This is all achieved through the overlays configuration.
+
+The `overlays/dev/kustomization.yaml` file above only creates a new resource. But if we wanted to patch an existing resource, for example, increase the pod replica from the default 1 to 3 as shown in the `overlays/dev/deployment.yaml file`...the patch would look like this:
+
+```
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dev-tooling
+bases:
+- ../../base
+
+commonLabels:
+  env: dev-tooling
+
+resources:
+  - namespace.yaml
+
+patches: #the deployment file is changed and the patch is add here
+  - deployment.yaml
+  
+```
+
+<br>
+
+<img width="971" alt="patches_deployment" src="https://user-images.githubusercontent.com/92983658/235641902-6220a581-55ad-423a-ba74-86879320ad47.png">
+
+<br>
+
+- apply configuration to cluster:
+```
+kubectl apply -k overlays/dev
+
+```
+
+<br>
+
+*note: `-k` flag instead of `-f` is used to make `kubectl` aware of `kustomise`
+
+<br>
+
+- expected output
+```
+
+namespace/dev-tooling created
+service/tooling-service created
+deployment.apps/tooling-deployment created
+
+```
+
+<br>
+
+<img width="852" alt="dev_output" src="https://user-images.githubusercontent.com/92983658/235646879-211010bc-9288-4f72-baa9-04af93833e86.png">
+
+<br>
+
+## Create Overlays Files: Sit Environment
+- add the following to sit `namespace` file: `tooling-app-kustomize/overlays/sit/namespace.yaml`
+```
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-tooling
+  
+```
+
+<br>
+
+<img width="1099" alt="sit_namespace" src="https://user-images.githubusercontent.com/92983658/235647619-789fbfa0-c320-4a75-9e53-18b060df0711.png">
+
+<br>
+
+- add the following to sit `deployment` file: `tooling-app-kustomize/overlays/sit/deployment.yaml`
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tooling-deployment
+spec:
+  replicas: 2 # pod replica changed from from the default 1 to 2
+  template: # resource limits and changed from base spec
+    spec:
+      containers:
+      - name: tooling
+        resources:
+            requests:
+               memory: "50Mi"
+               cpu: "200m"
+            limits:
+               memory: "150Mi"
+               cpu: "600m"
+               
+            
+```
+
+<br>
+
+<img width="1036" alt="sit_deployment" src="https://user-images.githubusercontent.com/92983658/235650057-854d0bef-c6d9-45a7-b94c-b94898607079.png">
+
+<br>
+
+- add the following to sit `kustomization` file: `tooling-app-kustomize/overlays/sit/kustomization.yaml`
+
+```
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dev-tooling
+bases:
+- ../../base
+
+commonLabels:
+  env: dev-tooling
+
+resources:
+  - namespace.yaml
+
+patches:
+  - deployment.yaml
+  
+  
+```
+
+<br>
+
+<img width="1127" alt="sit_kustomization" src="https://user-images.githubusercontent.com/92983658/235648867-1381394b-724c-490e-92e7-2ff178650cfb.png">
+
+<br>
+
+- output as follows:
+
+<br>
+
+<img width="1027" alt="sit_output" src="https://user-images.githubusercontent.com/92983658/235653113-be32634a-24f2-4827-a37d-5cffa50a6d49.png">
+
+<br>
+
+## Create Overlays Files: Prod Environment
+
+- add the following to prod `namespace` file: `tooling-app-kustomize/overlays/prod/namespace.yaml`
+```
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-tooling
+  
+```
+
+<br>
+
+<img width="1099" alt="sit_namespace" src="https://user-images.githubusercontent.com/92983658/235647619-789fbfa0-c320-4a75-9e53-18b060df0711.png">
+
+<br>
+
+- add the following to prod `deployment` file: `tooling-app-kustomize/overlays/prod/deployment.yaml`
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tooling-deployment
+spec:
+  replicas: 4 # pod replica changed from from the default 1 to 4
+  template: # resource limits and changed from base spec
+    spec:
+      containers:
+      - name: tooling
+        resources:
+            requests:
+               memory: "90Mi"
+               cpu: "300m"
+            limits:
+               memory: "250Mi"
+               cpu: "800m"
+               
+            
+```
+
+<br>
+
+<img width="1085" alt="prod_deployment" src="https://user-images.githubusercontent.com/92983658/235654859-9b72fa2d-f5bf-463e-8088-87235d667bdb.png">
+
+<br>
+
+- add the following to prod `kustomization` file: `tooling-app-kustomize/overlays/prod/kustomization.yaml`
+
+```
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dev-tooling
+bases:
+- ../../base
+
+commonLabels:
+  env: dev-tooling
+
+resources:
+  - namespace.yaml
+
+patches:
+  - deployment.yaml
+  
+  
+```
+
+<br>
+
+<img width="1127" alt="sit_kustomization" src="https://user-images.githubusercontent.com/92983658/235648867-1381394b-724c-490e-92e7-2ff178650cfb.png">
+
+<br>
+
+- deploy:
+
+```
+
+kubectl apply -k overlays/prod
+
+
+```
+
+<br>
+
+- output as follows:
+
+<br>
+
+<img width="1025" alt="prod_output" src="https://user-images.githubusercontent.com/92983658/235655277-ff910ab5-770e-4491-96c3-1f8a9b29f0a6.png">
+
+<br>
