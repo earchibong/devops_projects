@@ -545,4 +545,119 @@ vault
  
  <br>
  
- 
+ - update `terraform/providers.tf`
+
+```
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "4.34.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+```
+
+<br>
+
+- update `terraform/main.tf`
+
+An `AWS KMS` key will be created because when a Vault server is started, it starts in a sealed state and it does not know how to decrypt data. Before any operation can be performed on the Vault, it must be unsealed. Unsealing is the process by which the Vault root key is used to decrypt the data encryption key that Vault uses to encrypt all data.
+
+`IAM roles` for service accounts provide the ability to manage AWS credentials for the vault, similar to the way that Amazon EC2 instance profiles provide credentials to Amazon EC2 instances. Instead of using the Amazon EC2 instance’s role or creating and distributing `AWS credentials` to the vault containers through the Helm values file, we simply associate an `IAM role` with a Kubernetes service account and configure the pods to use the service account.
+
+
+
+```
+
+module "vault_iam_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.2.0"
+  role_name   = "vaultKMS"
+  create_role = true
+  role_policy_arns = {
+    AWSKeyManagementServicePowerUser = "arn:aws:iam::aws:policy/AWSKeyManagementServicePowerUser"
+  }
+
+  oidc_providers = {
+    one = {
+      provider_arn               = module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
+      namespace_service_accounts = ["vault:vault-kms", ]
+    }
+  }
+  attach_custom_iam_policy = false
+
+  tags = var.tags
+}
+
+module "vault_kms_key" {
+  source  = "terraform-aws-modules/kms/aws"
+  version = "1.0.2"
+  description             = "Complete key example showing various configurations available"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+  is_enabled              = true
+  key_usage               = "ENCRYPT_DECRYPT"
+  multi_region            = false
+
+  # Policy
+  enable_default_policy = true
+  key_owners            = [data.aws_iam_role.vault_kms.arn]
+  key_administrators    = [data.aws_iam_role.vault_kms.arn]
+  key_users             = [data.aws_iam_role.vault_kms.arn]
+
+  # Aliases
+  aliases                 = ["dev-vault-kms"]
+  aliases_use_name_prefix = true
+
+  # Grants
+  grants = {}
+
+  tags = var.tags
+}
+
+
+# This data source can be used to fetch information about vault IAM role.
+data "aws_iam_role" "vault_kms" {
+  name = "vaultKMS"
+  depends_on = [
+    module.vault_iam_role
+  ]
+}
+
+```
+
+<br>
+
+- update `terraform/variables.tf`
+
+```
+
+variable "tags" = {
+  type    = map
+  default = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+
+```
+
+<br>
+
+On terminal, change directory to  `terraform` directory and initialize the directory containing Terraform files.
+
+```
+
+cd terraform
+terraform init
+
+```
+
+<br>
