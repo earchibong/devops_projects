@@ -661,3 +661,13 @@ terraform init
 ```
 
 <br>
+
+<img width="1247" alt="terraform_init" src="https://user-images.githubusercontent.com/92983658/235679117-9d05a6be-03de-423f-a951-b80f64c8ff80.png">
+
+<br>
+
+- Run the command terraform plan to preview the changes that Terraform plans to make to infrastructure, then terraform apply to executes the actions proposed in the plan.
+
+```
+
+
