@@ -587,7 +587,8 @@ module "vault_iam_role" {
 
   oidc_providers = {
     one = {
-      provider_arn               = module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
+      #provider_arn               = module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
+      provider_url  = "oidc.eks.eu-west-2.amazonaws.com/id/BA9E170D464AF7B92084EF72A69B9DC8"
       namespace_service_accounts = ["vault:vault-kms", ]
     }
   }
