@@ -758,7 +758,7 @@ kind: Namespace
 metadata:
   name: vault
   labels:
-    env: vault=dev
+    #env: vault=dev
     
 ```
 
@@ -782,7 +782,7 @@ patchesStrategicMerge:
 
 # list the helm chart we want to 
 helmCharts:
-  - name: vault
+  - name: my-vault
     namespace: vault
     repo: https://helm.releases.hashicorp.com
     releaseName: vault
@@ -866,11 +866,217 @@ helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --crea
 
 <br>
 
-- deploy:
+- configure vault installation from `vault/overlays/dev/values.yaml`
 
 ```
 
-kubectl apply -k overlays/dev
+server:
+  enabled: "-"
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.11.3"
+    # Overrides the default Image Pull Policy
+    pullPolicy: IfNotPresent
+
+  # Configure the Update Strategy Type for the StatefulSet
+  updateStrategyType: "OnDelete"
+
+  # Ingress allows ingress services to be created to allow external access
+  # from Kubernetes to access Vault pods.
+  ingress:
+    enabled: true
+    labels: {}
+    annotations: 
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      cert-manager.io/private-key-rotation-policy: Always      
+
+    ingressClassName: "nginx"
+    pathType: Prefix
+
+    activeService: true
+    hosts:
+      - host: "vault.masterclass.dev.<your domain name>"
+        paths: [/]
+    tls:
+     - secretName: vault.masterclass.dev.<your domain name>
+       hosts:
+         - vault.masterclass.dev.<your domain name>
+
+  terminationGracePeriodSeconds: 10
+
+  # extraSecretEnvironmentVars is a list of extra environment variables to set with the stateful set.
+  # These variables take value from existing Secret objects.
+  extraSecretEnvironmentVars:
+    - envName: VAULT_SEAL_TYPE
+      secretName: vault-kms
+      secretKey: VAULT_SEAL_TYPE
+    - envName: VAULT_AWSKMS_SEAL_KEY_ID
+      secretName: vault-kms
+      secretKey: VAULT_AWSKMS_SEAL_KEY_ID
+
+  # Enables a headless service to be used by the Vault Statefulset
+  service:
+    enabled: true
+
+    # Port on which Vault server is listening
+    port: 8200
+    # Target port to which the service should be mapped to
+    targetPort: 8200
+    # Extra annotations for the service definition.
+    annotations: {}
+
+  # This configures the Vault Statefulset to create a PVC for data
+  # storage when using the file or raft backend storage engines.
+  dataStorage:
+    enabled: true
+    # Size of the PVC created
+    size: 2Gi
+    # Location where the PVC will be mounted.
+    mountPath: "/vault/data"
+    # Name of the storage class to use.  If null it will use the
+    # configured default Storage Class.
+    storageClass: null
+    # Access Mode of the storage device being used for the PVC
+    accessMode: ReadWriteOnce
+    annotations: {}
+
+  # Run Vault in "HA" mode. There are no storage requirements unless the audit log
+  # persistence is required.  In HA mode Vault will configure itself to use Consul
+  # for its storage backend.
+  ha:
+    enabled: true
+    replicas: 3
+
+    # Set the api_addr configuration for Vault HA
+    # See https://www.vaultproject.io/docs/configuration#api_addr
+    # If set to null, this will be set to the Pod IP Address
+    apiAddr: null
+
+    # Set the cluster_addr confuguration for Vault HA
+    # See https://www.vaultproject.io/docs/configuration#cluster_addr
+    # If set to null, this will be set to https://$(HOSTNAME).{{ template "vault.fullname" . }}-internal:8201
+    clusterAddr: null
+
+    # Enables Vault's integrated Raft storage.  Unlike the typical HA modes where
+    # Vault's persistence is external (such as Consul), enabling Raft mode will create
+    # persistent volumes for Vault to store data according to the configuration under server.dataStorage.
+    # The Vault cluster will coordinate leader elections and failovers internally.
+    raft:
+
+      # Enables Raft integrated storage
+      enabled: true
+      # Set the Node Raft ID to the name of the pod
+      setNodeId: true
+
+      config: |
+        ui = true
+
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+        }
+
+        storage "raft" {
+          path = "/vault/data"
+
+          retry_join {
+            leader_api_addr = "http://vault-0.vault-internal:8200"
+          }
+
+          retry_join {
+            leader_api_addr = "http://vault-1.vault-internal:8200"
+          } 
+
+          retry_join {
+            leader_api_addr = "http://vault-2.vault-internal:8200"
+          }
+
+          autopilot {
+            cleanup_dead_servers = "true"
+            last_contact_threshold = "200ms"
+            last_contact_failure_threshold = "10m"
+            max_trailing_logs = 250000
+            min_quorum = 5
+            server_stabilization_time = "10s"
+          }
+        }
+
+        # cluster_addr = "http://vault:8200"
+
+        service_registration "kubernetes" {}
+
+
+    # config is a raw string of default configuration when using a Stateful
+    # deployment. Default is to use a Consul for its HA storage backend.
+    # This should be HCL.
+    config: |
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+
+      seal "awskms" {
+      }
+
+      service_registration "kubernetes" {}
+
+      log_requests_level = "trace"
+
+  # Definition of the serviceAccount used to run Vault.
+  # These options are also used when using an external Vault server to validate
+  # Kubernetes tokens.
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: "vault-kms"
+    # Extra annotations for the serviceAccount definition. This can either be
+    # YAML or a YAML-formatted multi-line templated string map of the
+    # annotations to apply to the serviceAccount.
+    annotations: 
+      eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/vaultKMS ## Update role for new AWS account
+
+
+# Vault UI
+ui:
+  # True if you want to create a Service entry for the Vault UI.
+  #
+  # serviceType can be used to control the type of service created. For
+  # example, setting this to "LoadBalancer" will create an external load
+  # balancer to access the UI.
+  enabled: true
+  publishNotReadyAddresses: true
+  # The service should only contain selectors for active Vault pod
+  activeVaultPodOnly: false
+  serviceType: "ClusterIP"
+  serviceNodePort: null
+  externalPort: 8200
+  targetPort: 8200
+  
+  
+ ```
+ 
+ <br>
+ 
+ 
+- apply changes to cluster:
+
+```
+kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
+#kubectl apply -k overlays/dev
 
 
 ```
+
+<br>
+
+<img width="1111" alt="ault_dev_deploy" src="https://user-images.githubusercontent.com/92983658/235922607-d6c2e897-5598-4da9-ab95-e129fd31715a.png">
+
+<br>
+
+## Configure Terraform To Deploy An Aurora Instance: Initialize the Vault cluster
