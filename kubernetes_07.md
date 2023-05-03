@@ -822,6 +822,50 @@ VAULT_AWSKMS_SEAL_KEY_ID=<arn:aws:kms:eu-west-2:<your aws account>:key/<vault km
 
 <br>
 
+
+Before the content of the values file can be added, we need to install `Ingress Controller` and `Cert-Manager`. see <a href="https://github.com/earchibong/devops_projects/blob/main/private_repositories.md#jenkins-pipeline-for-business-applications"> project 26</a> for how to do this.
+
+```
+
+# deploy ingress controller in `ingress-nginx` namespace
+helm upgrade --install ingress-nginx ingress-nginx \
+--repo https://kubernetes.github.io/ingress-nginx \
+--namespace ingress-nginx --create-namespace
+
+# confirm the created load balancer in AWS 
+kubectl get service -n ingress-nginx
+
+
+```
+
+<br>
+
+<img width="1192" alt="ingress" src="https://user-images.githubusercontent.com/92983658/235911700-1b6615ef-5116-43f5-bc69-20828847f3cb.png">
+
+<br>
+
+```
+
+
+# deploy cert manager
+# install cert manager CustomResourceDefinition (CRD) and chart
+
+#CustomResourceDefinition 
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+
+#chart
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --create-namespace
+
+```
+
+<br>
+
+<img width="1257" alt="cert_manager" src="https://user-images.githubusercontent.com/92983658/235912691-d097c7c9-07e4-4db9-b935-96aab7875c0d.png">
+
+<br>
+
 - deploy:
 
 ```
@@ -830,5 +874,3 @@ kubectl apply -k overlays/dev
 
 
 ```
-
-<br>
