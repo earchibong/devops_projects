@@ -593,7 +593,7 @@ module "vault_iam_role" {
 
   oidc_providers = {
     one = {
-      provider_arn               = arn:aws:iam::<your AWS account>:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/<oidc provider>
+      provider_arn               = "arn:aws:iam::<your AWS account>:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/<oidc provider>"
                                    #module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
       namespace_service_accounts = ["vault:vault-kms", ]
     }
@@ -700,8 +700,23 @@ terraform init
 
 ```
 
+terraform plan -out tfplan
+
+terraform apply tfplan
+
+```
 
 <br>
+
+<img width="1469" alt="plan_01" src="https://user-images.githubusercontent.com/92983658/235905227-1819fc73-f1cd-4e91-8a8e-c97d0dcb2aeb.png">
+
+<br>
+
+<img width="1433" alt="plan+02" src="https://user-images.githubusercontent.com/92983658/235905243-1d5a8e04-e6e4-4ad1-a4cc-ff89e05f4684.png">
+
+<br>
+
+<img width="1383" alt="apply" src="https://user-images.githubusercontent.com/92983658/235905584-1adc80d4-c273-495a-b933-99a5340b3566.png">
 
 <br>
  
@@ -783,6 +798,27 @@ generatorOptions:
   
   
 ```
+
+<br>
+
+- update `vault/overlays/dev/.env`
+
+<br>
+
+<img width="1383" alt="apply" src="https://user-images.githubusercontent.com/92983658/235907182-978d9f56-6fe3-4391-bd38-6d734fcc4e27.png">
+
+<br>
+
+```
+
+VAULT_SEAL_TYPE=awskms
+VAULT_AWSKMS_SEAL_KEY_ID=<arn:aws:kms:eu-west-2:<your aws account>:key/<vault kms key id>>
+
+```
+
+<br>
+
+<img width="1025" alt="env" src="https://user-images.githubusercontent.com/92983658/235907832-a6098a4d-8dca-42ef-9e46-db4adb27a3e9.png">
 
 <br>
 
