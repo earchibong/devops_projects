@@ -522,26 +522,30 @@ The steps to do this are as follows:
 - Create the folder structure as below:
 ```
 
-vault
-├── base
-│   ├── kustomization.yaml
-│   └── namespace.yaml
-└── overlays
-    ├── dev
-    │   ├── .env
+├── terraform/
+│   ├── main.tf
+│   ├── variables.tf
+│   └── providers.tf
+└── vault/
+    ├── base/
     │   ├── kustomization.yaml
-    │   ├── namespace.yaml
-    │   └── values.yaml
-    ├── sit
-    │   ├── .env
-    │   ├── kustomization.yaml
-    │   ├── namespace.yaml
-    │   └── values.yaml
-    └── prod
-        ├── .env
-        ├── kustomization.yaml
-        ├── namespace.yaml
-        └── values.yaml
+    │   └── namespace.yaml
+    └── overlays/
+        ├── dev/
+        │   ├── .env
+        │   ├── kustomization.yaml
+        │   ├── namespace.yaml
+        │   └── values.yaml
+        ├── sit/
+        │   ├── .env
+        │   ├── kustomization.yaml
+        │   ├── namespace.yaml
+        │   └── values.yaml
+        └── prod/
+            ├── .env
+            ├── kustomization.yaml
+            ├── namespace.yaml
+            └── values.yaml
         
  ```
  
@@ -697,3 +701,98 @@ terraform init
 ```
 
 
+<br>
+
+<br>
+ 
+ - update `vault/base/namespace.yaml/`
+
+```
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vault
+  
+```
+
+<br>
+
+- update `vault/base/kustomization.yaml`
+
+```
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - "namespace.yaml"
+  
+```
+
+<br>
+
+### Update Vault Dev Environment Files
+
+- update `vault/overlays/dev/namespace.yaml`
+
+```
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vault
+  labels:
+    env: vault=dev
+    
+```
+
+<br>
+
+- update `vault/overlays/dev/kustomization.yaml`:
+
+```
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# this will over write the namespace all the resourses will be deployed to
+namespace: vault
+
+resources:
+  - ../../base
+
+patchesStrategicMerge:
+  - namespace.yaml
+
+# list the helm chart we want to 
+helmCharts:
+  - name: vault
+    namespace: vault
+    repo: https://helm.releases.hashicorp.com
+    releaseName: vault
+    version: 0.22.0
+    valuesFile: values.yaml
+
+secretGenerator:
+  - name: vault-kms
+    env: .env
+
+generatorOptions:
+  disableNameSuffixHash: true
+  
+  
+```
+
+<br>
+
+- deploy:
+
+```
+
+kubectl apply -k overlays/dev
+
+
+```
+
+<br>
