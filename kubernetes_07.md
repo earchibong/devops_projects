@@ -1079,4 +1079,11 @@ kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
 
 <br>
 
-## Configure Terraform To Deploy An Aurora Instance: Initialize the Vault cluster
+## Configure Terraform To Deploy An Aurora Instance: Initialize the Vault Cluster
+- Run the command below to execute commands in one of the pod with running status
+
+```
+kubectl get pod -n vault
+kubectl exec -n vault -it <running_vault_pod_name> -- /bin/sh
+
+```
