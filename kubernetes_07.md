@@ -587,8 +587,8 @@ module "vault_iam_role" {
 
   oidc_providers = {
     one = {
-      #provider_arn               = module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
-      provider_url  = "oidc.eks.eu-west-2.amazonaws.com/id/BA9E170D464AF7B92084EF72A69B9DC8"
+      provider_arn               = arn:aws:iam::<your AWS account>:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/<oidc provider>
+                                   #module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
       namespace_service_accounts = ["vault:vault-kms", ]
     }
   }
@@ -600,7 +600,7 @@ module "vault_iam_role" {
 module "vault_kms_key" {
   source  = "terraform-aws-modules/kms/aws"
   version = "1.0.2"
-  description             = "Complete key example showing various configurations available"
+  description             = "external key"
   deletion_window_in_days = 7
   enable_key_rotation     = true
   is_enabled              = true
@@ -633,6 +633,27 @@ data "aws_iam_role" "vault_kms" {
 }
 
 
+
+```
+
+<br>
+
+*note: get more information on <a href="https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/modules/iam-role-for-service-accounts-eks"> `terraform iam role for service accounts`</a>*
+
+<br>
+
+*note 2: for `oidc_provider...create it as follows:*
+```
+
+#Determine whether you have an existing IAM OIDC provider for your cluster.
+#Retrieve your cluster's OIDC provider ID and store it in a variable.
+oidc_id=$(aws eks describe-cluster --name my-cluster --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+
+#Determine whether an IAM OIDC provider with your cluster's ID is already in your account.
+aws iam list-open-id-connect-providers | grep $oidc_id | cut -d "/" -f4
+
+#Create an IAM OIDC identity provider for your cluster with the following command. Replace my-cluster with your own value.
+eksctl utils associate-iam-oidc-provider --cluster <your-cluster name> --approve
 
 ```
 
