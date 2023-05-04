@@ -506,7 +506,7 @@ kubectl apply -k overlays/prod
 
 <br>
 
-## Integrate The Tooling App Aith Amazon Aurora For Dev, SIT, And PROD Environments
+## Integrate The Tooling App Aith Amazon Aurora For Dev, SIT, And Prod Environments
 The steps to do this are as follows:
 - Configure Terraform to deploy an aurora instance
 - Use the tooling.sql script to load the database schema
@@ -758,7 +758,7 @@ kind: Namespace
 metadata:
   name: vault
   labels:
-    #env: vault=dev
+    env: my_vault_dev
     
 ```
 
@@ -782,7 +782,7 @@ patchesStrategicMerge:
 
 # list the helm chart we want to 
 helmCharts:
-  - name: my-vault
+  - name: vault
     namespace: vault
     repo: https://helm.releases.hashicorp.com
     releaseName: vault
@@ -812,7 +812,7 @@ generatorOptions:
 ```
 
 VAULT_SEAL_TYPE=awskms
-VAULT_AWSKMS_SEAL_KEY_ID=<arn:aws:kms:eu-west-2:<your aws account>:key/<vault kms key id>>
+VAULT_AWSKMS_SEAL_KEY_ID=<arn:aws:kms:eu-west-2:<your aws account>:key/dev-vault-kms>
 
 ```
 
