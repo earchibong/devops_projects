@@ -814,7 +814,7 @@ VAULT_AWSKMS_SEAL_KEY_ID="arn:aws:kms:eu-west-2:<your aws account>:key/dev-vault
 
 <br>
 
-<img width="1025" alt="env" src="https://user-images.githubusercontent.com/92983658/235907832-a6098a4d-8dca-42ef-9e46-db4adb27a3e9.png">
+<img width="1069" alt="env" src="https://user-images.githubusercontent.com/92983658/236194571-4e5d9c65-04c3-4ea8-9c7d-470142ea4fd1.png">
 
 <br>
 
@@ -1063,6 +1063,7 @@ ui:
 - apply changes to cluster:
 
 ```
+
 kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
 #kubectl apply -k overlays/dev
 
@@ -1071,7 +1072,7 @@ kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
 
 <br>
 
-<img width="1111" alt="ault_dev_deploy" src="https://user-images.githubusercontent.com/92983658/235922607-d6c2e897-5598-4da9-ab95-e129fd31715a.png">
+<img width="1229" alt="vault_dev_deploy" src="https://user-images.githubusercontent.com/92983658/236197386-9a94379c-3a97-4808-a4a2-5066e8470773.png">
 
 <br>
 
@@ -1079,6 +1080,7 @@ kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
 - Run the command below to execute commands in one of the pod with running status
 
 ```
+
 kubectl get pod -n vault
 kubectl exec -n vault -it <running_vault_pod_name> -- /bin/sh
 
