@@ -808,7 +808,7 @@ generatorOptions:
 ```
 
 VAULT_SEAL_TYPE=awskms
-VAULT_AWSKMS_SEAL_KEY_ID=<arn:aws:kms:eu-west-2:<your aws account>:key/dev-vault-kms>
+VAULT_AWSKMS_SEAL_KEY_ID="arn:aws:kms:eu-west-2:<your aws account>:key/dev-vault-kms"
 
 ```
 
