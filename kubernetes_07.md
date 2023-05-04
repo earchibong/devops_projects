@@ -805,10 +805,6 @@ generatorOptions:
 
 <br>
 
-<img width="1383" alt="apply" src="https://user-images.githubusercontent.com/92983658/235907182-978d9f56-6fe3-4391-bd38-6d734fcc4e27.png">
-
-<br>
-
 ```
 
 VAULT_SEAL_TYPE=awskms
