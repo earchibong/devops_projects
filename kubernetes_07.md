@@ -814,7 +814,7 @@ VAULT_AWSKMS_SEAL_KEY_ID="arn:aws:kms:eu-west-2:<your aws account>:alias/dev-vau
 
 <br>
 
-<img width="1069" alt="env" src="https://user-images.githubusercontent.com/92983658/236194571-4e5d9c65-04c3-4ea8-9c7d-470142ea4fd1.png">
+<img width="992" alt="Screenshot 2023-05-05 at 17 11 47" src="https://user-images.githubusercontent.com/92983658/236511435-28fad6f1-b94d-4e45-b11d-e69b52ab1105.png">
 
 <br>
 
