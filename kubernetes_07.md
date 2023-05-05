@@ -595,7 +595,7 @@ module "vault_iam_role" {
     one = {
       provider_arn               = "arn:aws:iam::<your AWS account>:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/<oidc provider>"
                                    #module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
-      namespace_service_accounts = ["vault:vault_kms", ]
+      namespace_service_accounts = ["vault:vault-kms", ]
     }
   }
   attach_custom_iam_policy = false
@@ -615,9 +615,9 @@ module "vault_kms_key" {
 
   # Policy
   enable_default_policy = true
-  key_owners            = [data.aws_iam_role.vault_kms.arn]
-  key_administrators    = [data.aws_iam_role.vault_kms.arn]
-  key_users             = [data.aws_iam_role.vault_kms.arn]
+  key_owners            = [data.aws_iam_role.vault-kms.arn]
+  key_administrators    = [data.aws_iam_role.vault-kms.arn]
+  key_users             = [data.aws_iam_role.vault-kms.arn]
 
   # Aliases
   aliases                 = ["dev-vault-kms"]
@@ -631,7 +631,7 @@ module "vault_kms_key" {
 
 
 # This data source can be used to fetch information about vault IAM role.
-data "aws_iam_role" "vault_kms" {
+data "aws_iam_role" "vault-kms" {
   name = "vaultKMS"
   depends_on = [
     module.vault_iam_role
@@ -1030,7 +1030,7 @@ server:
     create: true
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
-    name: "vault_kms"
+    name: "vault-kms"
     # Extra annotations for the serviceAccount definition. This can either be
     # YAML or a YAML-formatted multi-line templated string map of the
     # annotations to apply to the serviceAccount.
@@ -1073,6 +1073,14 @@ kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
 <br>
 
 <img width="1229" alt="vault_dev_deploy" src="https://user-images.githubusercontent.com/92983658/236197386-9a94379c-3a97-4808-a4a2-5066e8470773.png">
+
+<br>
+
+- update DNs record of host in hosted zone to `vault.masterclass.dev.<your domain name>`
+
+<br>
+
+<img width="1351" alt="dns_vault" src="https://user-images.githubusercontent.com/92983658/236514518-a53fd54d-7ef0-4381-b2c3-40209a9e4cfe.png">
 
 <br>
 
