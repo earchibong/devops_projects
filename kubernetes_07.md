@@ -758,7 +758,7 @@ kind: Namespace
 metadata:
   name: vault
   labels:
-    env: my_vault_dev
+    env: dev_vault
     
 ```
 
@@ -802,13 +802,13 @@ generatorOptions:
 <br>
 
 - update `vault/overlays/dev/.env`
-
+*get more information on `awskms` parameters <a href="https://developer.hashicorp.com/vault/docs/configuration/seal/awskms#awskms-parameters">here</a>*
 <br>
 
 ```
 
 VAULT_SEAL_TYPE=awskms
-VAULT_AWSKMS_SEAL_KEY_ID="arn:aws:kms:eu-west-2:<your aws account>:key/dev-vault-kms"
+VAULT_AWSKMS_SEAL_KEY_ID="arn:aws:kms:eu-west-2:<your aws account>:alias/dev-vault-kms"
 
 ```
 
