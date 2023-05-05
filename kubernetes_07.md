@@ -595,7 +595,7 @@ module "vault_iam_role" {
     one = {
       provider_arn               = "arn:aws:iam::<your AWS account>:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/<oidc provider>"
                                    #module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
-      namespace_service_accounts = ["vault:vault-kms", ]
+      namespace_service_accounts = ["vault:vault_kms", ]
     }
   }
   attach_custom_iam_policy = false
