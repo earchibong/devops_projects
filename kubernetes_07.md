@@ -594,7 +594,6 @@ module "vault_iam_role" {
   oidc_providers = {
     one = {
       provider_arn               = "arn:aws:iam::<your AWS account>:oidc-provider/oidc.eks.eu-west-2.amazonaws.com/id/<oidc provider>"
-                                   #module.eks.dev_eks_oidc_provider_arn #data.aws_eks_cluster.dev-eks.identity[0].oidc[0].issuer
       namespace_service_accounts = ["vault:vault-kms", ]
     }
   }
@@ -808,13 +807,14 @@ generatorOptions:
 ```
 
 VAULT_SEAL_TYPE=awskms
-VAULT_AWSKMS_SEAL_KEY_ID="arn:aws:kms:eu-west-2:<your aws account>:alias/dev-vault-kms"
+VAULT_AWSKMS_SEAL_KEY_ID="alias/dev-vault-kms"
 
 ```
 
 <br>
 
-<img width="992" alt="Screenshot 2023-05-05 at 17 11 47" src="https://user-images.githubusercontent.com/92983658/236511435-28fad6f1-b94d-4e45-b11d-e69b52ab1105.png">
+<img width="991" alt="env" src="https://user-images.githubusercontent.com/92983658/236618208-beb8f127-85dc-4904-ac60-a82486587bec.png">
+
 
 <br>
 
