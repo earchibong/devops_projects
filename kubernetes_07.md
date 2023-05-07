@@ -40,6 +40,7 @@ alongside Kustomize for this.
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#create-overlays-files-prod-environment">Create Overlay Files: Prod Environment</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#integrate-the-tooling-app-aith-amazon-aurora-for-dev-sit-and-prod-environments">Integrate Tooling App With AWS Aurora For Sit, Dev and Prod Environments</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-integrate-vault-with-kubernetes">Configure Vault To Deploy Aurora Instance: Integrate Vault With Kubernetes</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-initialize-the-vault-cluster">Configure Vault To Deploy Aurora Instance: Initialize Vault Cluster</a>
 
 <br>
 
@@ -1107,6 +1108,7 @@ cat cluster-keys.json | jq -r ".recovery_keys_b64[]"
 ```
 
 <br>
+
 *note: `vault operator init`: The operator init command generates a root key that it disassembles into key shares `-key-shares=1` and then sets the number of key shares required to unseal Vault `-key-threshold=1`. These key shares are written to the output as unseal keys in `JSON format -format=json`. Here the output is redirected to a file named `vault/cluster-keys.json`.*
 
 <br>
@@ -1132,3 +1134,29 @@ cat cluster-keys.json | jq -r ".recovery_keys_b64[]"
 <br>
 
 *Note: From the vault status output the Vault cluster is initialised, the seal type is `awskms`, but after initializing the vault cluster you will get the `recovery keys` (instead of unseal keys) because some of the Vault operations still require `shamir keys`. The Recovery keys generated after running vault operator init can be used to unseal the cluster when it is sealed manually or to regenerate a root token.The `awskms` key type is used for auto unseal. Using the `awskms` key type means you don’t have to manually unseal the pod if it gets recreated.*
+
+<br>
+
+*note 2: more information on how to unseal vault keys <a href="https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-amazon-eks">here</a>
+
+<br>
+
+## Dynamically Inject Secrets Into The Tooling App Container
+The objectiver here is to securely inject the tooling application database credentials from the vault cluster into the tooling application.
+
+This method can be used to pass secrets credentials like `password``, token` and other secrets credential into an application without the application being aware of the vault cluster.
+
+- install vault from <a href="https://developer.hashicorp.com/vault/downloads">here</a>
+- Export the vault address, create token and login
+
+```
+
+export VAULT_ADDR="https://vault.masterclass.dev.archibong.link"
+vault token create
+vault login
+
+```
+
+
+
+
