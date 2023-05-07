@@ -643,7 +643,7 @@ data "aws_iam_role" "vault-kms" {
 
 <br>
 
-*note: get more information on <a href="https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/modules/iam-role-for-service-accounts-eks"> `terraform iam role for service accounts`</a>*
+*note: get more information on <a href="https://github.com/terraform-aws-modules/terraform-aws-iam/tree/master/modules/iam-role-for-service-accounts-eks"> `terraform iam role for service accounts`</a>. check <a href="https://registry.terraform.io/modules/terraform-aws-modules/iam/aws/latest/submodules/iam-role-for-service-accounts-eks">here</a> as well.*
 
 <br>
 
@@ -807,13 +807,12 @@ generatorOptions:
 ```
 
 VAULT_SEAL_TYPE=awskms
-VAULT_AWSKMS_SEAL_KEY_ID="alias/dev-vault-kms"
-
+VAULT_AWSKMS_SEAL_KEY_ID=arn:aws:kms:<you aws region>:<you account id>:key/<your kms key>
 ```
 
 <br>
 
-<img width="991" alt="env" src="https://user-images.githubusercontent.com/92983658/236618208-beb8f127-85dc-4904-ac60-a82486587bec.png">
+<img width="1223" alt="kms" src="https://user-images.githubusercontent.com/92983658/236675125-dc9054ca-3f31-42e5-8847-9124ecef1999.png">
 
 
 <br>
@@ -1090,6 +1089,46 @@ kubectl kustomize overlays/dev --enable-helm | kubectl apply -f -
 ```
 
 kubectl get pod -n vault
-kubectl exec -n vault -it <running_vault_pod_name> -- /bin/sh
+
+# check vault status:
+kubectl exec -n vault vault-0 -- vault status
+
+# Initialize Vault with one key share and one key threshold.
+kubectl exec -n vault vault-0 -- vault operator init \
+    -key-shares=1 \
+    -key-threshold=1 \
+    -format=json > vault/cluster-keys.json
+    
+# Display the recovery key found in `vault/cluster-keys.json.`
+cd vault
+cat cluster-keys.json | jq -r ".recovery_keys_b64[]"
+
 
 ```
+
+<br>
+*note: `vault operator init`: The operator init command generates a root key that it disassembles into key shares `-key-shares=1` and then sets the number of key shares required to unseal Vault `-key-threshold=1`. These key shares are written to the output as unseal keys in `JSON format -format=json`. Here the output is redirected to a file named `vault/cluster-keys.json`.*
+
+<br>
+
+<img width="862" alt="pods" src="https://user-images.githubusercontent.com/92983658/236675649-6202eec6-7fbf-431e-bf8c-5e07b48fbe38.png">
+
+<br>
+
+<img width="876" alt="status" src="https://user-images.githubusercontent.com/92983658/236675717-939b2e0b-f431-4b61-90f0-91c33f0c0d39.png">
+
+<br>
+
+<img width="858" alt="recovery_keys" src="https://user-images.githubusercontent.com/92983658/236677505-6451367a-e9a9-49dc-ac8e-2cf68fc2364c.png">
+
+<br>
+
+- check vault status again to confirm it is unsealed.
+
+<br>
+
+<img width="959" alt="unsealed_vault" src="https://user-images.githubusercontent.com/92983658/236677729-b0828ced-219d-4523-ac12-6e40c9ee19a5.png">
+
+<br>
+
+*Note: From the vault status output the Vault cluster is initialised, the seal type is `awskms`, but after initializing the vault cluster you will get the `recovery keys` (instead of unseal keys) because some of the Vault operations still require `shamir keys`. The Recovery keys generated after running vault operator init can be used to unseal the cluster when it is sealed manually or to regenerate a root token.The `awskms` key type is used for auto unseal. Using the `awskms` key type means you don’t have to manually unseal the pod if it gets recreated.*
