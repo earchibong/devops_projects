@@ -572,6 +572,7 @@ provider "aws" {
 ```
 
 <br>
+
 - create an `iam` policy named `cert_manager` to add records to `route 53` to resolve `DNS01` challenge. The policy document looks like this:
 
 ```
