@@ -572,6 +572,39 @@ provider "aws" {
 ```
 
 <br>
+- create an `iam` policy named `cert_manager` to add records to `route 53` to resolve `DNS01` challenge. The policy document looks like this:
+
+```
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "route53:GetChange",
+      "Resource": "arn:aws:route53:::change/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "route53:ChangeResourceRecordSets",
+        "route53:ListResourceRecordSets"
+      ],
+      "Resource": "arn:aws:route53:::hostedzone/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "route53:ListHostedZonesByName",
+      "Resource": "*"
+    }
+  ]
+}
+
+```
+
+- once policy is created, get the `arn` for the `cert_manager` policy and save it to attach to the cluster iam role in `terraform/main.tf`
+
+<br>
 
 - update `terraform/main.tf`
 
@@ -590,6 +623,7 @@ module "vault_iam_role" {
   create_role = true
   role_policy_arns = {
     AWSKeyManagementServicePowerUser = "arn:aws:iam::aws:policy/AWSKeyManagementServicePowerUser"
+    cert_manager                     = "arn:aws:iam::<your AWS account>:policy/cert_manager"
   }
 
   oidc_providers = {
