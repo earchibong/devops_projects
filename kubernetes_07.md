@@ -743,15 +743,15 @@ terraform apply tfplan
 
 <br>
 
-<img width="1469" alt="plan_01" src="https://user-images.githubusercontent.com/92983658/235905227-1819fc73-f1cd-4e91-8a8e-c97d0dcb2aeb.png">
+<img width="1470" alt="plan_01" src="https://user-images.githubusercontent.com/92983658/236836399-9139f4d6-b004-46a1-a464-315924fde188.png">
 
 <br>
 
-<img width="1433" alt="plan+02" src="https://user-images.githubusercontent.com/92983658/235905243-1d5a8e04-e6e4-4ad1-a4cc-ff89e05f4684.png">
+<img width="1467" alt="plan_02" src="https://user-images.githubusercontent.com/92983658/236836429-f110ea8d-e8bc-4851-94a2-4c01b2e41d01.png">
 
 <br>
 
-<img width="1383" alt="apply" src="https://user-images.githubusercontent.com/92983658/235905584-1adc80d4-c273-495a-b933-99a5340b3566.png">
+<img width="1386" alt="apply" src="https://user-images.githubusercontent.com/92983658/236836469-efe163b8-981b-4efa-a5bd-1de829313b69.png">
 
 <br>
  
