@@ -897,6 +897,59 @@ helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --crea
 
 <br>
 
+```
+
+# create route53 secret crediatials for cert-manager
+
+kubectl --namespace cert-manager \
+create secret generic route53-credentials \
+--from-literal="secret-access-key=<YOUR-AWS-SECRET-ACCESS-KEY>"
+
+
+```
+
+<br>
+
+```
+
+# create a certificate cluster issuer
+# create a file named cert_manager.yaml and deploy with kubectl
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  namespace: "cert-manager"
+  name: "letsencrypt-prod"
+spec:
+  acme:
+    server: "https://acme-v02.api.letsencrypt.org/directory"
+    email: "infradev@oldcowboyshop.com"
+    privateKeySecretRef:
+      name: "letsencrypt-prod"
+    solvers:
+    - selector:
+        dnsZones:
+          - "archibong.link"
+      dns01:
+        route53:
+          region: "eu-west-2"
+          hostedZoneID: "<your route 53 hosted zone id>"
+          accessKeyID: "<YOUR AWS ACCESS KEY ID>"
+          secretAccessKeySecretRef:
+              key: secret-access-key
+              name: route53-credentials
+
+# apply configuration
+kubectl apply -f cert_manager.yaml
+
+```
+
+<br>
+
+<img width="1036" alt="cert_manager" src="https://user-images.githubusercontent.com/92983658/236842456-fae262fa-cb79-4152-9118-f9155f6a34ef.png">
+
+<br>
+
 - configure vault installation from `vault/overlays/dev/values.yaml`
 
 ```
