@@ -41,7 +41,7 @@ alongside Kustomize for this.
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#integrate-the-tooling-app-aith-amazon-aurora-for-dev-sit-and-prod-environments">Integrate Tooling App With AWS Aurora For Sit, Dev and Prod Environments</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-integrate-vault-with-kubernetes">Configure Vault To Deploy Aurora Instance: Integrate Vault With Kubernetes</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-initialize-the-vault-cluster">Configure Vault To Deploy Aurora Instance: Initialize Vault Cluster</a>
-- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#dynamically-inject-secrets-into-the-tooling-app-container">Dynamically Inject Secrets Into Tooling App</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#dynamically-inject-secrets-into-the-tooling-app-container">Dynamically Inject Secrets Into Tooling App Container</a>
 
 <br>
 
@@ -121,7 +121,7 @@ spec:
 
 <br>
 
-<img width="1015" alt="base_deploy" src="https://user-images.githubusercontent.com/92983658/235634361-1f8844a4-e5ee-4fe8-92b0-860a8b2f715d.png">
+<img width="1107" alt="image" src="https://user-images.githubusercontent.com/92983658/236859134-8d33eaf0-7a25-4fbc-8745-aca19a0ddb03.png">
 
 <br>
 
@@ -1356,4 +1356,113 @@ vault write auth/kubernetes/role/tooling-role \
 
 <br>
 
+## Inject Secrets into the Tooling Application
+In order to inject secrets into the tooling application, a service-account will need to be created with the name configured in the `kubernetes role` and attached to the `tooling application` pod. This will create a sidecar which is the Vault agent and it will do the authentication and inject the secrets into the application.
+
+- In the `tooling-app-kustomize/overlays` directory where the Kubernetes manifest files exist, create a file `service-account.yaml` and add:
+
+```
+
+# tooling-app-kustomize/overlays/dev/service-account.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tooling-sa
+  
+```
+
+<br>
+
+<img width="979" alt="service_yaml" src="https://user-images.githubusercontent.com/92983658/236853140-39813e2e-100a-4e8d-8471-d5b87254a1c4.png">
+
+<br>
+
+- In the `tooling-app-kustomize/overlays/dev/deployment.yaml` file, replace the content with:
+
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tooling-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'tooling-role'
+        vault.hashicorp.com/agent-inject-status: 'update'
+        vault.hashicorp.com/agent-inject-secret-database-cred.txt: 'app/data/database/config/dev'
+        vault.hashicorp.com/agent-inject-template-database-cred.txt: |
+          {{- with secret "app/data/database/config/dev" -}}
+          export db-username={{ .Data.data.username }}
+          export db-password={{ .Data.data.password }}
+          export db-host={{ .Data.data.password }}
+          {{- end -}}
+    spec:
+      serviceAccountName: tooling-sa
+      
+  ````
+  
+  <br>
+  
+  <img width="1067" alt="tooling_deployment" src="https://user-images.githubusercontent.com/92983658/236853723-85fcd47d-5f55-4eba-b39c-9adb3b1eb869.png">
+
+<br>
+
+- Add the `service-account.yaml` file under the resources field of the `Kustomization` file in the `dev` directory. The Kustomization file should look like this:
+
+```
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dev
+resources:
+  - ../../base
+  - namespace.yaml
+  - service-account.yaml
+
+commonLabels:
+  env: dev-tooling
+
+patches:
+  - deployment.yaml
+  
+```
+
+<br>
+
+<img width="1067" alt="dev_kustomisation_2a" src="https://user-images.githubusercontent.com/92983658/236854431-a08b4e3f-b1e2-4dbf-b94c-696849ccdad5.png">
+
+<br>
+
+- apply the configuration.
+
+```
+
+kubectl apply -k overlays/dev
+
+```
+
+<br>
+
+<img width="985" alt="overlays_dev_config" src="https://user-images.githubusercontent.com/92983658/236855841-80236697-a40c-4c2e-85f1-94fc404f8ca9.png">
+
+<br>
+
+- inspect the tooling application pod
+
+```
+
+kubectl exec -it deployment/tooling-deployment \
+  -c tooling -- cat /vault/secrets/database-cred.txt
+  
+```
+
+<br>
+
+
+  
 
