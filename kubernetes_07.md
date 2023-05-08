@@ -1217,7 +1217,7 @@ kubectl exec -n vault vault-0 -- vault operator init
 
 <br>
 
-*note 2: more information on how to unseal vault keys <a href="https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-amazon-eks">here</a>
+*note 2: more information on how to unseal vault keys <a href="https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-amazon-eks">here</a>*
 
 <br>
 
@@ -1232,10 +1232,56 @@ This method can be used to pass secrets credentials like `password``, token` and
 ```
 
 export VAULT_ADDR="https://vault.masterclass.dev.archibong.link"
-vault token create
-vault login
+vault login (enter initial root token from the vault init)
+
+# alternatively...create vault token with `vault create token`
 
 ```
+
+<br>
+
+- Enable the `kv-v2` secrets at the path app.
+
+```
+
+vault secrets enable -path=app kv-v2
+
+```
+
+<br>
+
+<img width="828" alt="k2_v2" src="https://user-images.githubusercontent.com/92983658/236847553-2e65406e-09ca-4832-b853-c86def59f0fb.png">
+
+<br>
+
+- Create the tooling application database credentials at the path `app/database/config/dev`.
+
+```
+
+vault kv put app/database/config/dev username=db password=password host=http://database
+
+
+```
+
+<br>
+
+<img width="1203" alt="tooling_credentials" src="https://user-images.githubusercontent.com/92983658/236847978-7a799700-491f-446f-aa21-fe3bbee87f74.png">
+
+<br>
+
+- Verify that the secret is defined at the path `app/database/config/dev`.
+
+```
+
+vault kv get app/database/config/dev
+
+```
+
+<br>
+
+<img width="946" alt="secret_verify" src="https://user-images.githubusercontent.com/92983658/236848400-e4c9780c-9d8c-4599-b4cd-46f746b21fcd.png">
+
+<br>
 
 
 
