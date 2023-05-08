@@ -1184,10 +1184,7 @@ kubectl get pod -n vault
 kubectl exec -n vault vault-0 -- vault status
 
 # Initialize Vault with one key share and one key threshold.
-kubectl exec -n vault vault-0 -- vault operator init \
-    -key-shares=1 \
-    -key-threshold=1 \
-    -format=json > vault/cluster-keys.json
+kubectl exec -n vault vault-0 -- vault operator init 
     
 # Display the recovery key found in `vault/cluster-keys.json.`
 cd vault
@@ -1207,6 +1204,10 @@ cat cluster-keys.json | jq -r ".recovery_keys_b64[]"
 <br>
 
 <img width="876" alt="status" src="https://user-images.githubusercontent.com/92983658/236675717-939b2e0b-f431-4b61-90f0-91c33f0c0d39.png">
+
+<br>
+
+<img width="911" alt="vault_init" src="https://user-images.githubusercontent.com/92983658/236844992-69e606c4-bf69-40b0-a29e-62c2c7cdc8ba.png">
 
 <br>
 
