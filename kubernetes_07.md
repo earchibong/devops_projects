@@ -897,9 +897,9 @@ helm upgrade --install cert-manager jetstack/cert-manager -n cert-manager --crea
 
 <br>
 
-```
+- create route53 secret crediatials for cert-manager
 
-# create route53 secret crediatials for cert-manager
+```
 
 kubectl --namespace cert-manager \
 create secret generic route53-credentials \
@@ -910,9 +910,10 @@ create secret generic route53-credentials \
 
 <br>
 
+- create a certificate cluster issuer
+
 ```
 
-# create a certificate cluster issuer
 # create a file named cert_manager.yaml and deploy with kubectl
 
 apiVersion: cert-manager.io/v1
