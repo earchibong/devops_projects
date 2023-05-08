@@ -1456,13 +1456,67 @@ kubectl apply -k overlays/dev
 
 ```
 
-kubectl exec -it deployment/tooling-deployment \
+kubectl exec -it -n dev deployment/tooling-deployment \
   -c tooling -- cat /vault/secrets/database-cred.txt
   
 ```
 
 <br>
 
+<img width="1380" alt="inspect_tooling" src="https://user-images.githubusercontent.com/92983658/236859797-161afc54-b080-4da0-a2a0-4a2b89361686.png">
 
+<br>
+
+## Working with the Vault UI
+Apart from `vault cli`, vault UI can also be used to do some of the configurations. To view the vault UI, copy and paste the vault address on your browser, then you will see the login page.
+
+```
+
+vault.masterclass.dev.<your domain>
+
+```
   
+<br>
+
+<img width="1391" alt="vault_login" src="https://user-images.githubusercontent.com/92983658/236861036-84543e81-94c5-4548-bcc0-2ba2d1c257ad.png">
+
+<br>
+
+- login using the token you got after initializing the vault cluster
+- Check the database KV secret created before which is at the path `app/database/config/dev`.
+
+<br>
+
+<img width="1389" alt="vault_3" src="https://user-images.githubusercontent.com/92983658/236862678-7667f1bb-1c23-4fa6-bc6c-07ec283302ff.png">
+
+<br>
+
+- Check the tooling-role kubernetes auth method role.
+
+<br>
+
+<img width="1389" alt="vault_0" src="https://user-images.githubusercontent.com/92983658/236863607-3566a2df-f7d7-4e7e-becd-6d894baecb1c.png">
+
+<br>
+
+<img width="1391" alt="vault_4" src="https://user-images.githubusercontent.com/92983658/236863356-91d0e2b8-c113-4c6f-bada-90aac0040f51.png">
+
+<br>
+
+<img width="1388" alt="vault_5" src="https://user-images.githubusercontent.com/92983658/236863375-f1e822ac-69b8-43f8-bf5c-80f0639efec4.png">
+
+<br>
+
+- Navigate to the vault policy attached to the tooling-role kubernetes auth method.
+
+<br>
+
+<img width="1389" alt="policy_1" src="https://user-images.githubusercontent.com/92983658/236863943-da267792-f8ed-457e-ac85-b3ee11292463.png">
+
+<br>
+
+<img width="1392" alt="policy_2" src="https://user-images.githubusercontent.com/92983658/236863963-8a88cf1d-5338-4bfa-b3c7-a984725bffd9.png">
+
+<br>
+
 
