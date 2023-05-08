@@ -1185,17 +1185,11 @@ kubectl exec -n vault vault-0 -- vault status
 
 # Initialize Vault with one key share and one key threshold.
 kubectl exec -n vault vault-0 -- vault operator init 
-    
-# Display the recovery key found in `vault/cluster-keys.json.`
-cd vault
-cat cluster-keys.json | jq -r ".recovery_keys_b64[]"
+
+# copy the printout of init into a file named `vault/cluster-keys.json`
 
 
 ```
-
-<br>
-
-*note: `vault operator init`: The operator init command generates a root key that it disassembles into key shares `-key-shares=1` and then sets the number of key shares required to unseal Vault `-key-threshold=1`. These key shares are written to the output as unseal keys in `JSON format -format=json`. Here the output is redirected to a file named `vault/cluster-keys.json`.*
 
 <br>
 
@@ -1208,10 +1202,6 @@ cat cluster-keys.json | jq -r ".recovery_keys_b64[]"
 <br>
 
 <img width="911" alt="vault_init" src="https://user-images.githubusercontent.com/92983658/236844992-69e606c4-bf69-40b0-a29e-62c2c7cdc8ba.png">
-
-<br>
-
-<img width="858" alt="recovery_keys" src="https://user-images.githubusercontent.com/92983658/236677505-6451367a-e9a9-49dc-ac8e-2cf68fc2364c.png">
 
 <br>
 
