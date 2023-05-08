@@ -42,6 +42,9 @@ alongside Kustomize for this.
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-integrate-vault-with-kubernetes">Configure Vault To Deploy Aurora Instance: Integrate Vault With Kubernetes</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-initialize-the-vault-cluster">Configure Vault To Deploy Aurora Instance: Initialize Vault Cluster</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#dynamically-inject-secrets-into-the-tooling-app-container">Dynamically Inject Secrets Into Tooling App Container</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-kubernetes-authentication">Configure Kubernetes Authentication</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#inject-secrets-into-the-tooling-application">Inject secrets Into Tooling Application</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#working-with-the-vault-ui">Working With Vault UI</a>
 
 <br>
 
