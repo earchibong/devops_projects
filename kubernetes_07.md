@@ -41,6 +41,7 @@ alongside Kustomize for this.
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#integrate-the-tooling-app-aith-amazon-aurora-for-dev-sit-and-prod-environments">Integrate Tooling App With AWS Aurora For Sit, Dev and Prod Environments</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-integrate-vault-with-kubernetes">Configure Vault To Deploy Aurora Instance: Integrate Vault With Kubernetes</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#configure-terraform-to-deploy-an-aurora-instance-initialize-the-vault-cluster">Configure Vault To Deploy Aurora Instance: Initialize Vault Cluster</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubernetes_07.md#dynamically-inject-secrets-into-the-tooling-app-container">Dynamically Inject Secrets Into Tooling App</a>
 
 <br>
 
@@ -1283,6 +1284,76 @@ vault kv get app/database/config/dev
 
 <br>
 
+## Configure Kubernetes Authentication
 
+- Enable the `kubernetes auth method` at the default path.
+
+```
+
+vault auth enable kubernetes
+
+```
+
+<br>
+
+<img width="952" alt="kubernetes_auth" src="https://user-images.githubusercontent.com/92983658/236849048-f1bcae2d-caa6-42ee-8cb2-1ffd99b80aa4.png">
+
+<br>
+
+- Configure Vault to talk to Kubernetes with the /config path.
+This will require the Kubernetes host address, use `kubectl cluster-info` to get the `Kubernetes host address` and `TCP port` replace it with the `kubernetes_host` from the command below.
+
+```
+# get kubernetes host address and TCP port
+kubectl cluster-info
+
+#configure vault
+vault write auth/kubernetes/config \
+  kubernetes_host=https://77E094ED449C0E809F03764C760A051D.gr7.eu-west-2.eks.amazonaws.com
+
+```
+
+<br>
+
+<img width="1385" alt="confi" src="https://user-images.githubusercontent.com/92983658/236850116-b12826a2-e70f-4172-92f0-e217f5058b78.png">
+
+<br>
+
+- Create `read` policy.
+In order for the tooling application to read the database credentials it needs the `read capability` to the path `app/data/database/config`, we can do this by creating a policy and attach it to Kubernetes authentication role we will create.
+
+```
+
+vault policy write tooling-db - <<EOF
+path "app/data/database/config/*" {
+  capabilities = ["read"]
+}
+EOF
+
+```
+
+<br>
+
+<img width="987" alt="read_policy" src="https://user-images.githubusercontent.com/92983658/236850649-a6d4139e-0bc9-49e2-a8be-55b9a5f554cf.png">
+
+<br>
+
+- Create a kubernetes authentication role named `tooling-role`
+
+```
+
+vault write auth/kubernetes/role/tooling-role \
+  ttl=6h \
+  policies=tooling-db \
+  bound_service_account_names=tooling-sa \
+  bound_service_account_namespaces=dev
+  
+```
+
+<br>
+
+<img width="1059" alt="tooling_role" src="https://user-images.githubusercontent.com/92983658/236851017-8ee1154c-d72f-469c-9fd8-06088193e45f.png">
+
+<br>
 
 
