@@ -209,7 +209,7 @@ data "aws_caller_identity" "current" {} # used for accesing Account ID and ARN
 <br>
 
 - Create a file – `eks.tf` and provision EKS cluster
-note: Create the file only if you are not using existing Terraform code. Otherwise simply append it to the `main.tf` from your existing code
+
 ```
 module "eks_cluster" {
   source  = "terraform-aws-modules/eks/aws"
