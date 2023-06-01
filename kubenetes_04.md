@@ -4,8 +4,7 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 
 - use Terraform to create a Kubernetes EKS cluster and dynamically add scalable worker nodes
 - deploy multiple applications using HELM
-- experience more kubernetes objects and how to use them with Helm. Such as Dynamic provisioning of volumes to make pods stateful
-- improve on CI/CD skills with Jenkins
+
 
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/main/kubenetes_04.md#building-eks-with-terraform">Building EKS With Terraform</a>
