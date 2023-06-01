@@ -44,7 +44,9 @@ aws s3api create-bucket \
 
 <br>
 
-- Create a file – `backend.tf` ensure the backend is configured for remote state in S3
+## Configure Backend for Remote State in S3
+
+- Create a file – `backend.tf` and add the following:
 ```
 
 terraform {
@@ -64,9 +66,12 @@ terraform {
 
 <br>
 
+## Create compute Resources
 - Create a file – `network.tf`
- - provision Elastic IP for Nat Gateway, VPC, Private and public subnets.
- - Create VPC using the official AWS module
+    - Provision Elastic IP for Nat Gateway, VPC, Private and public subnets.
+    - Create VPC using the official AWS module
+    - Enable a Nat gateway
+    - add VPC/subnet Tags for EKS
 
 ```
 
@@ -155,6 +160,8 @@ Value: 1
 
 <br>
 
+## Create a Variables File
+
 - Create a file – `variables.tf`
 ```
 
@@ -192,7 +199,9 @@ description = "CIDR block bits extension offset to calculate Public subnets, avo
 
 <br>
 
-- Create a file : `data.tf` (This will pull the available AZs for use.)
+## Create a Data file TO Pull Available Availability Zones FOr Use
+
+- Create a file : `data.tf` 
 ```
 # get all available AZs in our region
 data "aws_availability_zones" "available_azs" {
@@ -207,6 +216,8 @@ data "aws_caller_identity" "current" {} # used for accesing Account ID and ARN
 <img width="781" alt="data" src="https://user-images.githubusercontent.com/92983658/225303758-9a1ba2b1-b0f7-4029-91ae-320e5c1df219.png">
 
 <br>
+
+## Provision EKS Cluster
 
 - Create a file – `eks.tf` and provision EKS cluster
 
@@ -245,6 +256,8 @@ module "eks_cluster" {
 <img width="782" alt="eks" src="https://user-images.githubusercontent.com/92983658/225305510-7e25ef0e-6c91-4eec-a104-6e27118c5387.png">
 
 <br>
+
+## Create A Local Variables File to Store local variables
 
 - Create a file – `locals.tf` to create local variables
 ```
@@ -306,6 +319,8 @@ locals {
 
 <br>
 
+## Update Variables File
+
 - add to `variables.tf`
 ```
 
@@ -334,7 +349,9 @@ variable "autoscaling_maximum_size_by_az" {
 
 <br>
 
-- Create a file – `variables.tfvars` to set values for variables.
+## Create .tfvars file to set values for variables
+
+- Create a file – `variables.tfvars` 
 ```
 
 cluster_name            = "tooling-app-eks"
@@ -361,6 +378,8 @@ autoscaling_average_cpu        = 30
 
 <br>
 
+## Create Providers
+
 - Create file – `provider.tf`
 ```
 
@@ -375,7 +394,11 @@ provider "random" {
 
 <br>
 
-- Run `terraform init`
+ ```
+ 
+ terraform init
+ 
+ ```
 
 <br>
 
@@ -384,7 +407,16 @@ provider "random" {
 <br>
 
 
-- Run `Terraform plan` - plan should have an output as below:
+``
+
+Terraform plan
+
+``` 
+
+<br>
+
+- plan should have an output as below:
+
 ```
 Plan: 53 to add, 0 to change, 0 to destroy.
 
