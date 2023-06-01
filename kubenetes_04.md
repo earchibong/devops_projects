@@ -8,6 +8,10 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 
 ## Labs
 - <a href="https://github.com/earchibong/devops_training/main/kubenetes_04.md#building-eks-with-terraform">Building EKS With Terraform</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#configure-backend-for-remote-state-in-s3">Configure backend For Remote state In S3</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-compute-resources">Create Compute Resources</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-a-variables-file">Create Variable File</a>
+- 
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#deploy-applications-with-helm">Deploy Applications With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#deploy-jenkins-with-helm">Deploy Jenkins With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#configuring-kubeconfig-file--kubeconfig">Configuring Kube Config File</a> 
@@ -199,7 +203,7 @@ description = "CIDR block bits extension offset to calculate Public subnets, avo
 
 <br>
 
-## Create a Data file TO Pull Available Availability Zones FOr Use
+## Create a Data file To Pull Available Availability Zones FOr Use
 
 - Create a file : `data.tf` 
 ```
