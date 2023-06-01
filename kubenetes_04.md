@@ -11,7 +11,12 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#configure-backend-for-remote-state-in-s3">Configure backend For Remote state In S3</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-compute-resources">Create Compute Resources</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-a-variables-file">Create Variable File</a>
-- 
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-a-data-file-to-pull-available-availability-zones-for-use">Create A Data File to Pull Available AZs For Use</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#provision-eks-cluster">Provision EKS Cluster</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-a-local-variables-file-to-store-local-variables">Create Local Variables Fileto Store Local Variables</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#update-variables-file">Update Variables File</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-tfvars-file-to-set-values-for-variables">Create .tfvars files to set values for variables</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-providers">Create Providers</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#deploy-applications-with-helm">Deploy Applications With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#deploy-jenkins-with-helm">Deploy Jenkins With Helm</a>
 - <a href="https://github.com/earchibong/devops_training/blob/main/kubenetes_04.md#configuring-kubeconfig-file--kubeconfig">Configuring Kube Config File</a> 
@@ -203,7 +208,7 @@ description = "CIDR block bits extension offset to calculate Public subnets, avo
 
 <br>
 
-## Create a Data file To Pull Available Availability Zones FOr Use
+## Create a Data file To Pull Available Availability Zones For Use
 
 - Create a file : `data.tf` 
 ```
@@ -411,7 +416,7 @@ provider "random" {
 <br>
 
 
-``
+```
 
 Terraform plan
 
