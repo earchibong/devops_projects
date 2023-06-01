@@ -6,7 +6,7 @@ This project focuses on EKS, and how to get it up and running using Terraform. t
 - deploy multiple applications using HELM
 
 
-## Labs
+## Project Steps
 - <a href="https://github.com/earchibong/devops_training/main/kubenetes_04.md#building-eks-with-terraform">Building EKS With Terraform</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#configure-backend-for-remote-state-in-s3">Configure backend For Remote state In S3</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/kubenetes_04.md#create-compute-resources">Create Compute Resources</a>
