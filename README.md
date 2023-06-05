@@ -1,4 +1,6 @@
-## Freelance Projects
+# Devops Projects
+
+### Freelance Projects
 <ul>
     <li><a href="https://github.com/earchibong/springboot_project">Deploy Spring Boot MongoDB Application on AWS EC2 using Jenkins CI/CD</a></li>
     <li><a href="https://github.com/earchibong/terraform-wordpress">Deploy WordPress and MySQL with Terraform on AWS EC2</a></li>
@@ -8,10 +10,10 @@
 
 <br>
 
-# Devops Bootcamp Projects
+## Devops Bootcamp Projects
 Documentation of all my project based learning projects.
 
-## Projects include:
+### Projects include:
 <ul>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">PROJECT ONE: LAMP stack installation</a></li>
     <li><a href="https://github.com/earchibong/devops_training/blob/main/LEMP.md">PROJECT TWO: LEMP stack installation</a></li>
