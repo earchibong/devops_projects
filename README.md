@@ -1,7 +1,8 @@
 # Devops Projects
 
-### Freelance Projects
+### Side Projects
 <ul>
+    <li><a href="https://github.com/earchibong/terraform-eks">Deploy an EKS Cluster with Public and Private Node Groups on AWS using Terraform</a></li>
     <li><a href="https://github.com/earchibong/springboot_project">Deploy Spring Boot MongoDB Application on AWS EC2 using Jenkins CI/CD</a></li>
     <li><a href="https://github.com/earchibong/terraform-wordpress">Deploy WordPress and MySQL with Terraform on AWS EC2</a></li>
     <li><a href="https://github.com/earchibong/terraform-ansible">Deploy Web page On EC2 With Terraform And Ansible</a></li>
