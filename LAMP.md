@@ -27,7 +27,7 @@ The LAMP stack provides a robust and flexible platform for hosting dynamic websi
 <br>
 
 ## Project Steps
-- <a href=" ">Launch Virtual Machine</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/LAMP.md#launch-a-virutal-machine-select-machine-specs-connect-to-instance-with-ssh ">Launch Virtual Machine</a>
 - <a href=" ">Install Apache</a>
 - <a href=" ">Install MYSQL from SSH</a>
 - <a href=" ">Install PHP </a>
