@@ -31,8 +31,8 @@ The LAMP stack provides a robust and flexible platform for hosting dynamic websi
 - <a href="https://github.com/earchibong/devops_projects/blob/main/LAMP.md#install-apache">Install Apache</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/LAMP.md#install-mysql-on-aws-ec2-ubuntu-from-ssh">Install MYSQL from SSH</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/LAMP.md#install-php-on-ec2-ubuntu">Install PHP </a>
-- <a href="https://github.com/earchibong/devops_projects/blob/main/LAMP.md#enable-php-on-website">Create Virtual Host for a website using APACHE</a>
-- <a href=" ">Enable PHP on website</a>
+- <a href=" ">Create Virtual Host for a website using APACHE</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/LAMP.md#enable-php-on-website">Enable PHP on website</a>
 
 <br>
 
