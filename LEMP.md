@@ -37,7 +37,7 @@ It's worth noting that alternative components can also be used in the LEMP stack
 
 ## Create and configure a virtual server on AWS
 
-Get instructions on how to get started with EC@ instances <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html">here</a>
+Get instructions on how to get started with EC2 instances <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html">here</a>
 <br>
 
 <br>
