@@ -1,47 +1,191 @@
-## LEMP INSTALLATION ON AWS
+# LEMP INSTALLATION ON AWS
+
+LEMP stack is a popular software stack used for web application development and hosting. It consists of four main components:
+
+Linux: The "L" in LEMP represents the Linux operating system. Linux provides a stable and secure foundation for hosting web applications. It is commonly used in combination with other components of the LEMP stack.
+
+Nginx: The "N" in LEMP stands for Nginx, which is a high-performance web server and reverse proxy server. Nginx is known for its scalability, speed, and efficiency in handling concurrent connections. It is often used as the front-end web server in the LEMP stack.
+
+MySQL/MariaDB: The "M" in LEMP refers to MySQL or MariaDB, which are popular relational database management systems (RDBMS). They provide a robust and scalable solution for storing and managing data required by web applications. MySQL and MariaDB are widely used in conjunction with PHP and other programming languages.
+
+PHP: The "P" in LEMP represents PHP, which is a widely used server-side scripting language. PHP allows developers to build dynamic web applications by embedding code within HTML. It provides extensive libraries and frameworks for rapid web development. PHP is typically used in conjunction with Nginx and MySQL/MariaDB in the LEMP stack.
+
+When combined, the LEMP stack provides a complete environment for hosting web applications. Nginx handles the incoming web requests and acts as a reverse proxy to forward requests to the appropriate PHP scripts. PHP processes the requests, generates dynamic content, and communicates with the MySQL/MariaDB database to retrieve or store data.
+
+The LEMP stack is known for its performance, scalability, and compatibility with a wide range of web applications. It is particularly popular for hosting content management systems (CMS) like WordPress, Drupal, and Joomla.
+
+It's worth noting that alternative components can also be used in the LEMP stack, such as PostgreSQL instead of MySQL/MariaDB, or other scripting languages like Python or Ruby instead of PHP. The stack can be customized based on specific application requirements and preferences.
+
+<br>
+
+<br>
+
+## Project Steps
+- <a href=" ">Create and configure virtual server on AWS</a>
+- <a href=" ">Install Nginx</a>
+- <a href=" ">Install Mysql Database</a.
+
+<br>
+
+<br>
+
 ## STEP ONE: Create and configure virtual server on AWS
 
 <a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">See here</a>
 
+<br>
+
+<br>
+
 ## STEP TWO: Install Nginx Server
-- update server: `sudo apt update`
-- install nginx: `sudo apt install nginx`
+- update server and install nginx:
+```
+sudo apt update
+sudo apt install nginx
+
+```
+
+<br>
+
+<br>
 
 ![install_nginx](https://user-images.githubusercontent.com/92983658/177517763-5595f1f4-d2b0-423c-badc-a08209aa12c6.png)
 
-- check nginx status: `sudo systemctl status nginx`
+<br>
+
+<br>
+
+- check nginx status:
+
+```
+
+sudo systemctl status nginx
+
+```
+
+<br>
+
+<br>
 
 ![nginx_status](https://user-images.githubusercontent.com/92983658/177517974-ca324d51-1393-4841-b7c6-781976a3da7b.png)
 
-- test local access: `curl http://localhost:80`
+<br>
+
+<br>
+
+- test local access:
+```
+
+curl http://localhost:80
+
+```
+
+<br>
+
+<br>
 
 ![curl_nginx](https://user-images.githubusercontent.com/92983658/177518287-a3392188-3e4f-4017-aaee-66cf5be7e8f5.png)
 
-- check browser: `http://<EC2 IP>` `http://13.40.82.74`
+<br>
+
+<br>
+
+- check browser:
+
+```
+
+http://<EC2 IP>
+http://13.40.82.74 #example
+
+```
+
+<br>
+
+<br>
 
 ![ip_adress_nginx](https://user-images.githubusercontent.com/92983658/177519074-db7f6595-6155-42ed-be6d-be5fdb5c088e.png)
 
 
+<br>
+
+<br>
+
 ## STEP THEE: Install Mysql Database
-- acquire and install mysql database : `sudo apt install mysql-server`
+- acquire and install mysql database :
+
+```
+sudo apt install mysql-server
+
+```
+
+<br>
+
+<br>
 
 ![mysql_install](https://user-images.githubusercontent.com/92983658/177556240-e7d06a72-1610-47a5-8eb7-7382d446fb76.png)
 
-- log into MYSQL : `sudo mysql`
-- set password for root user: `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';`
+<br>
+
+<br>
+
+- log into MYSQL and set password for root user :
+
+```
+
+sudo MySQL
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
+
+
+```
+
+<br>
+
+<br>
 
 ![mysql_set_password](https://user-images.githubusercontent.com/92983658/177556904-64fb41c4-83c9-4b27-b8a0-fd212d3ab59d.png)
 
 - exit mysql shell: exit
--  run security script : `sudo mysql_secure_installation`
+-  run security script :
+
+```
+
+sudo mysql_secure_installation
+
+```
+
+<br>
+
+<br>
 
 ![musql_security_script](https://user-images.githubusercontent.com/92983658/177557473-71f577bf-95a5-4105-b75e-10f88b72897d.png)
 
-- test mysql installation : `sudo mysql -p`
+<br>
+
+<br>
+
+- test mysql installation :
+
+```
+
+sudo mysql -p
+
+```
+
+<br>
+
+<br>
 
 ![mysql_status](https://user-images.githubusercontent.com/92983658/177557854-dd515c11-b290-4aec-a267-80a496062559.png)
 
+<br>
+
+<br>
+
 - exit mysql : `exit`
+
+<br>
+
+<br>
 
 
 ## STEP FOUR: Install PHP
