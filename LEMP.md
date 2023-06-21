@@ -30,7 +30,7 @@ It's worth noting that alternative components can also be used in the LEMP stack
 
 <br>
 
-## Create and configure virtual server on AWS
+## Create and configure a virtual server on AWS
 
 Get instructions on how to get started with EC@ instances <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html">here</a>
 <br>
@@ -283,7 +283,7 @@ http://ec2 public IP
 
 
 ## Test Nginx and PHP
-- create test PHP file in document root:
+- create a test PHP file in the document root:
 - paste PHP code:
 
 ```
@@ -323,10 +323,18 @@ phpinfo();
 
 <br>
 
-## Retrieve data from database with PHP
+## Retrieve data from the database with PHP
 
-- connect to mysql console: `sudo mysql -p`
-- create new database: `CREATE DATABASE `example_database`;`
+- connect to mysql console: 
+- create a new database:
+
+```
+
+sudo mysql -p
+CREATE DATABASE `example_database`;
+
+
+```
 
 <br>
 
@@ -338,46 +346,131 @@ phpinfo();
 
 <br>
 
-- create a new user: `CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';`
-- give user permission over database: `GRANT ALL ON example_database.* TO 'example_user'@'%';`
-- exit mysql: `exit`
-- test user permissions: `mysql -u example_user -p`
-- confirm access to database: `SHOW DATABASES;`
+- create a new user: 
+- give user permission over database: 
+- exit mysql: 
+- test user permissions:
+- confirm access to database:
+
+```
+
+CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT ALL ON example_database.* TO 'example_user'@'%';
+exit
+mysql -u example_user -p
+SHOW DATABASES;
+
+```
+
+<br>
+
+<br>
 
 ![Screenshot 2022-07-06 at 15 28 19](https://user-images.githubusercontent.com/92983658/177574279-2f2669cd-4c53-417d-96d6-3231fadec1d4.png)
 
-- create test table '`to-do list`: `CREATE TABLE example_database.todo_list (
+<br>
+
+<br>
+
+- create test table '`to-do list`:
+```
+
+CREATE TABLE example_database.todo_list (
   item_id INT AUTO_INCREMENT,
   content VARCHAR(255),
   PRIMARY KEY(item_id)
-);`
+);
+
+```
+
+<br>
+
+<br>
 
 
 ![Screenshot 2022-07-06 at 16 02 36](https://user-images.githubusercontent.com/92983658/177582132-f6c7a4ff-9918-4659-829e-0c0d0d82110f.png)
 
 
-- insert new rows of content: `INSERT INTO
+<br>
+
+<br>
+
+- insert new rows of content:
+```
+
+INSERT INTO
   example_database.todo_list (content)
 VALUES
-  ("My first important item");`
- - repeat mutiple times with different values
-  
+  ("My first important item");
+
+```
+
+ - repeat multiple times with different values
+
+<br>
+
+<br>
   
   ![Screenshot 2022-07-06 at 16 12 02](https://user-images.githubusercontent.com/92983658/177584113-dab94a42-fede-4589-a2db-46c4630afa01.png)
 
-  - confirm data successfully saved : `SELECT * FROM example_database.todo_list;`
+<br>
+
+<br>
+
+- confirm data successfully saved:
+```
+
+SELECT * FROM example_database.todo_list;
+
+```
+
+<br>
+
+<br>
+
 
 ![Screenshot 2022-07-06 at 16 13 35](https://user-images.githubusercontent.com/92983658/177584714-251dd25c-d560-428e-9d78-a4af57b3594d.png)
 
-- exit mysql : `exit`
+<br>
+
+<br>
+
+- exit mysql: `exit`
 
 - *create PHP script to query MYSQL for database content* : `nano /var/www/projectLEMP/todo_list.php`
 - copy php script into `todo-list.php`
 
+<br>
+
+<br>
+
+
 ![Screenshot 2022-07-06 at 16 28 43](https://user-images.githubusercontent.com/92983658/177587746-2f87e6d5-a7a4-471f-ae6c-7cf9cbe502ad.png)
 
-- test configuration: `sudo service nginx configtest `
-- restart php-fpm and nginx: `sudo service php7.0-fpm restart` and `sudo service nginx restart`
-- access todo_list in browser: `http://ec2 public ip/todo_list.php`
+
+<br>
+
+<br>
+
+- test configuration: 
+- restart php-fpm and nginx:
+- access todo_list in browser:
+
+```
+
+sudo service nginx configtest
+sudo service php7.0-fpm restart` and `sudo service nginx restart
+http://ec2 public ip/todo_list.php
+
+```
+
+<br>
+
+<br>
 
 ![Screenshot 2022-07-06 at 17 05 47](https://user-images.githubusercontent.com/92983658/177595072-890e9d73-22d1-4780-b5c3-ce9c0ce3b3e5.png)
+
+<br>
+
+<br>
+
