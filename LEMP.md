@@ -464,7 +464,8 @@ SELECT * FROM example_database.todo_list;
 ```
 
 sudo service nginx configtest
-sudo service php7.0-fpm restart` and `sudo service nginx restart
+sudo service php7.0-fpm restart
+sudo service nginx restart
 http://ec2 public ip/todo_list.php
 
 ```
