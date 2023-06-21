@@ -2,13 +2,13 @@
 
 LEMP stack is a popular software stack used for web application development and hosting. It consists of four main components:
 
-Linux: The "L" in LEMP represents the Linux operating system. Linux provides a stable and secure foundation for hosting web applications. It is commonly used in combination with other components of the LEMP stack.
+**Linux:** The "L" in LEMP represents the Linux operating system. Linux provides a stable and secure foundation for hosting web applications. It is commonly used in combination with other components of the LEMP stack.
 
-Nginx: The "N" in LEMP stands for Nginx, which is a high-performance web server and reverse proxy server. Nginx is known for its scalability, speed, and efficiency in handling concurrent connections. It is often used as the front-end web server in the LEMP stack.
+**Nginx:** The "N" in LEMP stands for Nginx, which is a high-performance web server and reverse proxy server. Nginx is known for its scalability, speed, and efficiency in handling concurrent connections. It is often used as the front-end web server in the LEMP stack.
 
-MySQL/MariaDB: The "M" in LEMP refers to MySQL or MariaDB, which are popular relational database management systems (RDBMS). They provide a robust and scalable solution for storing and managing data required by web applications. MySQL and MariaDB are widely used in conjunction with PHP and other programming languages.
+**MySQL/MariaDB:** The "M" in LEMP refers to MySQL or MariaDB, which are popular relational database management systems (RDBMS). They provide a robust and scalable solution for storing and managing data required by web applications. MySQL and MariaDB are widely used in conjunction with PHP and other programming languages.
 
-PHP: The "P" in LEMP represents PHP, which is a widely used server-side scripting language. PHP allows developers to build dynamic web applications by embedding code within HTML. It provides extensive libraries and frameworks for rapid web development. PHP is typically used in conjunction with Nginx and MySQL/MariaDB in the LEMP stack.
+**PHP:** The "P" in LEMP represents PHP, which is a widely used server-side scripting language. PHP allows developers to build dynamic web applications by embedding code within HTML. It provides extensive libraries and frameworks for rapid web development. PHP is typically used in conjunction with Nginx and MySQL/MariaDB in the LEMP stack.
 
 When combined, the LEMP stack provides a complete environment for hosting web applications. Nginx handles the incoming web requests and acts as a reverse proxy to forward requests to the appropriate PHP scripts. PHP processes the requests, generates dynamic content, and communicates with the MySQL/MariaDB database to retrieve or store data.
 
@@ -23,21 +23,21 @@ It's worth noting that alternative components can also be used in the LEMP stack
 ## Project Steps
 - <a href=" ">Create and configure virtual server on AWS</a>
 - <a href=" ">Install Nginx</a>
-- <a href=" ">Install Mysql Database</a.
+- <a href=" ">Install Mysql Database</a>
+- <a href=" ">Install PHP</a>
 
 <br>
 
 <br>
 
-## STEP ONE: Create and configure virtual server on AWS
+## Create and configure virtual server on AWS
 
-<a href="https://github.com/earchibong/devops_training/blob/main/LAMP.md">See here</a>
-
+Get instructions on how to get started with EC@ instances <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html">here</a>
 <br>
 
 <br>
 
-## STEP TWO: Install Nginx Server
+## Install Nginx Server
 - update server and install nginx:
 ```
 sudo apt update
@@ -110,7 +110,7 @@ http://13.40.82.74 #example
 
 <br>
 
-## STEP THEE: Install Mysql Database
+## Install Mysql Database
 - acquire and install mysql database :
 
 ```
@@ -188,62 +188,155 @@ sudo mysql -p
 <br>
 
 
-## STEP FOUR: Install PHP
-- install `PHP fastCGI process manager` and `php-mysql` : `sudo apt install php-fpm php-mysql`
+## Install PHP
+- install `PHP fastCGI process manager` and `php-mysql` :
+```
+
+sudo apt install php-fpm php-mysql
+
+```
+
+<br>
+
+<br>
 
 ![php_myql_fpm](https://user-images.githubusercontent.com/92983658/177559045-dfb1578c-fbd0-4874-b8aa-461e0c52e15b.png)
 
 
-## STEP FIVE: Configure Nginx
+<br>
 
-- create root web directory : `sudo mkdir /var/www/projectLEMP`
-- assign ownership of directory: `sudo chown -R $USER:$USER /var/www/projectLEMP`
-- open new configuration file: `sudo nano /etc/nginx/sites-available/projectLEMP`
+<br>
+
+## Configure Nginx
+
+- create root web directory 
+- assign ownership of directory: 
+- open new configuration file:
 - paste configuration
+
+```
+
+sudo mkdir /var/www/projectLEMP
+sudo chown -R $USER:$USER /var/www/projectLEMP
+sudo nano /etc/nginx/sites-available/projectLEMP
+
+```
+
+<br>
+
+<br>
 
 ![nano_php_configuration](https://user-images.githubusercontent.com/92983658/177560662-0fe20e44-4f06-4f4b-ab96-b8cf39f633f6.png)
 
 
+<br>
+
+<br>
+
 - save and close file: `ctrl-x`, then `y` then `enter`
-- activate configuration: `sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/`
-- test configuration for syntax errors: `sudo nginx -t`
+- activate configuration:
+- test configuration for syntax errors:
+
+```
+
+sudo ln -s /etc/nginx/sites-available/projectLEMP /etc/nginx/sites-enabled/
+sudo nginx -t
+
+```
+
+<br>
+
+<br>
 
 ![activation_configuration](https://user-images.githubusercontent.com/92983658/177561077-06f4179e-004e-47de-8537-5a4427c39eea.png)
 
 
-- unlink default nginx host: `sudo unlink /etc/nginx/sites-enabled/default`
-- reload nginx: `sudo systemctl reload nginx`
+<br>
 
+<br>
+
+- unlink default nginx host:
+- reload nginx: 
 - create new index file and test server block: 
-`sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html`
+- check browser using IP address:
 
-- check browser using IP address: `http://ec2 public IP`
+```
+
+sudo unlink /etc/nginx/sites-enabled/default
+sudo systemctl reload nginx
+
+sudo echo 'Hello LEMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectLEMP/index.html
+
+http://ec2 public IP
+
+```
+
+<br>
+
+<br>
 
 ![public_IP_test](https://user-images.githubusercontent.com/92983658/177563188-6863e3d1-30c7-42c5-bd1f-a1fbc5335441.png)
 
+<br>
 
-## STEP SIX: Test Nginx and PHP
-- create test PHP file in document root: `sudo nano /var/www/projectLEMP/info.php`
-- paste PHP code: `<?php
-phpinfo();`
+<br>
+
+
+## Test Nginx and PHP
+- create test PHP file in document root:
+- paste PHP code:
+
+```
+
+sudo nano /var/www/projectLEMP/info.php
+<?php
+phpinfo();
+
+```
+
+<br>
+
+<br>
 
 ![Screenshot 2022-07-06 at 10 04 30](https://user-images.githubusercontent.com/92983658/177569538-4ce68948-43e4-486e-bbb1-fb9babf92543.png)
 
+<br>
+
+<br>
 
 - write and save file: `ctrl-x then y then enter`
 - access new php file in browser with `/info.php` extension: `http://ec2 public ip/info.php`
 
+<br>
+
+<br>
+
  ![Screenshot 2022-07-06 at 17 11 28](https://user-images.githubusercontent.com/92983658/177596080-4bf0fdcb-57bc-4ce4-9af5-d27f48316555.png)
+
+<br>
+
+<br>
 
 - remove test file `info.php` after checking relevant information: `sudo rm /var/www/your_domain/info.php`
 
+<br>
 
-## STEP SEVEN: Retrieve data from database with PHP
+<br>
+
+## Retrieve data from database with PHP
 
 - connect to mysql console: `sudo mysql -p`
 - create new database: `CREATE DATABASE `example_database`;`
 
+<br>
+
+<br>
+
 ![Screenshot 2022-07-06 at 15 21 12](https://user-images.githubusercontent.com/92983658/177572681-89c46d10-eaea-4c99-a8e3-b4b8429a256b.png)
+
+<br>
+
+<br>
 
 - create a new user: `CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';`
 - give user permission over database: `GRANT ALL ON example_database.* TO 'example_user'@'%';`
