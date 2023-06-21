@@ -24,7 +24,7 @@ It's worth noting that alternative components can also be used in the LEMP stack
 - <a href=" ">Create and configure virtual server on AWS</a>
 - <a href=" ">Install Nginx</a>
 - <a href=" ">Install Mysql Database</a>
-- <a href=" ">Install PHP</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/LEMP.md#install-php">Install PHP</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/LEMP.md#configure-nginx">Configure Niginx</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/LEMP.md#test-nginx-and-php">Test Nginx & PHP</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/LEMP.md#retrieve-data-from-the-database-with-php">Retrieve Data From Database With PHP</a>
