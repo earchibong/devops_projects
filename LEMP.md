@@ -25,6 +25,8 @@ It's worth noting that alternative components can also be used in the LEMP stack
 - <a href=" ">Install Nginx</a>
 - <a href=" ">Install Mysql Database</a>
 - <a href=" ">Install PHP</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/LEMP.md#configure-nginx">Configure Niginx</a>
+
 
 <br>
 
