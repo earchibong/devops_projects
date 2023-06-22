@@ -9,12 +9,19 @@ To deploy a simple To-Do application that creates To-Do lists like this:
 
 In this project, we will use a MERN stack in AWS Cloud to implement the web solution above.
 
-MERN Web stack consists of following components:
+The MERN stack is a popular web development framework that combines four key technologies: MongoDB, Express.js, React, and Node.js. Each of these technologies serves a specific purpose and together they form a full-stack JavaScript framework for building web applications.
 
-- **MongoDB**: A document-based, No-SQL database used to store application data in a form of documents.
-- **ExpressJS**: A server side Web Application framework for Node.js.
-- **ReactJS**: A frontend framework developed by Facebook. It is based on JavaScript, used to build User Interface (UI) components.
-- **Node.js**: A JavaScript runtime environment. It is used to run JavaScript on a machine rather than in a browser.
+Here's a breakdown of each component in the MERN stack:
+
+**MongoDB:** MongoDB is a NoSQL database that stores data in a flexible, JSON-like format called BSON (Binary JSON). It is known for its scalability, high performance, and ease of use. MongoDB allows developers to store and retrieve data using a document-oriented model, making it well-suited for applications that handle large amounts of unstructured data.
+
+**Express.js:** Express.js is a minimalistic and flexible web application framework for Node.js. It provides a set of tools and utilities for building web applications and APIs. Express.js simplifies the process of handling HTTP requests, routing, and middleware management. It's lightweight and allows developers to create server-side logic easily.
+
+**React:** React is a JavaScript library developed by Facebook for building user interfaces. It focuses on creating reusable UI components that can efficiently update and render as the application's data changes. React follows a component-based architecture and uses a virtual DOM (Document Object Model) for efficient updates. It's widely used for building interactive and dynamic user interfaces.
+
+**Node.js:** Node.js is a JavaScript runtime environment built on Chrome's V8 JavaScript engine. It allows developers to run JavaScript code on the server-side, enabling the creation of server applications. Node.js provides event-driven and non-blocking I/O (input/output) capabilities, making it highly scalable and efficient. It's commonly used for building fast and scalable network applications.
+
+<br>
 
 <br>
 
@@ -22,11 +29,20 @@ MERN Web stack consists of following components:
 
 <br>
 
+<br>
+
 As shown on the illustration above, a user interacts with the ReactJS UI components at the application front-end residing in the browser. This frontend is served by the application backend residing in a server, through ExpressJS running on top of NodeJS.
 
 Any interaction that causes a data change request is sent to the NodeJS based Express server, which grabs data from the MongoDB database if required, and returns the data to the frontend of the application, which is then presented to the user.
 
+When combined, MongoDB serves as the database layer, Express.js handles server-side logic and routing, React manages the client-side user interface, and Node.js acts as the server runtime. This combination allows developers to build full-stack JavaScript applications using a unified language and a consistent development environment.
+
+The MERN stack is popular because it leverages JavaScript for both frontend and backend development, allowing developers to use the same language throughout the entire application. This reduces the need to switch between different languages or frameworks, streamlines the development process, and promotes code reuse. Additionally, the MERN stack benefits from a large and active community, extensive documentation, and a rich ecosystem of libraries and tools.
+
 <br>
+
+<br>
+
 
 ## Pre-requisites:
 - an AWS account and a virtual server with Ubuntu Server OS.
