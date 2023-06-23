@@ -1,4 +1,4 @@
-# CLIENT-SERVER ARCHITECTURE IN MYSQL
+# Client-Server Architecture In MYSQL
 MySQL, being a relational database management system, is designed to work in a client-server architecture by default. The server component of MySQL, commonly known as the MySQL server or MySQL daemon, runs as a separate process and listens for client connections on a specific network port (typically port 3306). Clients, which can be applications or other systems, connect to the MySQL server to send queries and retrieve data.
 
 <br>
@@ -6,7 +6,7 @@ MySQL, being a relational database management system, is designed to work in a c
 <br>
 
 ## Project Steps
-- <a href=" ">Create and configure 2 Ubuntu Virtual Servers</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-one-create-and-configure-2-ubuntu-virtual-servers">Create and configure 2 Ubuntu Virtual Servers</a>
 - <a href=" ">Install Mysql Server Software on mysql_server instance</a>
 - <a href=" ">Configure Mysql Server</a>
 - <a href=" ">Create Dedicate User & Grant Privileges</a>
@@ -19,7 +19,6 @@ MySQL, being a relational database management system, is designed to work in a c
 
 <br>
 
--
 ## Requirements:
 - 2 ubuntu instances(one as a server, the other as a client)
 AWS EC2 instances will be used for this architecture.
