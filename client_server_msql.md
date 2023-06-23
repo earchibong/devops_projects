@@ -11,7 +11,7 @@ MySQL, being a relational database management system, is designed to work in a c
 - <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-three-configure-mysql">Configure Mysql Server</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-four-create-dedicate-user--grant-privileges">Create Dedicate User & Grant Privileges</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-five-test-mysql-server">Test Mysql-server</a>
-- <a href=" ">Install Mysql-Client Software on Client Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-six-install-mysql-client-software-on-client-server">Install Mysql-Client Software on Client Server</a>
 - <a href=" ">Configure MySQL server to accept connections</a>
 - <a href=" ">Connect to MySQL server from MySQL client</a>
 
