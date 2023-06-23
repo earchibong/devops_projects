@@ -9,7 +9,7 @@ MySQL, being a relational database management system, is designed to work in a c
 - <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-one-create-and-configure-2-ubuntu-virtual-servers">Create and configure 2 Ubuntu Virtual Servers</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-two-install-mysql-server-software-on-mysql_server-instance">Install Mysql Server Software on mysql_server instance</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-three-configure-mysql">Configure Mysql Server</a>
-- <a href=" ">Create Dedicate User & Grant Privileges</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/client_server_msql.md#step-four-create-dedicate-user--grant-privileges">Create Dedicate User & Grant Privileges</a>
 - <a href=" ">Test Mysql-server</a>
 - <a href=" ">Install Mysql-Client Software on Client Server</a>
 - <a href=" ">Configure MySQL server to accept connections</a>
