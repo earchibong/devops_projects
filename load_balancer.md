@@ -1,19 +1,26 @@
 # Project: Deploy And Configure An Apache Load Balancer
 
-Horizontal scalability with a Load Balancer to be used on a tooling website solution that creates access to DevOps tools within a corporate infrastructure. Users will be served by Web servers through the Load Balancer.
+Horizontal scalability with a Load Balancer to be used on a tooling website solution that creates access to DevOps tools within a corporate infrastructure. Web servers will serve users through the Load Balancer.
 
 ![3-tier-web-architecture=lb](https://user-images.githubusercontent.com/92983658/186165094-2bd547d6-8311-4626-8407-33e442efd31a.png)
 
+<br>
+
+<br>
 
 ## Pre-requisite:
-In this project the following components will be used for the solution:
+In this project, the following components will be used for the solution:
 
 - Infrastructure: AWS
 - Webserver Linux: 2 Red Hat Enterprise Linux 8
 - Database Server: Ubuntu 20.04 + MySQL
 - Storage Server: Red Hat Enterprise Linux 8 + NFS Server
 
-## STEP ONE: Configure Load Balancer Server
+<br>
+
+<br>
+
+## Configure Load Balancer Server
 
 - launch an ubuntu EC2 instance named `apache-lb`
 - open `TCP port 80`
@@ -38,10 +45,19 @@ sudo systemctl restart apache2
 
 ```
 
+<br>
+
 - ensure `apache` is running: `sudo systemctl status apache2`
 
+<br>
+
+<br>
 
 ![apache](https://user-images.githubusercontent.com/92983658/184630107-42c3bfed-0d80-4243-82c6-ba4bfa870732.png)
+
+<br>
+
+<br>
 
 - ### Configure Load Balancing
 ```
@@ -67,27 +83,55 @@ sudo systemctl restart apache2
 
 ```
 
+<br>
+
+<br>
+
 ![load_balancer_configure](https://user-images.githubusercontent.com/92983658/184632041-c2ce14cd-b5ac-48fd-8562-08e7dbc04dd1.png)
 
+<br>
 
 -*Note: If in the Project-7 you mounted /var/log/httpd/ from your Web Servers to the NFS server – unmount them and make sure that each Web Server has its own log directory.*: 
   - `sudo umount /var/log/httpd`
   - If the NFS mount has an entry in the fstab file, remove it or comment it out.
+
+ <br>
+
+ <br>
  
  ![umount](https://user-images.githubusercontent.com/92983658/184634907-7e01aeaf-4574-44f6-9ea8-5e87c199d2ec.png)
 
+<br>
+
+<br>
 
 - verify the configuration works: access your LB’s public IP address or Public DNS name from your browser
 `http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php`
 
+<br>
+
+<br>
+
 ![load_balancer_confirm](https://user-images.githubusercontent.com/92983658/185124537-ba834754-6b56-412f-be95-18119375b76c.png)
+
+<br>
+
+<br>
 
 
 - Open two ssh/Putty consoles for both Web Servers and run following command: `sudo tail -f /var/log/httpd/access_log`
 - Refresh your browser page `http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php` several times
 - make sure that both servers receive HTTP GET requests from the load balancer
 
+<br>
+
+<br>
+
 ![get_web1](https://user-images.githubusercontent.com/92983658/185140479-977d8c36-9057-4137-acec-ba79ff8a6264.png)
 
 ![get_web2](https://user-images.githubusercontent.com/92983658/185140563-7c1a437e-f442-42ce-8e02-49db583011ad.png)
 
+
+<br>
+
+<br>
