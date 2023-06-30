@@ -1,10 +1,30 @@
 # Website Deployment Automation With Continuous Integration
 
-Task: Configure a job to automatically deploy source code changes from Git to NFS server.
+**Task: Configure a job to automatically deploy source code changes from Git to NFS server.**
 
 <br>
 
 ![jenins_architecture](https://user-images.githubusercontent.com/92983658/185145169-c767dad0-02e8-4033-b09f-d573b279049b.png)
+
+<br>
+
+<br>
+
+## Pre-requisites
+- NFS server
+- Database
+- Webservers
+
+<br>
+
+<br>
+
+## Project Steps
+- <a href="https://github.com/earchibong/devops_projects/blob/main/CI.md#install-and-configure-jenkins-server">Install And Configure Jenkins Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/CI.md#configure-jenkins-to-retrieve-source-codes-from-github-using-webhooks">Configure Jenkins To Retrieve Source Codes From Github Using Webhooks</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/CI.md#configure-jenkins-to-copy-file-to-nfs-via-ssh">Configure Jenkins To copy File To NFS Via SSH</a>
+
+<br>
 
 <br>
 
@@ -18,6 +38,11 @@ sudo apt update
 sudo apt install default-jdk-headless
 
 ```
+
+<br>
+
+<br>
+
 - install Jenkins
 ```
 
@@ -30,7 +55,14 @@ sudo apt-get update
 sudo apt-get install jenkins
 
 ```
+
+<br>
+
+<br>
+
 - confirm Jenkins status: `sudo systemctl status jenkins`
+
+<br>
 
 <br>
 
@@ -38,11 +70,17 @@ sudo apt-get install jenkins
 
 <br>
 
+<br>
+
 - open `TCP port 8080` by creating an inbound rule in EC2 security group
 
 <br>
 
+<br>
+
 ![security_jenkins](https://user-images.githubusercontent.com/92983658/185380649-d47dc6c4-cdd6-48ff-9236-1288a0e26385.png)
+
+<br>
 
 <br>
 
@@ -55,7 +93,11 @@ sudo apt-get install jenkins
 
 <br>
 
+<br>
+
 ![jenkins_server](https://user-images.githubusercontent.com/92983658/185386534-6cc7297b-73f4-444c-abe7-2fce0c8c98f9.png)
+
+<br>
 
 <br>
 
@@ -63,9 +105,13 @@ sudo apt-get install jenkins
 
 <br>
 
-### Step Two: Configure Jenkins To Retrieve Source Codes From Github Using Webhooks
+<br>
+
+### Configure Jenkins To Retrieve Source Codes From Github Using Webhooks
 
 - enable `webhooks` in github repository settings: `github repository -> settings -> webhooks`
+
+<br>
 
 <br>
 
@@ -73,10 +119,18 @@ sudo apt-get install jenkins
 
 <br>
 
+<br>
+
 - on Jenkins Console, click "New Item" and create a "Freestyle Project" called "tooling-github"
     - connect to github repository: get the repository URL
-    
+
+  <br>
+
+  <br>
+  
 ![https](https://user-images.githubusercontent.com/92983658/185390017-96390495-f6f4-47fe-bd73-3494d06cf277.png)
+
+<br>
 
 <br>
 
@@ -90,16 +144,24 @@ sudo apt-get install jenkins
  - if configuration is correct, then `build` will be successful and will appear under `#1` at the bottom left of the dashboard
    
  <br>
+
+ <br>
  
  ![build_now](https://user-images.githubusercontent.com/92983658/185391629-826a2cba-39be-49d9-9e30-f0ae65450f2d.png)
+
+<br>
 
 <br>
 
     - open `build` and check in `console output` to confirm successful run
  
  <br>
+
+ <br>
  
 ![console_output](https://user-images.githubusercontent.com/92983658/185391965-d8175c4a-ee6a-4728-92c6-805f748999e6.png)
+
+<br>
 
 <br>
 
@@ -119,11 +181,15 @@ sudo apt-get install jenkins
 
 <br>
 
+<br>
+
  ![changes_file](https://user-images.githubusercontent.com/92983658/185940025-d03740d7-56f9-45b3-bfbc-070c5ae7ada4.png)
 
 <br>
 
 ![console_output_1](https://user-images.githubusercontent.com/92983658/185940041-15fa6605-4c01-4ad9-9a99-a524867601d2.png)
+
+ <br>
 
  <br>
  
@@ -137,13 +203,19 @@ sudo apt-get install jenkins
 - Configure the job/project to copy artifacts over to NFS server
   - On main dashboard select `Manage Jenkins` and choose `Configure System` menu item.
   - Scroll down to Publish over SSH plugin configuration section and configure it to be able to connect to your NFS server:
-   - Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty): 
+   - Provide a private key (content of .pem file that you use to connect to NFS server via SSH/Putty):
+<br>
+
    ```
    Get the private key with the following steps:
     - on terminal, navigate to where EC2-private key is stored on system
     - access private key: cat "EC2 private key.pem"
    
    ```
+
+  <br>
+
+  <br>
   
   - on jenkins `SSH plugin configuration section` click `add ssh server`:
    - Name: can be any arbitrary name
@@ -155,7 +227,11 @@ sudo apt-get install jenkins
 
 <br>
 
+<br>
+
 ![private_key](https://user-images.githubusercontent.com/92983658/185879366-b84ac88f-f6c9-4f9a-a133-8f11ea9f6416.png)
+
+<br>
 
 <br>
 
@@ -163,6 +239,7 @@ sudo apt-get install jenkins
 
 <br>
 
+<br>
 
 - head over to the project configuration -> add another "Post-build Action" -> `send build artifacts over SSH`
     - source files: `**`
@@ -174,6 +251,7 @@ sudo apt-get install jenkins
 - head over to github and edit the `README.md` file
 - Webhook should trigger a new job in Jenkins and in the "Console Output" of the job you will find something like this:
 ```
+
 SSH: Transferred 25 file(s)
 Finished: SUCCESS
 
@@ -181,7 +259,11 @@ Finished: SUCCESS
 
 <br>
 
+<br>
+
 ![console](https://user-images.githubusercontent.com/92983658/186126836-df0b96d9-cd5d-4157-89d3-77af7714b433.png)
+
+<br>
 
 <br>
 
@@ -191,3 +273,6 @@ Finished: SUCCESS
  - If you see the changes you had previously made in your GitHub – the job works as expected.
  
  
+<br>
+
+<br>
