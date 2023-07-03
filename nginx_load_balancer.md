@@ -2,7 +2,7 @@
 
 This project consists of two parts:
 - Configure Nginx as a Load Balancer
-- Register a new domain name and configure secured connection using SSL/TLS certificates
+- Register a new domain name and configure a secured connection using SSL/TLS certificates
 
 The target architecture will look like this:
 
@@ -16,10 +16,10 @@ The target architecture will look like this:
 - <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#part-one-register-and-configure-new-domain">Register And Configure New Domain</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#connect-new-domain-with-nginx-public-ip">Connect new domain with Nginx Public IP</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#part-two-configure-nginx-server-as-a-load-balancer">Configure NginX Server as a Load Balancer</a>
-- <a href=" ">Install certbot and request for an SSL/TLS certificate</a>
-- <a href=" ">Set up periodical renewal of your SSL/TLS certificate</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#install-certbot-and-request-for-an-ssltls-certificate">Install certbot and request for an SSL/TLS certificate</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#set-up-periodical-renewal-of-your-ssltls-certificate">Set up periodical renewal of your SSL/TLS certificate</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#assign-an-elastic-ip-to-nginx-lb-server">Assign an Elastic IP to Nginx LB server</a>
-- <a href=" "> Configure DNS records</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/nginx_load_balancer.md#configure-dns-records"> Configure DNS records</a>
 
 <br>
 
@@ -53,9 +53,9 @@ The target architecture will look like this:
 
 - **configure DNS RECORDS:**
   - in AWS Route 53 menu, click on `hosted zones`
-  - select new domain and click on domain name
+  - select `new domain` and click on `domain name`
    - Click the `CREATE RECORD` button to get started:
-   - Enter in your `A record` information and ensure "A" is selected in the Record Type field.
+   - Enter your `A record` information and ensure "A" is selected in the Record Type field.
    - Enter the `NginX Public IP address` into the value.
    - Click the CREATE RECORDS button once you have finished.
 
@@ -124,7 +124,7 @@ sudo vi /etc/hosts
 
 ```
 
-#insert following configuration into http section
+#insert the following configuration into HTTP section
 
  upstream myproject {
     server Web1 weight=5;
