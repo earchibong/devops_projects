@@ -12,6 +12,20 @@ architecture:
 
 <br>
 
+## Project Steps:
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#install-and-configure-ansible-on-ec2">Install And Configure Ansible On EC2</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#configure-jenkins-build-job-to-save-repository-content-every-time-it-is-changed">Configure Jenkins build job to save repository content every time it is changed</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#allocate-elastic-ip-to-jenkins--ansible-server">Allocate Elastic IP to Jenkins- Ansible Server</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#prepare-development-environment">Prepare Development Environment
+</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#set-up-ansible-inventory">Set up Ansible Inventory</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#create-a-playbook ">Create a playbook</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#run-first-ansible-test">Run Ansible Test</a>
+
+<br>
+
+<br>
+
 ## Install And Configure Ansible On EC2
 - Update Name tag on your `Jenkins EC2` Instance (from project 9) to `Jenkins-Ansible`.
 - In GitHub create a new repository and name it `ansible-config-mgt`.
@@ -24,14 +38,20 @@ sudo apt install ansible
 
 ```
 
-- confirm ansible version : `ansible --version`
+- confirm ansible version: `ansible --version`
 
 ![ansible_version](https://user-images.githubusercontent.com/92983658/187173699-1cc70a6f-0a86-499a-9b02-369de77db140.png)
 
 <br>
 
+<br>
+
 - ### Configure Jenkins build job to save repository content every time it is changed
   - Create a new Freestyle project `ansible` in Jenkins and point it to your ‘ansible-config-mgt’ repository.
+
+<br>
+
+<br>
 
 ![git_](https://user-images.githubusercontent.com/92983658/187188044-04d76543-c349-494f-9985-1c0091037423.png)
 
@@ -41,13 +61,18 @@ sudo apt install ansible
 
 <br>
 
+<br>
+
   - Configure Webhook in GitHub and set webhook to trigger ansible build: `ansible-config-mgt` -> settings -> webhooks 
   
   <br>
   
+ <br>
  
  ![ansible_jenkins_webhook](https://user-images.githubusercontent.com/92983658/187915459-1ea88589-b194-49dc-b5a2-e002185f4e55.png)
 
+
+<br>
 
 <br>
 
@@ -57,10 +82,15 @@ sudo apt install ansible
     - if configuration is correct, then build will be successful and will appear under #1 at the bottom left of the dashboard
     
   <br>  
+
+  <br>
   
   ![build_check](https://user-images.githubusercontent.com/92983658/187189829-e9e1df48-8fac-4052-898b-fd5f99065b87.png)
 
 <br>
+
+<br>
+
 
 - Test setup by making some change in README.MD file in master / main branch and make sure that builds starts automatically and Jenkins saves the files (build artifacts) in following folder: 
   - `ls /var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/`
@@ -68,8 +98,12 @@ sudo apt install ansible
   - `cat README.md`
   
   <br>
+
+  <br>
   
 ![console_output](https://user-images.githubusercontent.com/92983658/187190646-4ee622e8-b7e2-4454-9444-85cdbbba354c.png)
+
+<br>
 
 <br>
 
@@ -78,6 +112,8 @@ sudo apt install ansible
 <br>
 
 ![cat_readme](https://user-images.githubusercontent.com/92983658/187192146-06ad3eb6-4afa-4e1a-8101-64e4f6a00625.png)
+
+<br>
 
 <br>
 
@@ -91,7 +127,11 @@ sudo apt install ansible
 
 <br>
 
+<br>
+
 ![elastic-ip-jenkins](https://user-images.githubusercontent.com/92983658/187193366-eb522ce6-5fab-49cf-9370-92d4f27b963e.png)
+
+<br>
 
 <br>
 
@@ -99,7 +139,11 @@ sudo apt install ansible
 
 <br>
 
+<br>
+
 ![elastic_ip_jenkins_webhook](https://user-images.githubusercontent.com/92983658/187193874-d4c15a20-3e9b-42c8-86c7-65f73f872764.png)
+
+<br>
 
 <br>
 
@@ -138,7 +182,11 @@ git config --global user.email "somebody@somewhere.net"
 
 <br>
 
+<br>
+
 ![keypair](https://user-images.githubusercontent.com/92983658/187872205-440ba6e5-00da-4979-97b9-49606999217a.png)
+
+<br>
 
 <br>
 
@@ -153,25 +201,41 @@ git config --global user.email "somebody@somewhere.net"
 
 <br>
 
+<br>
+
 ![add_ssh_key](https://user-images.githubusercontent.com/92983658/187874384-18d2bdb3-918f-4202-baad-662373040dde.png)
 
 <br>
 
+<br>
+
 - ssh into jenkins-ansible` from cloud9 environment
+
+<br>
+
+
 ```
+
 # upload privatekey to local environment in cloud9 first.
 
 chmod 400 privatekey.pem
 ssh -i "privatekey.pem" jenkins-ansible.IP
 
+
 ```
+
+<br>
 
 - Clone down your `ansible-config-mgt` repository to your Jenkins-Ansible instance: `git clone ansible-config-mgt url`
 
 <br>
 
+<br>
+
 ![ansible_config_clone](https://user-images.githubusercontent.com/92983658/187921544-4214f053-3184-4936-ab37-d235c07a0c99.png)
 
+
+<br>
 
 <br>
 
@@ -181,7 +245,11 @@ ssh -i "privatekey.pem" jenkins-ansible.IP
 
 <br>
 
+<br>
+
 ![prj_11](https://user-images.githubusercontent.com/92983658/187923223-eaa2e0ce-8f05-44e1-afbc-be729205fb3e.png)
+
+<br>
 
 <br>
 
@@ -202,6 +270,8 @@ touch common.yml
 
 <br>
 
+<br>
+
 - Within the inventory folder, create an inventory file (.yml) for each environment (Development, Staging Testing and Production) dev, staging, uat, and prod respectively.
 ```
 
@@ -215,11 +285,16 @@ touch prod.yml
 ```
 <br>
 
+<br>
+
 ### Set up Ansible Inventory
 
 - exit `Jenkins-Ansible` server
 - **Set up an `SSH agent` and connect to `Jenkins-Ansible` server:**
   - on local machine: 
+
+<br>
+
 ```
 
 eval `ssh-agent -s`
@@ -227,13 +302,24 @@ ssh-add ./<path-to-private-key>
 
 ```
 
+<br>
+
+<br
+
 - Confirm the key has been added : `ssh-add -l`
 - ssh into `Jenkins-Ansible` server using ssh-agent: `ssh -A -i "private ec2 key" ubuntu@public-ip`
 
 <br>
 
+<br>
+
 - Update inventory/dev.yml file with this snippet of code:
  *notice, that Load Balancer and database user is ubuntu and user for RHEL-based servers is ec2-user.*
+
+<br>
+
+<br>
+
 ```
 
 [nfs]
@@ -252,11 +338,15 @@ ssh-add ./<path-to-private-key>
 ```
 <br>
 
+<br>
+
 ![dev_yml](https://user-images.githubusercontent.com/92983658/187440923-c9b1d29a-4b2f-4e4d-813b-7477669cc509.png)
 
 <br>
 
-## Create a common playbook
+<br>
+
+## Create a playbook
 
 In common.yml playbook configuration for repeatable, re-usable, and multi-machine tasks that is common to systems within the infrastructure will be written
 
@@ -316,7 +406,11 @@ git push origin <branch name>
 
 <br>
 
+<br>
+
 ![git_status_commit](https://user-images.githubusercontent.com/92983658/187445141-75ccddad-f527-41cd-a8f2-682d1197bcbf.png)
+
+<br>
 
 <br>
 
@@ -324,7 +418,11 @@ git push origin <branch name>
 
 <br>
 
+<br>
+
 ![compreand pull](https://user-images.githubusercontent.com/92983658/187450096-05082257-7476-4121-a286-103ee5ae0096.png)
+
+<br>
 
 <br>
 
@@ -332,10 +430,13 @@ git push origin <branch name>
 
 <br>
 
+<br>
+
 ![successful_merge](https://user-images.githubusercontent.com/92983658/187450503-3004fdbf-30d0-4b09-9727-01a440045f97.png)
 
 <br>
 
+<br>
 
 - Head back to terminal, checkout from the feature branch into the master, and pull down the latest changes:
 ```
@@ -345,7 +446,11 @@ git pull
 ```
 <br>
 
+<br>
+
 - Once code changes appear in master branch – Jenkins will do its job and save all the files (build artifacts) to `/var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/` directory on `Jenkins-Ansible server.`
+
+<br>
 
 <br>
 
@@ -353,9 +458,14 @@ git pull
 
 <br>
 
+<br>
+
 ![var_confirm](https://user-images.githubusercontent.com/92983658/187456104-326931f2-1ea3-4d36-b7e0-0e7086796bb6.png)
 
 <br>
+
+<br>
+
 
 ## Run First Ansible Test
 
@@ -368,7 +478,11 @@ ansible-playbook -i inventory/dev.yml playbooks/common.yml
 ```
 <br>
 
+<br>
+
 ![ansible](https://user-images.githubusercontent.com/92983658/187943833-1ea86d39-f1ea-4388-8eea-59923bc12286.png)
+
+<br>
 
 <br>
 
@@ -376,11 +490,13 @@ ansible-playbook -i inventory/dev.yml playbooks/common.yml
 
 <br>
 
+<br>
+
 ![wireshark_nfs](https://user-images.githubusercontent.com/92983658/187943890-e7066e7c-2b81-4057-b222-efaeea6fc0f3.png)
 
 <br>
 
-
+<br>
 
 
 
