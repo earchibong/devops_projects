@@ -16,8 +16,7 @@ architecture:
 - <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#install-and-configure-ansible-on-ec2">Install And Configure Ansible On EC2</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#configure-jenkins-build-job-to-save-repository-content-every-time-it-is-changed">Configure Jenkins build job to save repository content every time it is changed</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#allocate-elastic-ip-to-jenkins--ansible-server">Allocate Elastic IP to Jenkins- Ansible Server</a>
-- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#prepare-development-environment">Prepare Development Environment
-</a>
+- <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#prepare-development-environment">Prepare Development Environment</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#set-up-ansible-inventory">Set up Ansible Inventory</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#create-a-playbook ">Create a playbook</a>
 - <a href="https://github.com/earchibong/devops_projects/blob/main/ansible_config.md#run-first-ansible-test">Run Ansible Test</a>
