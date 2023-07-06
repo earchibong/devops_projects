@@ -1,6 +1,6 @@
 <br>
 
-# AUTOMATE INFRASTRUCTURE WITH IAC USING TERRAFORM PART 1
+# Automate Infrastructure WIth Terraform - Part One
 
 This project demonstrates how the AWS infrastructure for 2 websites that was built manually in project 15 is automated with the use of Terraform.
 
@@ -8,9 +8,14 @@ The following outlines the steps taken:
 
 <br>
 
+<br>
+
 ![image](https://user-images.githubusercontent.com/92983658/203531844-0d082b08-87b1-4b95-ad5d-c921e0b61611.png)
 
 <br>
+
+<br>
+
 
 ## Pre-requisites:
 
@@ -23,12 +28,16 @@ The following outlines the steps taken:
  
 <br>
 
+<br>
+
 ![create_user_1a](https://user-images.githubusercontent.com/92983658/203534121-91fdf847-6ff0-4d83-b25c-46a35521cb22.png)
 
 <br>
 
-- select `add user to group` -> `create group`
-- select `adminitrator access`
+<br>
+
+- select `add a user to group` -> `create group`
+- select `administrator access`
 
 <br>
 
@@ -52,6 +61,8 @@ The following outlines the steps taken:
 
 <br>
 
+<br>
+
 - **Configure programmatic access from your workstation to connect to AWS using the access keys copied above and a Python 
 SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 
@@ -61,6 +72,8 @@ SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 - Create an S3 bucket to store Terraform state file. You can name it something like <yourname>-dev-terraform-bucket 
  (Note: S3 bucket names must be unique unique within a region partition)
  - search for `S3` in AWS conslole -> `create bucket`
+
+<br>
 
 <br>
  
@@ -83,6 +96,8 @@ SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 ![bucket_1e](https://user-images.githubusercontent.com/92983658/203541131-d116b60e-6b99-46bf-a5eb-8e9701686a8b.png)
 
 <br>
+
+<br>
  
 - To install AWS SDK boto3 , it is recommended to upgrade the Python to latest version : `brew install python`
 - install `pip`: `sudo easy_install pip`
@@ -92,7 +107,11 @@ SDK (boto3). You must have Python 3.6 or higher on your workstation.**
 
 <br>
 
+<br>
+
 ![boto3_install](https://user-images.githubusercontent.com/92983658/203551877-3cebfcb7-27c3-4f87-ba8c-bc5225cb2151.png)
+
+<br>
 
 <br>
  
@@ -108,13 +127,18 @@ for bucket in s3.buckets.all():
 ```
 
 - *You should see your previously created S3 bucket name*
+
+<br>
+
 <br>
 
 ![import_boto](https://user-images.githubusercontent.com/92983658/203561094-043eb2fe-8d12-4492-b1b5-a7b43fc32571.png)
 
 <br>
+
+<br>
  
-## Step ONE: VPC | SUBNETS | SECURITY GROUPS
+## VPC | SUBNETS | SECURITY GROUPS
 - **create a directory structure**
  - on the desktop, create a new folder named `Terraform`
  - Open Visual Studio Code and:
@@ -123,7 +147,11 @@ for bucket in s3.buckets.all():
 
 <br>
 
+<br>
+
 ![pbl](https://user-images.githubusercontent.com/92983658/203767834-666a27bf-88b8-42c3-a666-70567b16cd19.png)
+
+<br>
 
 <br>
  
@@ -152,21 +180,31 @@ resource "aws_vpc" "main" {
  
 ```
 <br>
+
+<br>
  
-*Note: You can change the configuration above to create your VPC in other region that is closer to you. The same applies to all configuration snippets that will follow.*
+*Note: You can change the configuration above to create your VPC in another region that is closer to you. The same applies to all configuration snippets that will follow.*
+
+ <br>
 
  <br>
  
 ![main_1a](https://user-images.githubusercontent.com/92983658/203774406-f9d0006a-6fe7-412b-9815-a7845b58b63e.png)
 
 <br>
+
+<br>
  
-- download necessary plugins for Terraform to work.
+- download the necessary plugins for Terraform to work.
  - run `terraform init` command in `PBL` folder
  
 <br>
+
+<br>
  
 ![terraform_init](https://user-images.githubusercontent.com/92983658/203777454-df803779-59a5-4796-8c8f-b3d7524f07f3.png)
+
+<br>
 
 <br>
  
@@ -175,23 +213,33 @@ resource "aws_vpc" "main" {
 - check to see what terraform intends to create : in `PBL` run `terraform plan`
 
 <br>
+
+<br>
  
 ![plan](https://user-images.githubusercontent.com/92983658/203779799-a2b72e1e-ee52-4ae3-9255-951763623cd2.png)
+
+<br>
 
 <br>
  
 - if happy with changes planned, execute `terraform apply`
  
 <br>
+
+<br>
  
 ![terraform_apply_1a](https://user-images.githubusercontent.com/92983658/203780754-070fac00-1c65-4af1-92c3-4512d18274d6.png)
 ![terraform_apply_1b](https://user-images.githubusercontent.com/92983658/203780763-6e8f548e-fc51-4639-a763-38cf451833d5.png)
+
+<br>
 
 <br>
  
  - *A new file terraform.tfstate is created as a result of the above command which Terraform uses to keeps itself up to date with the 
  exact state of the infrastructure and terraform.tfstate.lock.info file which Terraform uses to track who is running its code against the infrastructure at any point in time*
  
+<br>
+
 <br>
  
 ### Subnets resource section
@@ -201,6 +249,8 @@ According to the architectural design, we require 6 subnets:
 - 2 public
 - 2 private for webservers
 - 2 private for data layer
+
+<br>
 
 <br>
  
@@ -233,11 +283,15 @@ According to the architectural design, we require 6 subnets:
 ![subnets_2](https://user-images.githubusercontent.com/92983658/203783514-08232075-253e-4c3e-9a77-1963b69e7e72.png)
 
 <br>
+
+<br>
  
 *We are creating 2 subnets, therefore declaring 2 resource blocks – one for each of the subnets.*
 *We are using the vpc_id argument to interpolate the value of the VPC id by setting it to aws_vpc.main.id. This way, Terraform knows inside which VPC to create the subnet.*
  
  - Run `terraform plan` and `terraform apply`
+
+<br>
 
 <br>
  
@@ -247,18 +301,26 @@ According to the architectural design, we require 6 subnets:
 
 <br>
 
+<br>
+
 ### REFACTOR CODES
 - **improve the code by refactoring it.**
  - *Hardcoded values: Both the `availability_zone` and `cidr_block arguments` are hard coded. We should always endeavour to make our work dynamic.*
  - *Multiple Resource Blocks: are declared for each subnet in the code. A single resource block that can dynamically create resources without specifying multiple blocks is needed instead*
  
 <br>
+
+<br>
  
 *First, destroy the current infrastructure. Since we are still in development, this is totally fine. Otherwise, **DO NOT DESTROY** an infrastructure that has been deployed to production.*
  
 <br>
+
+<br>
  
 - To destroy whatever has been created run `terraform destroy` command, and type `yes` after evaluating the plan.
+
+<br>
 
 <br>
  
@@ -266,6 +328,8 @@ According to the architectural design, we require 6 subnets:
 ![destroy_1b](https://user-images.githubusercontent.com/92983658/203786792-672dbeec-5bd5-41c2-93a1-b8a69d608120.png)
 ![destroy_1c](https://user-images.githubusercontent.com/92983658/203786808-3c9ba2f4-1846-4aec-a4e3-60e74fb8dc68.png)
 ![destroy_1d](https://user-images.githubusercontent.com/92983658/203786847-3d3ed65b-572c-4b37-9396-d7f157227a10.png)
+
+<br>
 
 <br>
  
@@ -285,6 +349,8 @@ According to the architectural design, we require 6 subnets:
  
  ```
  
+ <br>
+
  <br>
  
  - Do the same to `cidr value` in the `vpc` block, and all the other arguments.
@@ -332,15 +398,21 @@ According to the architectural design, we require 6 subnets:
  ```
  
  <br>
+
+ <br>
  
  ![refactir_1a](https://user-images.githubusercontent.com/92983658/203791476-b907efcd-f614-4dc2-8f22-e37ca156c608.png)
 
  ![refactor_1b](https://user-images.githubusercontent.com/92983658/203791484-8bdd80b4-0dc0-4738-9279-c1cbef1955b0.png)
 
 <br>
+
+<br>
  
 - **fixing multiple resource blocks:**
  - fetch `Availability zones` from AWS, and replace the hard coded value in the subnet’s availability_zone section.
+
+<br>
 
 <br>
  
@@ -352,6 +424,8 @@ According to the architectural design, we require 6 subnets:
  
  ```
  
+ <br>
+
  <br>
  
  - Introduce a count argument in the subnet block to make use of the new data resource:
@@ -374,6 +448,8 @@ According to the architectural design, we require 6 subnets:
 But if Terraform is being run with this configuration, it may succeed for the first time, but by the time it goes into the second loop, it will fail because the cidr_block still has to be hard coded because the same cidr_block cannot be created twice within the same VPC.*
  
  <br>
+
+ <br>
  
  - introduce a function cidrsubnet() that accepts 3 parameters to make the cidr block dynamic
  
@@ -390,8 +466,12 @@ But if Terraform is being run with this configuration, it may succeed for the fi
     }
  
  ```
+
+ <br>
+
+ <br>
  
-- introuducing a length() function, which basically determines the length of a given list, map, or string solves the problem of the hard coded count value and makes it more dynamic.
+- introducing a length() function, which basically determines the length of a given list, map, or string solves the problem of the hard coded count value and makes it more dynamic.
 ```
  
 # Create public subnet1
@@ -408,7 +488,9 @@ But if Terraform is being run with this configuration, it may succeed for the fi
 
 <br>
 
-- But since this returns the value of 3 instead of 2 that is preferred, a variable for preferred number of public subnets will need to be set:
+<br>
+
+- But since this returns the value of 3 instead of 2 which is preferred, a variable for the preferred number of public subnets will need to be set:
 
 ```
 
@@ -418,6 +500,8 @@ variable "preferred_number_of_public_subnets" {
  
 ```
  
+<br>
+
 <br>
  
 - Next, update the count argument with a condition. Terraform needs to check first if there is a desired number of subnets. Otherwise, use the data returned by the lenght function. See how that is presented below.
@@ -437,14 +521,18 @@ resource "aws_subnet" "public" {
 ```
  
 <br>
+
+<br>
  
 ![config_1a](https://user-images.githubusercontent.com/92983658/203797111-599a165e-eba5-4398-9f38-9649cdaf0326.png)
 ![config_1b](https://user-images.githubusercontent.com/92983658/203797134-ba75b8a3-f8ac-4642-8a1e-aa972d101596.png)
 ![config_1c](https://user-images.githubusercontent.com/92983658/203797179-51b75e28-d55f-4150-adb1-cc0bb562d94a.png)
 
 <br>
+
+<br>
  
-## Step THREE: Introducing Variables.tf And terraform.tfvars
+## Introducing Variables.tf And terraform.tfvars
 
  Instead of havng a long lisf of variables in main.tf file, we can actually make the code a lot more readable and better structured by moving out some parts of the configuration content to other files.
 
@@ -452,29 +540,43 @@ resource "aws_subnet" "public" {
 - And provide non default values to each of them
 
 <br>
+
+<br>
  
 - Create a new file in `PBL` and name it `variables.tf` and copy all the variable declarations into the new file.
 - Create another file, name it `terraform.tfvars` and Set values for each of the variables.
  
 <br>
+
+<br>
  
 ![main](https://user-images.githubusercontent.com/92983658/203800341-199e9353-a4e2-4d12-b708-e7704d8e9275.png)
+
+<br>
 
 <br>
  
 ![variables](https://user-images.githubusercontent.com/92983658/203800398-478dcfc3-4bcb-4da0-a7e9-4aa2d2212250.png)
 
 <br>
+
+<br>
  
 ![tfvars](https://user-images.githubusercontent.com/92983658/203800445-024027f1-8493-4034-9d08-530a010e606b.png)
+
+<br>
 
 <br>
  
  - Run `terraform validate` and `terraform plan` and ensure everything works
  
 <br>
+
+<br>
  
  ![fmt_validate](https://user-images.githubusercontent.com/92983658/203801117-0449be6f-dce3-4fff-9a08-de1d66ff08f1.png)
+
+ <br>
 
  <br>
 
@@ -483,6 +585,8 @@ resource "aws_subnet" "public" {
 ![plan1c](https://user-images.githubusercontent.com/92983658/203801793-5e61df31-e94d-40b1-ae86-491eeda8ba4d.png)
 ![plan1d](https://user-images.githubusercontent.com/92983658/203801810-80a4b330-2d61-4eea-ab22-e14b0864704c.png)
 ![plan1e](https://user-images.githubusercontent.com/92983658/203801827-bef1736c-0d43-40ed-8e02-d08773c70278.png)
+
+<br>
 
 <br>
  
